@@ -1,0 +1,10 @@
+@import "tailwindcss";
+body { font-family: Arial, sans-serif; color: #182333; margin: 0; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+table { border-collapse: collapse; min-width: 1080px; }
+th, td { padding: 12px; border-bottom: 1px solid #d7dce2; white-space: nowrap; text-align: left; }
+th { background: #e9eef3; }
+aside { width: 220px; flex-shrink: 0; background: #172638; color: white; min-height: 100vh; }
+aside a { display: block; color: white; padding: 14px; }
+@media(max-width: 600px) { aside { width: 100px; } aside a { padding: 8px; overflow-wrap: anywhere; } }

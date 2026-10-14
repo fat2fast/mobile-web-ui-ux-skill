@@ -1,37 +1,13 @@
-# Decision Playbook: Mobile Forms
+# Mobile form decisions
 
-## Trigger
+Inspect required fields, validation rules, server responses, focus order and recovery before changing form presentation.
 
-Input feels slow; users encounter hidden errors, difficult keyboard/focus transitions, or obscured submit buttons.
-
-## Diagnose
-
-- What is the minimum information required to complete the task?
-- Is the form one coherent group or a long multi-stage flow?
-- What should the mobile keyboard show for each field?
-- How are errors displayed, announced and recovered from?
-- Do autocomplete, password managers, paste, and back-navigation work?
-
-## Choose a pattern
-
-| Conditions | Candidate | Reject when |
+| Conditions | Candidate and trade-off | Reject when |
 | --- | --- | --- |
-| Short straightforward form | Single-column form with visible labels | Long form would overwhelm users |
-| Multiple meaningful phases | Progressive sections/steps with clear progress | Extra steps slow a short simple form |
-| Numeric/email/phone data | Appropriate `type`, `inputmode` and autocomplete | Custom masking breaks paste or accessibility |
-| Validation errors | Inline errors + programmatic association and focus strategy | Validation fires too early or loses input |
-| Keyboard covers actions | Natural document flow / keyboard-aware layout | Sticky CTA overlaps viewport or input |
+| Short coherent form | One column, persistent labels, natural submit flow | Splitting adds unnecessary steps |
+| Long form with meaningful stages | Sections or steps with progress and preserved values | Back loses input, validation context or deep-link state |
+| Email/phone/numeric data | Semantic `type`, fitting `inputmode`, and correct `autocomplete` | Masking or keyboard choice blocks paste or valid formats |
+| Validation/server error | Inline error associated through `aria-describedby`, summary/focus when useful | Error appears away from field or destroys values |
+| Submit near viewport edge | In-flow CTA, or sticky CTA with measured clearance and keyboard handling | It obscures focused field/content or competes with system keyboard |
 
-## Guardrails
-
-- Never rely on placeholder as the only accessible field label.
-- Avoid forcing autofocus on load, which may unexpectedly open the keyboard.
-- Preserve form values, error state, authentication and submit behavior.
-- Avoid disabling zoom, blocking paste or implementing inaccessible custom keyboards.
-- Validate with an actual mobile keyboard where available; emulator-only checks have limits.
-
-## Example decision
-
-**Before:** A signup form has placeholder-only labels and a fixed bottom submit control hidden while typing.
-
-**Option:** Add persistent labels, proper input autocomplete and visible inline errors; move CTA into normal flow or adapt sticky behavior to keyboard visibility. Verify successful submission, error recovery, and no obscured fields.
+Keep labels visible; placeholders are hints. Preserve existing client and server validation, submitted values, paste, password manager behavior, zoom and success/error paths. Make email typo suggestions optional: accepting a suggestion must be an explicit user action, while declining it must not block an address that existing validation accepts. Do not lowercase an entire email address: [SMTP preserves the local part's case](https://www.rfc-editor.org/rfc/rfc5321#section-2.4). Do not add a stricter domain rule without an existing product requirement. Use `aria-invalid` only on invalid fields; move focus deliberately after submit errors. A resized desktop viewport is not a physical keyboard test. Use the [decision contract](../decision-contract.md).

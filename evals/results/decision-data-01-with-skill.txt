@@ -1,0 +1,18 @@
+Recommend a **compact mobile order list with a full details page**. Each entry should show the order ID as a clear details link, customer, status, and labeled total/date. Keep a labeled selection checkbox and visible Follow-up button. Items, channel, and city remain accessible on the existing `/orders/:id` page.
+
+This fits the stated workflow: find one order, inspect its status, then open details. A horizontally scrolling table remains useful for comparing columns, but that is a secondary task here. Showing all eight fields in expanded cards would make the list longer and slow identity/status scanning. Preserve the current desktop table.
+
+Source evidence supports the change: `src/style.css` gives the table a minimum width of 1080px, while the mobile sidebar still occupies 100px. `src/main.jsx` already has search, status filtering, sorting, selection, export, per-order follow-up, and a details route exposing every order field. The likely difficulty of finding status/actions on a phone is **inferred from source**, not browser-tested.
+
+Keep Search visible above the list. Let Status and Sort wrap into readable labeled controls; retain Reset filters and Export visible. If controls later need a collapsible panel, show active filters outside it. Reuse the existing `visible` dataset and shared selection state for both presentations so filtering, ordering, CSV content, and bulk follow-up retain their current meanings. Keep the selected count and bulk action discoverable, including when selected orders become filtered out. Avoid nested interactive controls: the details link, checkbox, and follow-up button should be separate targets.
+
+Verification: **source inspection completed; implementation, build, and browser checks not run**. Before accepting an implementation, verify:
+
+- At 320px and 390px, locate an order by ID/customer, read status, open details, and return with browser Back.
+- Confirm every field remains reachable and currency/date formatting stays unchanged.
+- Exercise search, each status filter, sorting, reset, export, individual follow-up, and selection across filter changes. Compare results and exported rows with desktop.
+- Check long names, empty results, text zoom, keyboard focus, labeled checkboxes, and action completion announcements.
+- At a representative desktop width, confirm the existing table and actions still work. Check landscape behavior and ensure only the active presentation is exposed to keyboard and assistive technology.
+
+Status: DONE  
+Summary: Use a compact mobile order list with existing details routes and shared controls/state, retaining all data, actions, and desktop behavior.

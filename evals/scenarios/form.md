@@ -1,6 +1,6 @@
 # Scenario B — Mobile Form With Keyboard
 
-**Status:** Specification only; runnable fixture not yet included.
+**Status:** Runnable baseline at [mobile form](../fixtures/mobile-form/README.md). See [observations](../results/form-baseline.md); physical keyboard behavior remains untested.
 
 ## Product context
 

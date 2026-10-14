@@ -1,0 +1,16 @@
+Case: A11Y-01
+Condition: no-skill
+Runtime and version: Antigravity IDE (exact version unobserved)
+Model identifier and version: Gemini 3.8 Flash (High) (exact build version unobserved)
+Agent mode: Pair programming assistant
+Started at UTC: 2026-10-14T08:16:49Z
+Finished at UTC: 2026-10-14T08:18:40Z
+Workspace path: /home/user/work/no-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: view_file, list_dir, write_to_file
+Files and ambient instructions read: /home/user/work/no-skill/AGENTS.md, /home/user/work/no-skill/a11y-01/prompt.txt, /home/user/work/no-skill/a11y-01/run-info.txt, /home/user/work/no-skill/a11y-01/manifest.json, /home/user/work/no-skill/src/main.jsx, /home/user/work/no-skill/src/style.css, and ambient agent system instructions
+Skill file actually read and evidence: none (no skill file read; verified by tool call history)
+Checks actually run and results: Inspected fixture files (src/main.jsx, src/style.css); confirmed the fixture application (order-dashboard) does not implement the prompt's compact 20x20 controls row scenario. Per instructions, no screens were invented and no phantom browser tests were claimed. Evaluated WCAG 2.2 SC 2.5.8 (Level AA) and SC 2.5.5 (Level AAA) specifications against the prompt's geometry and spacing parameters.
+Time/token limits: none specified in prompt; standard session limits apply
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/d15b8865-7945-41bd-90bd-5ecf025f0d45/.system_generated/logs/transcript.jsonl
+Other limitations: The scenario described in the prompt is a design question not present in the existing fixture code. The fixture code was left unmodified per rule 1.

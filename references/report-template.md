@@ -9,9 +9,7 @@ Write a concise, readable report after audit/change/verification.
 - Context / assumption(s): ...
 
 ## Decisions
-| Issue | Mobile UX improvement | Why it fits | Preserved behavior |
-|---|---|---|---|
-| ... | ... | ... | ... |
+Use the [decision contract](decision-contract.md) for each consequential choice: Evidence (`PASS`/`FAIL`/`INFERRED`/`NOT RUN`), Mobile task, Candidates, Selected + why, Rejected + why, Preserved, Verify. Summarize a few choices here without dropping rejected alternatives or preservation.
 
 ## Changes (omit for audit-only)
 - `path/to/file` — ...
@@ -26,3 +24,5 @@ Write a concise, readable report after audit/change/verification.
 ```
 
 Never mark a check PASS unless actually executed or directly observed. Avoid unexplained terminology and fabricated before/after gains.
+
+For recommendation or audit-only requests, keep the response to the decision, one viable alternative, preserved behavior and verification steps. Include implementation code only when requested or necessary to explain the decision; label untested examples as examples.

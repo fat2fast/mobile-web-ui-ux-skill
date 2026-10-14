@@ -1,0 +1,16 @@
+Case: NAV-01
+Condition: no-skill
+Runtime and version: Antigravity IDE (server bin 2.5.5-ecfbad74d93962fc8ca485d93ab9b4f3d4cb6cf8, Node.js v26.10.0, Linux 6.6.87.2-microsoft-standard-WSL2)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Pair programming assistant (autonomous IDE agent)
+Started at UTC: 2026-10-14T08:10:53Z
+Finished at UTC: 2026-10-14T08:14:15Z
+Workspace path: /home/user/work/no-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: view_file, list_dir, run_command, write_to_file
+Files and ambient instructions read: /home/user/work/no-skill/AGENTS.md, /home/user/work/no-skill/nav-01/prompt.txt, /home/user/work/no-skill/nav-01/run-info.txt, /home/user/work/no-skill/nav-01/manifest.json, /home/user/work/no-skill/README.md, /home/user/work/no-skill/package.json, /home/user/work/no-skill/src/main.jsx, /home/user/work/no-skill/src/style.css
+Skill file actually read and evidence: None (no skill file was accessed or read; condition is no-skill)
+Checks actually run and results: None (decision-only task; inspected fixture code and environment without running automated tests or build checks)
+Time/token limits: None specified
+Raw transcript location or availability: Available at /home/user/.gemini/antigravity-ide/brain/f4e3768e-1fb4-46ae-99ee-2a81e505be51/.system_generated/logs/transcript.jsonl
+Other limitations: Decision-only comparison run; fixture application code modification disallowed by comparison run rules.

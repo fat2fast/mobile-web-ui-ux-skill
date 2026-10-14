@@ -1,0 +1,16 @@
+Case: DATA-02
+Condition: no-skill
+Runtime and version: Antigravity IDE (version unexposed)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Pair programming assistant
+Started at UTC: 2026-10-14T07:51:36Z
+Finished at UTC: 2026-10-14T07:53:30Z
+Workspace path: /home/user/work/no-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: list_dir, view_file, write_to_file
+Files and ambient instructions read: /home/user/work/no-skill/AGENTS.md, /home/user/work/no-skill/data-02/prompt.txt, /home/user/work/no-skill/data-02/run-info.txt, /home/user/work/no-skill/data-02/manifest.json, /home/user/work/no-skill/data-01/run-info.txt
+Skill file actually read and evidence: None (no skill file was read; condition is no-skill)
+Checks actually run and results: None (decision-only recommendation task; no code checks or tests run)
+Time/token limits: unknown
+Raw transcript location or availability: Available at /home/user/.gemini/antigravity-ide/brain/8a311120-80d8-44e4-8519-20aecfe6d614/.system_generated/logs/transcript.jsonl
+Other limitations: None

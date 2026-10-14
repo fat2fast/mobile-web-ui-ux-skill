@@ -1,0 +1,586 @@
+# Mobile Contact Form & Error Recovery Recommendation
+
+## 1. Executive Summary & Mobile Design Principles
+
+Designing forms for mobile devices requires accounting for unique physical and cognitive constraints: compact viewports, on-screen virtual keyboards that obscure up to 50% of the screen, variable touch precision ("fat-finger" errors), aggressive platform autocorrect engines, and intermittent connectivity.
+
+For a three-field contact form (**Name**, **Email**, and **Message**), an invalid email address is the single highest-friction point because:
+1. It breaks the communication loop (the business cannot reply).
+2. Entering email strings requires toggling special characters (`@`, `.`, `_`, `-`) on small mobile keyboards.
+3. Mobile OS autocorrect and autocapitalization frequently corrupt email strings without the user noticing.
+
+The recommended UX strategy follows three foundational principles:
+* **Proactive Prevention**: Configure mobile-native keyboard triggers and input attributes so typing errors are minimized before they occur.
+* **Non-Intrusive Inline Feedback ("Reward Early, Punish Late")**: Avoid shouting errors while the user is still actively typing; provide immediate positive reassurance once resolved.
+* **Lossless, Accessible Recovery**: Ensure that when errors occur, not a single keystroke in any field is wiped, the viewport scrolls smoothly to the problematic field, and assistive technologies announce clear, actionable instructions.
+
+---
+
+## 2. Mobile Form Architecture & Field Design
+
+### 2.1 Layout & Hierarchy
+* **Single-Column Flow**: Use a strict vertical stack (`Name` → `Email` → `Message` → `CTA`). Multi-column form layouts on mobile lead to erratic tabbing and visual confusion when the keyboard appears.
+* **Touch Target Ergonomics**: All input fields must have a minimum height of **48px** (WCAG 2.5.5 / 2.5.8 compliant touch targets) with at least **16px** vertical spacing between fields to prevent accidental mis-taps.
+* **Persistent Top-Aligned Labels**: Labels must sit above the input fields, remaining visible at all times. Never use floating or disappearing placeholder-only labels; once a user starts typing, placeholders vanish, increasing cognitive load and causing users to lose track of what field they are editing.
+* **Thumb-Zone Submit Button**: Place the primary action button (`Send Message`) at the bottom of the form, spanning 100% width, with a minimum height of 48–52px.
+
+### 2.2 Field-by-Field Specifications
+
+#### Field 1: Name
+* `type="text"`
+* `name="name"`
+* `autocomplete="name"` (Enables single-tap autofill from iOS/Android contacts)
+* `autocapitalize="words"` (Capitalizes first letter of each name component)
+* `spellcheck="false"`
+* Label: **Full Name** (Required)
+
+#### Field 2: Email (Critical Field)
+* `type="email"`
+* `name="email"`
+* `inputmode="email"` (Forces the mobile keyboard to render dedicated `@` and `.` keys on the primary layout without needing shift/symbol toggles)
+* `autocomplete="email"` (Allows immediate one-tap selection from browser or OS autofill)
+* `autocapitalize="none"` (**Mandatory**: Prevents mobile OS from capitalizing the first letter, which causes validation failures)
+* `autocorrect="off"` (**Mandatory**: Prevents mobile dictionary replacements, such as changing `gmail` to `snail` or adding unwanted spaces)
+* `spellcheck="false"` (Suppresses noisy red squiggly underlines on valid but non-dictionary usernames)
+* Helper Text: *"We'll send our reply to this address."*
+* Label: **Email Address** (Required)
+
+#### Field 3: Message
+* `<textarea>`
+* `name="message"`
+* `rows="4"` (Initial visible height of ~100–120px; auto-expands as text grows)
+* `autocomplete="off"`
+* `autocapitalize="sentences"`
+* `spellcheck="true"`
+* Helper Text: Dynamic character or minimum word count if required (e.g., *"Minimum 10 characters"*).
+* Label: **Message** (Required)
+
+---
+
+## 3. Email Error Prevention Strategy (Proactive UX)
+
+### 3.1 Input Sanitization & Normalization
+Users on mobile frequently encounter invisible formatting glitches:
+* **Whitespace Trimming**: Mobile keyboards often append a trailing space when the user accepts an autocomplete suggestion or taps the period shortcut. The form logic must automatically strip leading and trailing whitespace on `blur` and prior to validation check (`email.trim()`).
+* **Lowercasing**: While RFC standards permit case-sensitive local parts, practical email delivery is case-insensitive. Normalize the string to lowercase before validation to eliminate cosmetic errors.
+
+### 3.2 "Did You Mean?" Typo Detection Engine
+The most common mobile email errors are domain misspellings (e.g., `@gamil.com`, `@hotmial.com`, `@yaho.com`, `@outlok.com`, `user@domain,com` with a comma, or `user@domain..com`).
+
+* **Interactive Correction Chip**: Rather than rejecting the input with a harsh red error, display an ambient suggestion chip directly below the field:
+  > *Did you mean **user@gmail.com**? [Tap to apply]*
+* Tapping the chip immediately replaces the typed domain with the corrected domain, plays a subtle positive visual transition, and marks the field as valid.
+
+### 3.3 Domain Completion Chips (Optional Progressive Enhancement)
+When the user types `@`, display a horizontal scrolling carousel of common domain pills above the virtual keyboard:
+`[@gmail.com]` `[@outlook.com]` `[@yahoo.com]` `[@icloud.com]`
+Tapping any chip appends the domain with a single touch, eliminating manual domain typing entirely.
+
+---
+
+## 4. Error Validation Lifecycle: "Reward Early, Punish Late"
+
+Validating at the wrong time is the primary reason mobile users abandon forms. The validation strategy must follow this exact lifecycle:
+
+| Phase | User Action | System Behavior | Rationale |
+| :--- | :--- | :--- | :--- |
+| **1. Initial Typing** | User types first characters | **Silent / Neutral**. No errors displayed. | Showing "Invalid email" after typing "j" causes frustration and anxiety. |
+| **2. Field Blur** | User taps away or tabs to Message | **Validate**. If invalid, display inline error state. | The user has finished typing their intended input; now it is safe to evaluate. |
+| **3. Correction Typing** | User returns to field and edits | **Immediate Live Validation (`input` event)**. As soon as the syntax becomes valid, remove the error. | Provides immediate relief and confirms the issue is fixed without requiring another blur or submit attempt. |
+| **4. Valid State** | Field meets criteria | Display subtle neutral/green checkmark icon inside the field. | Clear positive reinforcement. |
+| **5. Form Submit** | User taps "Send Message" | Full check across all fields. If email fails, halt, preserve inputs, auto-scroll, and focus. | Prevents network dispatch of invalid payloads while ensuring zero data loss. |
+
+---
+
+## 5. Reactive Error Recovery & Accessible Microcopy
+
+### 5.1 Visual Anatomy of the Error State
+To comply with WCAG 2.1 AA standards and accommodate color-blind users:
+1. **Never rely on color alone**: A red border is insufficient. Combine:
+   * **Border**: 2px high-contrast stroke (`#D32F2F` in light mode, `#FF6B6B` in dark mode).
+   * **Icon**: Exclamation circle icon (`!`) positioned inside the right edge of the input.
+   * **Text Message**: Clear, high-contrast text positioned immediately beneath the input box.
+2. **Accessible Semantics**:
+   * Add `aria-invalid="true"` to the `<input>`.
+   * Add `aria-describedby="email-error"` pointing to the error message `id`.
+   * Include `role="alert"` or `aria-live="polite"` on the error container so screen readers read the error message when triggered.
+
+### 5.2 Contextual, Human Microcopy
+Generic messages like *"Invalid input"* or *"RFC 5322 regex error"* leave users guessing. Errors must be specific and instructional:
+
+* **Field Left Empty**:
+  * ❌ *"Required field."*
+  * ✔️ *"Please enter your email address so we can reply to you."*
+* **Missing `@` Symbol**:
+  * ❌ *"Email format invalid."*
+  * ✔️ *"Include an '@' in your email address (for example: name@example.com)."*
+* **Missing Domain / TLD**:
+  * ❌ *"Invalid domain."*
+  * ✔️ *"Please enter a domain after the '@' (for example: example.com)."*
+* **Invalid Characters / Embedded Spaces**:
+  * ❌ *"Malformed string."*
+  * ✔️ *"Email addresses cannot contain spaces or special symbols."*
+* **Common Domain Typo Detected**:
+  * ✔️ *"Did you mean **user@gmail.com**? [Tap to fix]"*
+
+### 5.3 Focus & Viewport Management on Submit
+If the user taps **Send Message** with an invalid email:
+1. **Prevent Form Submission**: Block the submit event (`event.preventDefault()`).
+2. **Lossless Recovery**: **NEVER reset or clear any field.** The user's name and message must stay 100% intact.
+3. **Smooth Viewport Scroll**: Smoothly scroll the page so the label, email input, and error message are centered in the upper third of the visible screen.
+4. **Programmatic Focus**: Call `emailInput.focus({ preventScroll: true })`. This brings up the mobile email keyboard automatically so the user can begin typing immediately without an extra tap.
+
+---
+
+## 6. Resilience & Edge Cases
+
+### 6.1 State Preservation & Local Draft Persistence
+* Mobile users often switch apps while completing a contact form (e.g., jumping to Gmail or Safari to check their exact email address or copy a reference number).
+* Store the form state in `sessionStorage` on every input change (debounced). If the mobile browser refreshes or unloads the tab due to memory pressure, repopulate the Name, Email, and Message fields upon return.
+
+### 6.2 Realistic Validation Logic
+* Do not use overly restrictive regular expressions that reject valid modern emails (e.g., new gTLDs like `.design`, `.tech`, or tag aliases with plus signs like `alex+support@domain.co.uk`).
+* A robust client-side validation standard:
+  ```javascript
+  function isValidEmail(email) {
+    const trimmed = email.trim();
+    // Non-empty, contains one @, valid local part, domain with at least one dot, no spaces
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed);
+  }
+  ```
+
+### 6.3 Server-Side Error Handling Parity
+* If client-side validation passes but server-side checks fail (e.g., DNS MX record validation fails, or email domain does not accept mail):
+  * Return a structured JSON response (`{ "field": "email", "message": "We could not reach this email domain. Please check for a typo." }`).
+  * Display the server message directly in the inline error container without refreshing the page.
+  * Keep all fields populated.
+
+---
+
+## 7. Mobile UI Wireframe & State Schematics
+
+### Screen A: Default State
+```text
+┌──────────────────────────────────────────┐
+│              Contact Us                  │
+│                                          │
+│  Full Name *                             │
+│  ┌────────────────────────────────────┐  │
+│  │ Jane Doe                           │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  Email Address *                         │
+│  ┌────────────────────────────────────┐  │
+│  │ jane.doe@                          │  │  <-- Virtual keyboard opens with
+│  └────────────────────────────────────┘  │      '@' and '.' on main layer
+│  We'll send our reply to this address.   │
+│                                          │
+│  Message *                               │
+│  ┌────────────────────────────────────┐  │
+│  │ Hi, I have an inquiry about...     │  │
+│  │                                    │  │
+│  └────────────────────────────────────┘  │
+│                                          │
+│  ┌────────────────────────────────────┐  │
+│  │            Send Message            │  │  <-- 48px full-width CTA
+│  └────────────────────────────────────┘  │
+└──────────────────────────────────────────┘
+```
+
+### Screen B: Typo Detection Suggestion Chip
+```text
+│  Email Address *                         │
+│  ┌────────────────────────────────────┐  │
+│  │ jane.doe@gamil.com                 │  │
+│  └────────────────────────────────────┘  │
+│  💡 Did you mean jane.doe@gmail.com?     │  <-- Interactive chip
+│     [Tap to apply]                       │      (Tapping replaces value)
+```
+
+### Screen C: Error State (On Blur or Submit)
+```text
+│  Email Address *                         │
+│  ┌────────────────────────────────────┐  │
+│  │ jane.doe@gmail                     │! │  <-- Red 2px border + alert icon
+│  └────────────────────────────────────┘  │
+│  ⚠️ Please enter a domain suffix after   │  <-- Specific error text
+│     'gmail' (e.g., jane.doe@gmail.com)   │      (aria-live="polite")
+```
+
+### Screen D: Resolved Valid State
+```text
+│  Email Address *                         │
+│  ┌────────────────────────────────────┐  │
+│  │ jane.doe@gmail.com                ✓│  │  <-- Neutral green check icon
+│  └────────────────────────────────────┘  │
+│  We'll send our reply to this address.   │
+```
+
+---
+
+## 8. Complete Technical Implementation Specification
+
+```html
+<!-- HTML Structure -->
+<form id="contact-form" class="mobile-contact-form" novalidate>
+  <!-- Name Field -->
+  <div class="form-group">
+    <label for="contact-name" class="form-label">Full Name <span aria-hidden="true">*</span></label>
+    <input 
+      type="text" 
+      id="contact-name" 
+      name="name" 
+      class="form-input" 
+      autocomplete="name" 
+      autocapitalize="words" 
+      spellcheck="false" 
+      required 
+    />
+    <p class="field-error" id="name-error" role="alert" aria-live="polite"></p>
+  </div>
+
+  <!-- Email Field -->
+  <div class="form-group" id="email-group">
+    <label for="contact-email" class="form-label">Email Address <span aria-hidden="true">*</span></label>
+    <div class="input-wrapper">
+      <input 
+        type="email" 
+        id="contact-email" 
+        name="email" 
+        class="form-input" 
+        inputmode="email" 
+        autocomplete="email" 
+        autocapitalize="none" 
+        autocorrect="off" 
+        spellcheck="false" 
+        aria-describedby="email-hint email-error email-suggestion" 
+        required 
+      />
+      <span class="status-icon" aria-hidden="true"></span>
+    </div>
+    
+    <!-- Typo suggestion chip -->
+    <div id="email-suggestion" class="suggestion-chip" style="display: none;">
+      <span>Did you mean <strong id="suggested-domain"></strong>?</span>
+      <button type="button" id="apply-suggestion-btn" class="chip-btn">Apply</button>
+    </div>
+
+    <p class="field-hint" id="email-hint">We'll send our reply to this address.</p>
+    <p class="field-error" id="email-error" role="alert" aria-live="polite"></p>
+  </div>
+
+  <!-- Message Field -->
+  <div class="form-group">
+    <label for="contact-message" class="form-label">Message <span aria-hidden="true">*</span></label>
+    <textarea 
+      id="contact-message" 
+      name="message" 
+      class="form-textarea" 
+      rows="4" 
+      autocapitalize="sentences" 
+      spellcheck="true" 
+      required
+    ></textarea>
+    <p class="field-error" id="message-error" role="alert" aria-live="polite"></p>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" id="submit-btn" class="submit-btn">
+    <span class="btn-text">Send Message</span>
+    <span class="spinner" aria-hidden="true" style="display: none;"></span>
+  </button>
+</form>
+```
+
+```css
+/* CSS Styling */
+.mobile-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.form-label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  height: 48px; /* Touch target minimum */
+  padding: 12px 14px;
+  font-size: 16px; /* 16px prevents iOS Safari auto-zooming on focus */
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+}
+
+/* Error State */
+.form-group.has-error .form-input {
+  border-color: #d32f2f;
+  background-color: #fff8f8;
+}
+
+.form-group.has-error .status-icon::after {
+  content: "!";
+  position: absolute;
+  right: 14px;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.field-error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin: 6px 0 0 0;
+  min-height: 18px;
+  font-weight: 500;
+}
+
+.field-hint {
+  color: #666;
+  font-size: 13px;
+  margin: 6px 0 0 0;
+}
+
+/* Typo Suggestion Chip */
+.suggestion-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #eef5fc;
+  border: 1px solid #b8daff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #004085;
+}
+
+.chip-btn {
+  background: #0066cc;
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* CTA */
+.submit-btn {
+  height: 50px;
+  background-color: #0066cc;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-btn:active {
+  background-color: #004c99;
+}
+```
+
+```javascript
+// JavaScript Logic & Validation Lifecycle
+const form = document.getElementById('contact-form');
+const emailInput = document.getElementById('contact-email');
+const emailGroup = document.getElementById('email-group');
+const emailError = document.getElementById('email-error');
+const suggestionBox = document.getElementById('email-suggestion');
+const suggestedDomainSpan = document.getElementById('suggested-domain');
+const applySuggestionBtn = document.getElementById('apply-suggestion-btn');
+
+let emailHasError = false;
+let pendingSuggestion = '';
+
+// Known domain misspellings map
+const domainTypos = {
+  'gamil.com': 'gmail.com',
+  'gmai.com': 'gmail.com',
+  'gmial.com': 'gmail.com',
+  'yaho.com': 'yahoo.com',
+  'hotmial.com': 'hotmail.com',
+  'outlok.com': 'outlook.com',
+  'iclud.com': 'icloud.com'
+};
+
+function getEmailDiagnostics(val) {
+  const value = val.trim();
+  if (!value) {
+    return { valid: false, message: 'Please enter your email address so we can reply.' };
+  }
+  if (!value.includes('@')) {
+    return { valid: false, message: 'Please include an \'@\' in your email (e.g. name@example.com).' };
+  }
+  const parts = value.split('@');
+  if (parts.length > 2) {
+    return { valid: false, message: 'An email address can only contain one \'@\' symbol.' };
+  }
+  const [local, domain] = parts;
+  if (!local) {
+    return { valid: false, message: 'Please enter the username before the \'@\' symbol.' };
+  }
+  if (!domain) {
+    return { valid: false, message: 'Please enter a domain after the \'@\' (e.g. example.com).' };
+  }
+  if (!domain.includes('.')) {
+    return { valid: false, message: `Please enter a complete domain after '@' (e.g. ${domain}.com).` };
+  }
+  const tld = domain.split('.').pop();
+  if (tld.length < 2) {
+    return { valid: false, message: 'The domain ending is too short (e.g. .com, .org).' };
+  }
+  if (/\s/.test(value)) {
+    return { valid: false, message: 'Email addresses cannot contain spaces.' };
+  }
+  return { valid: true, message: '' };
+}
+
+function checkDomainSuggestion(email) {
+  const parts = email.trim().toLowerCase().split('@');
+  if (parts.length === 2) {
+    const domain = parts[1];
+    if (domainTypos[domain]) {
+      pendingSuggestion = `${parts[0]}@${domainTypos[domain]}`;
+      suggestedDomainSpan.textContent = pendingSuggestion;
+      suggestionBox.style.display = 'flex';
+      return;
+    }
+  }
+  suggestionBox.style.display = 'none';
+  pendingSuggestion = '';
+}
+
+applySuggestionBtn.addEventListener('click', () => {
+  if (pendingSuggestion) {
+    emailInput.value = pendingSuggestion;
+    suggestionBox.style.display = 'none';
+    clearEmailError();
+    emailInput.focus();
+  }
+});
+
+function displayEmailError(msg) {
+  emailHasError = true;
+  emailGroup.classList.add('has-error');
+  emailInput.setAttribute('aria-invalid', 'true');
+  emailError.textContent = msg;
+}
+
+function clearEmailError() {
+  emailHasError = false;
+  emailGroup.classList.remove('has-error');
+  emailInput.removeAttribute('aria-invalid');
+  emailError.textContent = '';
+}
+
+// Validation Lifecycle:
+// 1. Validate on Blur
+emailInput.addEventListener('blur', () => {
+  const diag = getEmailDiagnostics(emailInput.value);
+  if (!diag.valid) {
+    displayEmailError(diag.message);
+  } else {
+    clearEmailError();
+    checkDomainSuggestion(emailInput.value);
+  }
+});
+
+// 2. Validate on Input ONLY if an error is already showing (immediate recovery feedback)
+emailInput.addEventListener('input', () => {
+  if (emailHasError) {
+    const diag = getEmailDiagnostics(emailInput.value);
+    if (diag.valid) {
+      clearEmailError();
+      checkDomainSuggestion(emailInput.value);
+    }
+  }
+});
+
+// 3. Lossless Form Submission Gate
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  // Clean whitespace
+  emailInput.value = emailInput.value.trim();
+  
+  const diag = getEmailDiagnostics(emailInput.value);
+  if (!diag.valid) {
+    displayEmailError(diag.message);
+    
+    // Smooth scroll to field
+    emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Auto-focus to trigger keyboard
+    emailInput.focus({ preventScroll: true });
+    return;
+  }
+  
+  // Submit action (Name and Message are preserved)
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.querySelector('.btn-text').textContent = 'Sending...';
+  
+  // Dispatch payload via fetch...
+});
+```
+
+---
+
+## 9. Summary Checklist for Implementation
+
+* [x] **Native Virtual Keyboard**: Set `type="email"`, `inputmode="email"`, and `autocomplete="email"`.
+* [x] **Autocorrect Deactivation**: Disabled `autocorrect="off"`, `autocapitalize="none"`, and `spellcheck="false"` on email input.
+* [x] **Ergonomic Touch Sizing**: 48px+ touch targets on all interactive fields and full-width CTA.
+* [x] **Validation Timing**: Initial check deferred to `blur`; live resolution on `input`; final safety gate on `submit`.
+* [x] **Typo Prevention**: Interactive "Did you mean?" suggestions for common top-level domain typos.
+* [x] **Lossless Recovery**: Zero data wiping; all entered fields (Name, Email, Message) remain intact across errors and app switches.
+* [x] **Accessibility (a11y)**: `aria-invalid`, `aria-describedby`, and `role="alert"` dynamically synchronized for assistive tech.
+* [x] **Viewport & Focus Flow**: Viewport scrolls to the error and automatically activates the keyboard upon submit failure.

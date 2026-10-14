@@ -1,0 +1,129 @@
+# Mobile Price and Product Comparison: Design & UX Recommendations
+
+Presenting a comprehensive comparison page (spanning aligned features, pricing tiers, operational limits, and warranty/guarantee policies) on phone-width viewports (360px–430px) without losing information requires shifting away from wide multi-column desktop tables toward **pairwise focus, progressive disclosure, and synchronized sticky navigation**.
+
+---
+
+## 1. Core Challenge & Architectural Strategy
+
+On desktop screens, comparison matrices place 3 to 5 product columns side-by-side with row-level feature labels. On mobile:
+- Squeezing more than 2 products horizontally compresses text into illegible, truncated vertical ribbons.
+- Traditional horizontal scrolling tables frequently lose context when row labels scroll off-screen.
+- Stripping or hiding limits and warranty clauses compromises customer decision-making and violates compliance/clarity requirements.
+
+**Strategy:** Rather than dropping data, adapt the presentation through **Pairwise Comparison (2-up)**, **Categorized Accordion Sections**, **Sticky Anchor Headers**, and **Progressive Disclosure** for detailed clauses and limits.
+
+---
+
+## 2. Recommended Primary Layout: 2-Product Pinned View with Quick Switcher
+
+Cognitive research indicates that customers compare products pairwise (evaluating trade-offs between two options at a time, e.g., Base vs. Pro, or Option A vs. Option B).
+
+### Structure:
+1. **Side-by-Side 2-Column Matrix**:
+   - Allocate 50% viewport width to Product 1 and 50% to Product 2, or 35% for Attribute Label and 32.5% each for Product A and B.
+   - When using a 2-column layout without a dedicated label column, place the attribute label in a full-width row header spanning across both columns, with the respective values directly beneath it.
+2. **Product Switcher Controls in Header**:
+   - Top-level dropdown selectors or swipeable tabs let users choose which two products are actively compared from the full catalog (e.g., "Product A" vs. "Product B").
+   - Support a **"Lock / Pin"** action on one product (e.g., the user’s current plan or top contender) while cycling through other options in the second column.
+3. **Sticky Product Summary Bar**:
+   - As the user scrolls down through dozens of features and limits, a compact persistent header sticks to the top of the screen displaying:
+     - Product Names (abbreviated if needed)
+     - Price and billing cadence
+     - Primary CTA buttons (e.g., "Select" / "Buy")
+     - Column change indicator
+
+---
+
+## 3. Alternative / Hybrid Layout: Horizontal Snap Carousel with Frozen Attribute Column
+
+For catalogs where users expect to swipe through 3+ products continuously without manual dropdown selection:
+
+1. **Sticky Row Labels (Frozen Left Column)**:
+   - Freeze the attribute label column on the left (taking ~35% width).
+   - Product columns (taking ~45% width each) scroll horizontally in a container using CSS scroll snap (`scroll-snap-type: x mandatory`).
+   - The user sees one full product column and a "peek" (15–20%) of the next product column, visually communicating horizontal scrollability.
+2. **Synchronized Scrolling**:
+   - Vertical scrolling scrolls all columns synchronously.
+   - The top product header remains pinned vertically while sliding horizontally in sync with product columns.
+
+---
+
+## 4. Structuring Aligned Features, Pricing, Limits, and Warranty
+
+Organize the dense matrix into clear, thematic accordion blocks to reduce cognitive fatigue while keeping every specification accessible:
+
+### A. Pricing & Commitment Terms
+- **Primary Display**: Prominent recurring price (e.g., "$29/mo"), billing term (e.g., "billed annually"), and setup/activation fees.
+- **Commitment & Cancellation**: Contract length, free trial availability, and refund windows placed in a dedicated sub-row beneath the headline price.
+
+### B. Aligned Features
+- **Binary Features (Yes/No)**: High-contrast visual checkmarks (`✓`) and crosses (`✕` or subtle dashes) accompanied by accessible text (`aria-label="Included"`).
+- **Graded Features**: Clear textual labels (e.g., "Standard", "Advanced", "Priority") rather than ambiguous symbols.
+- **Feature Differentiator Highlighting**: Subtle background tint or border accent on features exclusive to higher tiers.
+
+### C. Limits & Quotas
+- **Quantitative Metrics**: Bold numeric values with clear units (e.g., "10 users", "50 GB storage", "5,000 API calls/day").
+- **Overage Conditions**: Specify whether overages are hard stops or billed per unit (e.g., "$0.05/extra GB").
+- **Progressive Depth for Exceptions**: Use an info trigger (`ⓘ`) or expandable detail row for edge-case constraints (e.g., fair-use policies or concurrency caps).
+
+### D. Warranty, Guarantees & Support
+- **Warranty Duration**: Prominent badge (e.g., "1-Year Limited", "3-Year Hardware").
+- **Coverage Scope**: Explicitly compare what is covered vs. excluded (e.g., parts vs. labor, accidental damage).
+- **Service Level Agreement (SLA) & Support Channels**: Turnaround times (e.g., "24/7 Phone & Chat" vs. "Business Hours Email - 48h SLA").
+
+---
+
+## 5. Preserving Information Without Clutter (Zero Information Loss)
+
+To ensure no technical specifications, caveats, or warranty terms are omitted:
+
+1. **Progressive Disclosure Triggers**:
+   - **Inline Tap-to-Expand**: Keep the main table clean with concise summaries (e.g., "3-Year Limited Warranty [Details]"). Tapping expands full coverage terms directly inline without navigating away.
+   - **Bottom Sheet Detail Panels**: For extensive legal warranty text or complex limit definitions, tapping an info icon (`ⓘ`) slides up a mobile bottom sheet with the complete terms, definitions, and exclusions.
+2. **Self-Contained Attribute Rows**:
+   - Use full-width attribute rows that span the entire mobile screen width:
+     ```
+     [ Attribute: Storage Capacity & Overage ]
+     Product A: 50 GB ($0.10/GB overage)
+     Product B: 250 GB (No overages; soft throttle at limit)
+     ```
+   - This prevents text wrapping issues common when long descriptions are jammed into narrow table cells.
+
+---
+
+## 6. High-Impact Scannability Features
+
+1. **"Show Differences Only" Toggle**:
+   - A persistent switch at the top of the comparison.
+   - When toggled ON, rows where all compared products have identical specs (e.g., identical 1-year warranty or basic SSL) collapse or hide, allowing users to immediately focus on distinguishing features and price deltas.
+2. **Category Anchor Jump Links (Sticky Sub-nav)**:
+   - A horizontal scrolling pill bar beneath the sticky header (`[ Overview ] [ Features ] [ Limits ] [ Warranty ]`).
+   - Tapping smooth-scrolls directly to that section, preventing endless swipe fatigue.
+3. **Winner / Recommendation Badges**:
+   - Clear visual flags for "Most Popular", "Best Value", or highest warranty protection to anchor customer decisions.
+
+---
+
+## 7. Ergonomics, Touch Targets & Accessibility
+
+1. **Touch Ergonomics**:
+   - All interactive controls (dropdown selectors, accordions, info buttons, CTAs) must maintain a minimum touch target size of 44 × 44 pt.
+   - Place primary conversion CTAs in the bottom thumb zone or in the persistent sticky header.
+2. **Screen Reader & Keyboard Accessibility**:
+   - Maintain semantic accessibility relationships even if CSS visually rearranges cells:
+     - Use `role="table"`, `role="row"`, `role="columnheader"`, and `role="cell"`.
+     - Associate each data point with its attribute label using `aria-labelledby` or `headers` attributes, ensuring screen reader users hear: *"Storage Capacity: Product Pro, 250 GB"* rather than disconnected numbers.
+3. **Visual Contrast & Density Control**:
+   - Alternate row zebra striping with subtle borders (`1px solid #E2E8F0`).
+   - Avoid low-contrast grey-on-grey text for disclaimers; use legible 13px+ typography for fine print and 15px–16px for body content.
+
+---
+
+## Summary Comparison of Implementation Approaches
+
+| Approach | Best Suited For | Pros | Considerations |
+| :--- | :--- | :--- | :--- |
+| **2-Product Pinned View (Recommended)** | Deep comparisons with detailed limits & legal warranties | Highest legibility; no horizontal text clipping; natural pairwise trade-off analysis | Requires product switcher to view 3+ products |
+| **Frozen Header + Snap Carousel** | Fast browsing across 3–5 standardized products | Swipe gestures feel native; all products accessible in one stream | Requires swipe hints; narrower cell widths |
+| **Categorized Accordion Blocks** | Lengthy technical specs with 40+ attributes | Minimizes scroll height; lets user jump directly to Limits or Warranty | Requires extra taps to reveal collapsed sections |

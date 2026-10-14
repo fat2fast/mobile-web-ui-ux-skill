@@ -1,0 +1,16 @@
+Case: DATA-03
+Condition: no-skill
+Runtime and version: Antigravity IDE (version unknown)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: autonomous pair programming agent / default mode
+Started at UTC: 2026-10-14T07:57:41Z
+Finished at UTC: 2026-10-14T08:00:20Z
+Workspace path: /home/user/work/no-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: view_file, list_dir, run_command, manage_task, write_to_file
+Files and ambient instructions read: Ambient instructions (system prompt including AGENTS.md, web_application_development, customizations, guidelines, messaging, artifacts), /home/user/work/no-skill/AGENTS.md, /home/user/work/no-skill/data-03/prompt.txt, /home/user/work/no-skill/data-03/manifest.json, /home/user/work/no-skill/data-03/run-info.txt, /home/user/work/no-skill/README.md, /home/user/work/no-skill/src/main.jsx, /home/user/work/no-skill/src/style.css
+Skill file actually read and evidence: None (no skill file was read or loaded; condition is no-skill)
+Checks actually run and results: npm run build (exited with code 127: vite not found; dependencies uninstalled per fixture setup instructions)
+Time/token limits: unknown
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/8efce843-68f9-4bb5-9fac-95c56b153b71/.system_generated/logs/transcript.jsonl
+Other limitations: Fixture node_modules not pre-installed; decision-only comparison run without modifying fixture code

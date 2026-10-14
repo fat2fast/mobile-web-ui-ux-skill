@@ -1,0 +1,1 @@
+A price comparison page lets customers compare several products across aligned features, price, limits and warranty. Recommend how to present it at phone width without losing information.

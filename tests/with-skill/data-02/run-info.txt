@@ -1,0 +1,28 @@
+Case: DATA-02
+Condition: with-skill
+Runtime and version: Antigravity IDE (Linux x86_64)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Pair programming / autonomous assistant
+Started at UTC: 2026-10-14T07:51:33Z
+Finished at UTC: 2026-10-14T07:55:00Z
+Workspace path: /home/user/work/with-skill
+Tool access: default_api:view_file, default_api:list_dir, default_api:write_to_file, default_api:replace_file_content, default_api:multi_replace_file_content, default_api:run_command, default_api:grep_search, default_api:browser_subagent, default_api:ask_question, default_api:generate_image, default_api:read_url_content, default_api:schedule, default_api:manage_task
+Tools actually used: view_file, list_dir, write_to_file
+Files and ambient instructions read:
+  - /home/user/work/with-skill/AGENTS.md
+  - /home/user/work/with-skill/data-02/prompt.txt
+  - /home/user/work/with-skill/data-02/run-info.txt
+  - /home/user/work/with-skill/data-02/manifest.json
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/data-display.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/content-hierarchy.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/mobile-ux-principles.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/actions.md
+  - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/evaluation-criteria.md
+Skill file actually read and evidence: Yes. Viewed /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md (102 lines read, SHA256 matches manifest entry 474de2f7fc6056f94f782e16aa43c9b9090eb2f3dc2b9cec7ca9fe123198658d) plus 7 referenced decision/principle guides via view_file.
+Checks actually run and results: None run (recommendation/advisory task; workspace fixture order-dashboard is unrelated to price comparison; no code modified or runtime checks executed).
+Time/token limits: None observed
+Raw transcript location or availability: Available at /home/user/.gemini/antigravity-ide/brain/9babd149-064c-4571-b9bd-b6d43439693e/.system_generated/logs/transcript.jsonl
+Other limitations: Decision-only comparison task. No browser testing or fixture code changes were performed.

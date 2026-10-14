@@ -1,0 +1,174 @@
+# Mobile UX Recommendation: Order List, Comparison, and Safe Bulk Actions
+
+## Mobile UX Summary
+- **Main User Task**: Operations and fulfillment staff using mobile phones to search/filter orders, compare order statuses and financial totals across records, multi-select orders via touch, and safely apply permitted bulk operational actions without unintended mutations.
+- **Observed Baseline Problems (`src/main.jsx`, `src/style.css`)**:
+  - *Horizontal Context Loss*: The baseline presents orders in an unyielding 10-column HTML `<table>` with `min-width: 1080px`. In phone viewports (320px–390px), horizontal panning across columns dissociates the order identifier and selection checkbox from the status and total columns. Staff cannot view identity, status, and total simultaneously.
+  - *Viewport Congestion*: On screens `<=600px`, the `<aside>` navigation remains fixed at 100px width, leaving only ~260px of usable horizontal screen space on a 360px device.
+  - *Sub-standard Touch Targets*: Checkboxes and row buttons rely on compact table cell padding without guaranteed minimum hit targets (falling short of WCAG 2.5.8 24×24px AA minimum and 2.5.5 44×44px AAA recommendations), increasing accidental touch errors.
+  - *Buried Bulk Action Trigger*: The bulk action button (`Follow-up selected (N)`) is rendered beneath the entire table list. Staff selecting orders near the top must scroll past all rows to reach the action.
+  - *Absent Safety & Permission Guards*: The baseline immediately executes follow-ups on click without eligibility validation (e.g., verifying whether an order's status permits follow-up), provides no pre-flight confirmation of affected records or combined totals, lacks idempotency/double-tap guards, and provides no undo or reversal mechanism.
+- **Context & Operational Assumptions**:
+  - Staff operate smartphones in dynamic environments (e.g., warehouse floor or dispatch counter) where one-handed use, touch precision variance, and network latency occur.
+  - Existing desktop routes (`/orders`, `/orders/:id`), data structures, sorting, and export capabilities must remain fully functional.
+
+---
+
+## Decisions
+
+### Decision 1: Phone Presentation for Comparing Status and Totals
+- **Evidence**: `INFERRED` from `src/main.jsx` (lines 31–32) and `src/style.css` (lines 5–10). A 1080px table forced into `overflow-x-auto` requires wide horizontal scrolling. Staff cannot evaluate status against total without losing the row's identity and checkbox off-screen.
+- **Mobile Task**: Rapidly scan, filter, and compare order status and monetary totals across multiple orders on a 320px–430px smartphone screen.
+- **Candidates**:
+  1. *Status Quo*: Full 10-column table with horizontal scrolling.
+  2. *Priority-Anchored Mobile Card List*: Stacked card/row layout grouping Checkbox, ID, Status Badge, and Total in the primary viewport, with secondary metadata (Customer, Date, Items) tucked below and tertiary fields available via disclosure.
+  3. *Freeze-Column Table*: Two-dimensional table with sticky left columns (Checkbox + ID) and horizontally scrollable remaining columns.
+- **Selected**: **Priority-Anchored Mobile Card List**.
+  - *Why*: Comparing totals and statuses is a primary scanning task. Placing the checkbox, order ID, high-contrast status badge, and bold currency total together on the first two lines of each card eliminates horizontal scrolling entirely on phones. Staff can vertically scan 3–4 orders per screen height, instantly comparing totals and statuses.
+- **Rejected**:
+  - *Status Quo*: Rejected because horizontal swiping is slow, disconnects values from row headers, and causes frequent accidental check-state toggles.
+  - *Freeze-Column Table*: Rejected because on a 360px screen with a 100px sidebar, freezing ID and Checkbox leaves barely ~140px for scrollable columns, producing severe text truncation and awkward dual-scroll interaction.
+- **Preserved**: Desktop 10-column table layout on wide viewports (`md:` breakpoint); sorting, filtering, deep-linking to `/orders/:id`, and full field accessibility.
+- **Verify**: `NOT RUN` (manual test recommended at 360×780px and 390×844px: verify Checkbox, ID, Status, and Total are visible without horizontal scrolling; verify vertical scan efficiency).
+
+---
+
+### Decision 2: Filter Presentation and Query Management
+- **Evidence**: `INFERRED` from `src/main.jsx` (line 31). The desktop filter controls (`<div className="flex flex-wrap gap-3">`) stack into an unwieldy block of text inputs, select dropdowns, and buttons that pushes the first record below the fold on mobile.
+- **Mobile Task**: Narrow order lists by status or text query while retaining visible feedback of active filters and quick access to reset.
+- **Candidates**:
+  1. *Inline Form Wrap (Status Quo)*: Stacking all dropdowns and buttons directly above the list.
+  2. *Horizontal Quick-Filter Chips with Collapsible Filter Sheet*: A search input paired with horizontal scrollable status pills (`All`, `Pending`, `Shipped`, `Delivered`) and a "More Filters" sheet for sort/date parameters.
+  3. *Separate Filter Route*: Navigating to a dedicated `/orders/filter` page.
+- **Selected**: **Horizontal Quick-Filter Chips with Collapsible Filter Sheet**.
+  - *Why*: Status filtering is the single most frequent triage task. Horizontally scrollable status pills allow one-tap status switching with instant visual feedback of the active filter. Deep filters (sorting, date ranges) open in a modal sheet without cluttering the main task view, and active filter tags feature clear dismiss (`×`) triggers.
+- **Rejected**:
+  - *Inline Form Wrap*: Rejected because it consumes >240px of vertical space, hiding orders and selection feedback.
+  - *Separate Filter Route*: Rejected because multi-step page navigation breaks the triage and comparison rhythm on mobile.
+- **Preserved**: Text search querying both ID and customer, full status options, sorting options (ID, Customer, Date), and CSV export capability.
+- **Verify**: `NOT RUN` (manual test recommended: tap 'Pending' chip; verify list filters immediately, active status is highlighted, and order cards adjust without page reload).
+
+---
+
+### Decision 3: Touch Selection and Sticky Bulk Action Bar
+- **Evidence**: `INFERRED` from `src/main.jsx` (lines 32–33). Selection checkboxes have minimal hit areas. The bulk action button is static at the end of the table, rendering it unreachable without scrolling to the bottom of the dataset.
+- **Mobile Task**: Select multiple orders comfortably across the list and trigger bulk actions while maintaining continuous awareness of selected count and monetary sum.
+- **Candidates**:
+  1. *Bottom In-Flow Button (Status Quo)*: Button below list that is enabled when `selection.length > 0`.
+  2. *Sticky Bottom Selection Bar*: An anchored floating toolbar that transitions into view when at least one order is selected, showing count, running total, "Select All Visible", and primary action CTA.
+  3. *Contextual Header Replacement*: Replacing the top navigation header with selection actions when items are checked.
+- **Selected**: **Sticky Bottom Selection Bar**.
+  - *Why*: Keeps bulk action triggers within the ergonomic "thumb zone" at the bottom of the screen. Displays real-time aggregate data (`3 orders selected • Total: $605.00`), gives immediate access to the primary action, and includes an explicit "Clear selection" button.
+- **Rejected**:
+  - *Bottom In-Flow Button*: Rejected because requiring users to scroll past dozens of items to find the submit button causes high drop-off and confusion regarding whether selection was registered.
+  - *Contextual Header Replacement*: Rejected because top headers sit outside comfortable one-handed reach on modern tall phones (6.1"–6.7") and can collide with navigation controls.
+- **Preserved**: Bottom padding on order list (`padding-bottom: 80px`) to prevent sticky bar from occluding the final order; `env(safe-area-inset-bottom)` compliance for iOS Home Indicator.
+- **Verify**: `NOT RUN` (manual test recommended: select 2 orders; verify sticky bar animates in, displays correct count and sum, does not overlap the last order card, and dismisses when cleared).
+
+---
+
+### Decision 4: Safety Checks, Permission Guardrails, and Execution Flow
+- **Evidence**: `INFERRED` from `src/main.jsx` (line 32). The baseline invokes `act(selection)` directly with `setMessage(...)`, without verifying order status compatibility, without confirmation, and without undo.
+- **Mobile Task**: Apply consequential operational updates to multiple selected orders without risking accidental executions, state conflicts, or unauthorized status changes.
+- **Candidates**:
+  1. *Immediate Execution with Toast (Status Quo)*: Direct state update on button tap.
+  2. *Two-Step Pre-Flight Review Modal*: Interactive modal sheet displaying eligibility breakdown, order ID list, total monetary impact, destructive action confirmation, and loading state.
+  3. *Native Browser `confirm()` Dialog*: Simple system alert prompt.
+- **Selected**: **Two-Step Pre-Flight Review Modal**.
+  - *Why*: Essential for operational integrity on phones where pocket-taps or mis-taps happen. It provides:
+    1. *Eligibility Filtering*: Scans selected orders against permitted status transitions (e.g., "Follow-up permitted on Pending/Shipped; 1 Delivered order excluded").
+    2. *Impact Transparency*: Summarizes the total batch value and lists affected order IDs before commit.
+    3. *Explicit Action Verbs*: Primary button explicitly states action and count (e.g., "Confirm Follow-up (3)"), paired with a neutral "Cancel" button.
+    4. *Double-Tap Prevention*: Button disables immediately upon tap, showing a busy spinner to block duplicate submissions.
+    5. *Post-Execution Reversibility*: Displays a live status announcement (`role="status"`) with a 10-second "Undo" window if supported by backend transactions.
+- **Rejected**:
+  - *Immediate Execution*: Rejected due to high operational risk; accidental taps immediately mutate state.
+  - *Native Browser `confirm()`*: Rejected because it cannot render structured breakdowns (ineligible exclusions, financial totals, accessible ARIA roles).
+- **Preserved**: Existing business logic and notification message pipeline; clean focus trap and Escape key dismissal.
+- **Verify**: `NOT RUN` (manual test recommended: select mixed orders; verify modal highlights ineligible items, requires explicit confirmation, prevents double submission, and returns focus to trigger on close).
+
+---
+
+## Detailed Phone Presentation Specifications
+
+### 1. Compact Order Card Architecture
+On mobile screens (`< 768px`), transform table rows into structured cards:
+```
++-------------------------------------------------------------+
+| [ ] ORD-1003               [ Pending ]            $240.00   |  <- Line 1: Hit target (44px), ID, Status Badge, Total
+|     Customer: Hoa Pham     Date: 2026-10-12       4 items   |  <- Line 2: Contextual metadata
+|     [v Details: Partner - HCMC]                             |  <- Line 3: Progressive disclosure trigger
++-------------------------------------------------------------+
+```
+- **Hit Targets**: Checkbox container styled with minimum 44×44 CSS px bounding box (`p-2.5` touch padding around `<input type="checkbox">`).
+- **Visual Contrast**: Status badges use distinct background, text, and border styling (e.g., Pending: amber-100/amber-800, Shipped: blue-100/blue-800, Delivered: emerald-100/emerald-800) satisfying WCAG 1.4.3 (4.5:1 text contrast) and 1.4.11 (3:1 non-text boundary contrast).
+- **Alignment**: Monetary totals aligned right in a monospaced or tabular-figure font (`font-variant-numeric: tabular-nums; font-weight: 700;`) for immediate vertical comparison across cards.
+
+### 2. Ergonomic Sticky Bulk Action Toolbar
+Positioned at screen bottom with safe area padding:
+```
++-------------------------------------------------------------+
+| 3 orders selected (Total: $454.50)           [ Deselect All ]|
+| [  Apply Permitted Action (Follow-up)                     ] |  <- Full-width prominent CTA (min 48px height)
++-------------------------------------------------------------+
+```
+- **Visibility**: Rendered conditionally when `selection.length > 0`.
+- **Z-Index & Insets**: `z-index: 40`, `padding: 12px 16px`, `padding-bottom: calc(12px + env(safe-area-inset-bottom))`.
+- **Page Clearance**: Container list receives dynamic `padding-bottom: 96px` to prevent occlusion.
+
+---
+
+## Safety Checks and Guardrails Specification
+
+1. **Permission & Eligibility Validation Matrix**:
+   - Before presenting bulk actions, the client evaluates each selected order against permission rules:
+     ```javascript
+     const eligibleOrders = selection.filter(id => {
+       const order = orders.find(o => o.id === id);
+       return isActionPermitted(order, actionType);
+     });
+     const ineligibleOrders = selection.filter(id => !eligibleOrders.includes(id));
+     ```
+   - If `ineligibleOrders.length > 0`: Display a non-blocking warning banner inside the review sheet:
+     *"Note: 1 of 4 selected orders (ORD-1004) is already Delivered and cannot receive a follow-up. It will be skipped."*
+   - If `eligibleOrders.length === 0`: Disable the bulk action trigger completely with an explanatory message: *"None of the selected orders are eligible for this action."*
+
+2. **Pre-flight Confirmation Sheet Content**:
+   - Title: `Review Bulk Action: Follow-up`
+   - Scope Summary:
+     - Total Selected: `4 orders`
+     - Actionable Orders: `3 orders`
+     - Total Value Affected: `$454.50`
+   - Order List Preview: Scrollable horizontal badge list of eligible IDs (`ORD-1001`, `ORD-1002`, `ORD-1003`).
+   - Actions:
+     - Primary Button: `Confirm Follow-up (3 Orders)` (prominent high-contrast button).
+     - Dismiss Button: `Cancel` (secondary outline button).
+
+3. **Execution Guards**:
+   - **Idempotency & Double-Click Lock**: State transition to `isSubmitting = true` on first tap; button is set to `disabled` with `aria-busy="true"` and a spinner.
+   - **Keyboard & Screen Reader Safety**: Focus trapped inside modal dialog during review; on completion, modal closes and returns focus to the main container while announcing result via `<div role="status" aria-live="polite">`.
+   - **Selection Auto-Reset**: Selection cleared immediately upon successful action execution to avoid unintentional repeated actions on the same batch.
+   - **Undo Affordance**: Display floating feedback snackbar with an `Undo` button active for 10 seconds (restores prior local state).
+
+---
+
+## Changes
+- *None (Recommendation and decision-only run; fixture application left unedited in accordance with project comparison rules).*
+
+---
+
+## Verification
+- **INFERRED**: Baseline 1080px table, 100px sidebar, bottom-anchored bulk action, and absence of safety checks verified through static analysis of `src/main.jsx` and `src/style.css`.
+- **NOT RUN**: Interactive browser rendering, viewport resizing, screen reader announcements, and touch target validation (omitted because fixture code edits and test execution are prohibited by comparison instructions).
+- **Suggested Manual Verification Protocol**:
+  1. *Small Phone Viewport (360×780px)*: Verify card layout eliminates horizontal scrolling and shows Checkbox, ID, Status, and Total above the fold.
+  2. *Status Comparison*: Filter by 'All' and verify eye gaze can track vertically down the right edge to compare totals and left/center for statuses.
+  3. *Selection & Action Bar*: Check 3 orders; verify sticky bar slides up from bottom without covering the lowest card.
+  4. *Safety Confirmation*: Tap action; verify modal lists eligible items, excludes ineligible orders, disables on submit, and announces status update.
+  5. *Desktop Regression*: Open at 1280×800px; verify standard 10-column table and top filter bar remain intact.
+
+---
+
+## Remaining Risks & Next Steps
+- **Large Dataset Pagination**: When datasets exceed 20 records, an explicit scope choice must be offered: "Select 20 orders on this page" vs "Select all 145 filtered orders across all pages".
+- **Network Latency & Partial Failures**: In production backends, bulk operations can partially fail; the UI must support detailed partial success reporting (e.g., "2 succeeded, 1 failed: server timeout").

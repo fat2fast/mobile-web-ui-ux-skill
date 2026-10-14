@@ -1,37 +1,13 @@
-# Decision Playbook: Mobile Navigation
+# Navigation decisions
 
-## Trigger
+Choose by route structure and switching frequency; retain existing URLs and permissions.
 
-Users cannot find frequently used destinations; desktop sidebar collapses into a long hard-to-use menu; navigation blocks too much screen; back behavior is confusing.
-
-## Diagnose
-
-- How many **top-level destinations** exist? Which correspond to top tasks?
-- Is the user browsing many sections or repeatedly switching among a small stable set?
-- Is the navigation hierarchical? Are there access-controlled destinations?
-- Does browser Back and deep linking currently work?
-- Is screen height/keyboard reducing usable navigation space?
-
-## Choose a pattern
-
-| Conditions | Candidate | Reject when |
+| Conditions | Candidate and trade-off | Reject when |
 | --- | --- | --- |
-| Small, stable set of high-frequency peer destinations | Bottom navigation | Many destinations, deep hierarchy, or bottom UI competition |
-| Numerous destinations with occasional switching | Menu/drawer with grouped labels | Main task becomes buried with no visible entry |
-| Small number of sibling views within one section | Local tabs | Tabs represent unrelated routes/tasks |
-| One focused multi-step flow | Visible progress + explicit Back/Next | Global navigation unnecessarily interrupts the flow |
-| Dense admin app with distinct contexts | Contextual actions + compact navigation | Critical tasks become undiscoverable |
+| Three to five stable peer destinations used repeatedly | Bottom navigation reduces switching cost | Deep hierarchy, many routes, form keyboard or another bottom control competes |
+| Many grouped destinations used occasionally | Labeled menu/drawer keeps route tree intact | Frequent top tasks disappear inside it; expose those separately |
+| Two to four sibling views within a route | Local tabs expose peer views and active state | Views are unrelated or tab switch would silently discard work |
+| Focused flow or nested detail | Contextual action plus explicit Back/breadcrumb | It conceals a required global destination or replaces browser history |
+| Access-controlled routes | Filter entries using existing authorization result | UI-only hiding is mistaken for access control |
 
-## Guardrails
-
-- Do not invent information architecture or rename routes without evidence/authorization.
-- Reflect active state; avoid duplicate navigation patterns competing for the same role.
-- Do not break browser Back, focus restoration or keyboard traversal.
-- A fixed bottom bar must account for content padding, viewport/safe area and any on-screen keyboard.
-- Verify important destinations remain discoverable; do not treat a bottom bar as mandatory.
-
-## Example decision
-
-**Before:** 12 desktop sidebar links become a hamburger list; users repeatedly open the menu for Orders and Tasks.
-
-**Option:** Expose the two frequently used actions prominently and keep grouped secondary destinations in a menu, rather than placing 12 items in a bottom bar. Verify that task frequency is real before promoting routes globally.
+For each choice, record [evidence, task, candidates, selected, rejected, preserved, verify](../decision-contract.md). Keep direct URLs and browser Back, active/current state, focus on route changes, and all permitted destinations. Test direct deep link, Back after details, keyboard traversal and restricted roles when the actual auth system is available. Do not invent auth for a fixture.

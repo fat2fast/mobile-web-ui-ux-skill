@@ -1,36 +1,13 @@
-# Decision Playbook: Mobile Tables & Dense Data
+# Dense data decisions
 
-## Trigger
+First identify whether users scan records, compare columns, filter, or act on a selection. Inventory identity, mandatory fields, sorting, filtering, export, bulk actions and per-record permissions before changing presentation.
 
-Users struggle to read important records or operate row actions on a phone; a data table creates overflow or tiny text.
-
-## Diagnose
-
-- Is the table for quick scanning, record selection, side-by-side comparison, or bulk manipulation?
-- Which fields are essential to identify a record? Which fields are mandatory for the task?
-- Can users sort, filter, select multiple rows or export? These capabilities must not silently disappear.
-- Are identifiers/currency/statuses meaningful when truncated?
-
-## Choose a pattern
-
-| Conditions | Candidate | Reject when |
+| Conditions | Candidate and trade-off | Reject when |
 | --- | --- | --- |
-| Scan individual entities, few priority fields | Record list/cards with detail disclosure | Side-by-side comparison or dense bulk editing is central |
-| Tabular comparison is essential | Focused horizontal scrolling + sticky identifiers if justified | Scrolling hides the row context and actions |
-| Many columns, limited primary mobile fields | Priority columns + accessible details view | Hidden fields cannot be retrieved |
-| Filter-heavy workflow | Compact filter UI with visible active filters and reset | Filter state becomes invisible or hard to edit |
-| Bulk operations matter | Mobile selection mode with persistent clear affordances | Accidental selections or actions cannot be reversed |
+| Scan individual records by identity/status | Mobile list or cards with labeled details; faster scan | Side-by-side comparison or dense bulk editing dominates |
+| Aligned cross-record comparison | Horizontal table with visible row identity and explicit scroll affordance | Context or actions disappear without a recovery path |
+| Dense table with a few mobile priorities | Priority summary plus full details route | Any mandatory field becomes unreachable |
+| Filter-heavy workflow | Compact filter panel with visible active filters/reset | Filter state becomes hidden or requires repeated navigation |
+| Multi-select and bulk action | Table or selection mode with selection count and clear action | Cards drop selection, sort, or safe bulk affordance |
 
-## Guardrails
-
-- Preserve access to all essential fields, sorting/filtering and permitted actions.
-- Ensure data label/value association remains clear to assistive technology.
-- Preserve accessible semantics or add an accessible equivalent when switching table markup to cards.
-- Keep money, dates and identifiers readable and correctly formatted.
-- Do not hide columns solely based on breakpoints without user-task reasoning.
-
-## Example decision
-
-**Before:** Eight-column orders table at 390px with a barely visible action button.
-
-**Option:** Mobile order list displays order number, status, customer and total, with an obvious details/action entry. Desktop retains the table. Verify filters, record actions and full data remain reachable.
+Preserve meaningful row identity, units, money/date formatting, data semantics, sort/filter/export and actions. If cards replace table markup, associate each value with a visible/accessible label. Horizontal scrolling may be appropriate for genuinely two-dimensional data; test row context and keyboard reachability. Record the choice via the [decision contract](../decision-contract.md).

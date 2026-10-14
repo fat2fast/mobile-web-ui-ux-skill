@@ -4,7 +4,7 @@ description: >-
   Improve UI/UX for existing mobile websites, responsive web apps, and PWAs. Use when a user asks to make a responsive website easier to use on phones, improve mobile navigation, touch interactions, forms, tables, actions, content hierarchy, or mobile-first web layouts. Act as a mobile web UX specialist for vibe coders and non-designers: inspect the project, choose context-appropriate patterns, implement focused changes, and verify mobile and desktop behavior.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Mobile Web UI/UX Skill
@@ -60,13 +60,18 @@ Follow [agent workflow](references/agent-workflow.md). Inspect both markup/style
 
 ### 3. Make UX decisions
 
-Read [mobile principles](references/mobile-ux-principles.md) and relevant decision playbooks, **only for the problems encountered**:
+Read [mobile principles](references/mobile-ux-principles.md), the [decision contract](references/decision-contract.md), and relevant decision playbooks, **only for the problems encountered**:
 
 - Navigation, menu hierarchy, tabs: [navigation](references/decisions/navigation.md)
 - Tables, dense content, filtering: [data display](references/decisions/data-display.md)
 - Forms, input, validation, keyboard: [forms](references/decisions/forms.md)
+- Primary, destructive or sticky actions: [actions](references/decisions/actions.md)
+- Long or layered content: [content hierarchy](references/decisions/content-hierarchy.md)
+- Dialogs, drawers and sheets: [overlays](references/decisions/overlays.md)
+- Touch, gestures and hover fallbacks: [touch interactions](references/decisions/touch-interactions.md)
+- Semantics, focus, zoom and target size: [accessibility](references/decisions/accessibility.md)
 
-For each change, choose a pattern with a short rationale, one rejected alternative, and explicit preservation requirements. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
+For each change, fill the decision contract with evidence, task, candidates, selected/rejected reasons, preservation and verification. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
 
 ### 4. Implement (only for Build/Improve)
 
@@ -74,11 +79,11 @@ Change the smallest appropriate components and styles. Reuse existing abstractio
 
 ### 5. Verify
 
-Follow [verification criteria](evals/evaluation-criteria.md). When tools are available, run relevant tests, inspect representative small/mobile widths, verify key touch flows, keyboard focus, text scaling, and desktop regressions. For PWA, distinguish browser tab vs installed/standalone behavior. When runtime testing isn't possible, provide manual verification steps and mark those checks **not run**.
+Follow [verification criteria](references/verification-criteria.md). When tools are available, run relevant tests, inspect representative small/mobile widths, verify key touch flows, keyboard focus, text scaling, and desktop regressions. For PWA, distinguish browser tab vs installed/standalone behavior. When runtime testing isn't possible, provide manual verification steps and mark those checks **NOT RUN**. Check the whole response for claims such as "verified", "passes" or "conforms" that lack a corresponding executed check.
 
 ### 6. Report
 
-Use the concise format in [report template](references/report-template.md): issue → UX choice → changed files → validation → remaining risk. Don't overwhelm non-designers with unexplained terminology.
+Use the concise format in [report template](references/report-template.md): issue → UX choice → changed files → validation → remaining risk. For advice or audit, give the decision and checks without sample implementation code unless requested. Don't overwhelm non-designers with unexplained terminology.
 
 ## Quick rules of judgment
 
@@ -93,4 +98,4 @@ Use the concise format in [report template](references/report-template.md): issu
 
 ## Scope / maturity
 
-This is **v0.1 foundation**: navigation, data display and forms have initial decision playbooks. These are starting guidelines, not a complete, browser-verified UX expert system. Broader action/content patterns, PWA-specialized rules and automated visual verification are roadmap items. See [roadmap](docs/roadmap.md).
+This is a decision-guidance skill with eight focused playbooks. Case records in the source repository are mostly reasoned reviews, not proof that proposed improvements were built or browser-verified. PWA-specialized rules and automated visual verification remain future work.

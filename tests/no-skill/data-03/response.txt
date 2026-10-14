@@ -1,0 +1,130 @@
+# Mobile Order Ops: Phone Presentation and Safety Checks Recommendation
+
+## 1. Executive Summary & Problem Framing
+
+Desktop order operations interfaces typically rely on wide, multi-column tables (such as the 10-column, 1080px baseline in this application). On mobile viewports (375px–430px wide), this tabular layout fails:
+- Horizontal scrolling obscures primary record identifiers (Order ID, Customer) when viewing totals, statuses, or actions.
+- Cramped desktop-sized checkboxes (12px–16px hit targets) cause mis-taps.
+- Comparing statuses and monetary totals across records requires disorienting horizontal and vertical panning.
+- Persistent sidebars consume up to 25%–30% of the screen width, leaving inadequate space for operations.
+- Desktop-style immediate single-click bulk buttons lack the safeguards required when staff execute batch operations on handheld touchscreens on the warehouse or store floor.
+
+To enable staff to efficiently select multiple orders, compare statuses and totals, filter the list, and execute permitted bulk actions on a phone, we recommend a mobile-first presentation architecture paired with a multi-layered safety framework.
+
+---
+
+## 2. Phone Presentation Architecture
+
+### 2.1 Navigation & Layout Adaptation
+1. **Collapsible Navigation:** Replace the fixed sidebar with a top app bar containing a hamburger menu or a mobile bottom tab bar (`Orders`, `Reports`, `Settings`). This reclaims 100% of horizontal screen width for operational data.
+2. **Card / Stacked Row Transformation:** Replace the 1080px wide table with responsive, vertically stacked **Order Cards**:
+   - **Header Row:**
+     - 48x48px touch-target selection checkbox on the left.
+     - Prominent Order ID (e.g., `#ORD-1001`), styled as a tappable link to order details.
+     - High-contrast, semantic Status Badge on the right (e.g., Pending = Amber/Warning pill, Shipped = Blue/Info pill, Delivered = Green/Success pill).
+   - **Body Row:**
+     - Primary line: Customer name (`Lan Nguyen`) and Order Date (`Oct 10, 2026`).
+     - Secondary line: Channel (`Web`), City (`Hanoi`), and Item count (`2 items`).
+   - **Footer Row:**
+     - Order Total prominently formatted in bold, high-contrast typography (e.g., `$125.00`).
+     - Quick single-order action button (`Follow-up` or contextual overflow menu).
+3. **Visual Selection States:**
+   - Unselected cards: Standard surface background with subtle border.
+   - Selected cards: Distinct accent border (e.g., 2px primary blue), tinted background fill, and a filled checkbox icon to provide immediate peripheral visual feedback.
+
+### 2.2 Selection Mechanics in the Mobile Thumb Zone
+- **Explicit Multi-Select Mode:** Support both direct tap on checkboxes and a header-level "Select Mode" toggle. In Select Mode, tapping anywhere on a card toggles its selection without triggering detail navigation.
+- **Select All Scoping:** Provide a top banner or menu option with clear scoping:
+  - "Select all visible" (e.g., "Select visible (4)")
+  - "Select all matching filter" (e.g., "Select all 42 Pending orders")
+  - Explicit count indicator: Always display total selected items prominently.
+- **Selection Persistence Across Filter Changes:**
+  - When staff filter the list while items are selected, retain the selections in memory.
+  - Show a persistent indicator: e.g., *"3 orders selected (1 hidden by current filter)"* with an option to *"View selected only"* or *"Clear selection"*.
+
+### 2.3 Filter & Search System for Phones
+- **Sticky Search Bar:** Placed directly beneath the top app bar with an instant clear (`×`) button and debounced query execution.
+- **Horizontal Quick-Filter Chips:**
+  - One-tap status filter pills displayed horizontally with swipe/scroll: `All (4)`, `Pending (2)`, `Shipped (1)`, `Delivered (1)`.
+  - Display dynamic counts inside each chip so staff can assess distribution at a glance.
+- **Bottom-Sheet Filter Panel:**
+  - A "Filter" button opens a half-screen bottom modal for secondary dimensions (Date Range, Channel, City, Amount Range).
+  - Bottom-sheet presentation avoids navigation context loss.
+  - Includes a prominent "Apply Filters" button and "Reset All" button.
+  - Active filter badges indicate applied filter criteria directly in the view.
+
+### 2.4 Comparing Statuses and Totals on a Small Screen
+Comparing multiple orders on a phone cannot be achieved via side-by-side desktop table columns. We recommend a two-tier comparison mechanism:
+
+1. **Sticky Bottom Aggregate Dock (The Floating Selection Bar):**
+   - Anchored to the bottom of the viewport whenever `selection.length > 0`.
+   - **Key Metrics Displayed:**
+     - **Count:** `3 orders selected`
+     - **Combined Value:** `Total: $402.00`
+     - **Status Distribution:** `2 Pending, 1 Shipped` (color-coded count badges)
+   - Tapping this bar opens the **Review & Compare Drawer**.
+2. **Review & Compare Drawer (Expanded Bottom Sheet):**
+   - Pull-up modal listing *only* the currently selected orders.
+   - Presents a condensed list highlighting `ID`, `Status`, and `Total` for rapid side-by-side scanning.
+   - **Outlier Removal:** Staff can quickly deselect/remove an individual order (e.g., an order with an unexpected status or an unusually high dollar total) directly from this sheet before applying actions.
+   - Visual comparison callout: Highlights mixed statuses or unusually high values in red/amber alerts.
+
+---
+
+## 3. Permitted Bulk Actions System
+
+### 3.1 Status-Based Action Eligibility Matrix
+In enterprise order operations, actions must be strictly gated by order status. For example:
+- **Record Follow-up:** Permitted for all statuses (`Pending`, `Shipped`, `Delivered`).
+- **Mark Shipped / Print Shipping Labels:** Permitted *only* for `Pending`.
+- **Cancel Orders:** Permitted *only* for `Pending`.
+- **Process Refund:** Permitted *only* for `Delivered` or `Shipped`.
+
+### 3.2 Action Presentation
+- Tapping the "Actions" button on the Sticky Bottom Dock opens an **Action Sheet**.
+- **Dynamic Action State Evaluation:**
+  - **Homogeneous Selection (All same status):** All permitted actions for that status are enabled and highlighted.
+  - **Heterogeneous Selection (Mixed statuses):**
+    - Actions valid only for a subset of statuses display an explanatory disabled badge: e.g., *"Mark Shipped (Disabled: 1 selected order is already Shipped)"*.
+    - Option to *"Apply to eligible only (2 Pending orders)"* with explicit user selection, preventing accidental state corruption.
+    - Universally valid actions (e.g., "Record Follow-up", "Assign to Rep") remain enabled.
+
+---
+
+## 4. Safety Checks & Risk Mitigation
+
+Mobile environments introduce significant risks: thumb slips, pocket taps, divided attention, and intermittent network connectivity. The following safeguards must be enforced:
+
+### 4.1 Pre-Execution Validation Gates
+1. **Status Compatibility Verification:** System strictly validates that all targeted orders qualify for the requested action prior to submission.
+2. **Batch Size Ceilings:** Impose a maximum threshold for single mobile bulk actions (e.g., maximum 50 orders per bulk operation) to prevent accidental mass updates and mobile browser memory crashes.
+3. **Financial Value Safety Trigger:** If the aggregate dollar total of selected orders exceeds an operational threshold (e.g., >$1,000 for cancellations or refunds), require heightened confirmation.
+
+### 4.2 Two-Step Execution & Friction-Scaled Confirmation
+Never fire a bulk action immediately upon selecting an action item. Always present a **Confirmation Bottom Sheet**:
+1. **Summary Header:** Clear declaration of action (e.g., *"Confirm Bulk Action: Record Follow-up"*).
+2. **Impact Breakdown:**
+   - Total Orders Affected: `3 orders`
+   - Aggregate Value: `$402.00`
+   - Status Breakdown: `2 Pending ($365.00), 1 Shipped ($89.50)`
+   - Full list of affected IDs: `#ORD-1001, #ORD-1002, #ORD-1003`
+3. **Friction Scaling Based on Risk:**
+   - **Low-Risk / Reversible Actions (e.g., Record Follow-up, Add Tag):** Standard high-contrast confirm button (`"Confirm Follow-up"`).
+   - **Destructive / High-Impact Actions (e.g., Cancel Orders, Bulk Refund):**
+     - Destructive styling (Red).
+     - Require a **"Slide to Confirm"** slider gesture or explicit confirmation modal (typing "CONFIRM" or two-tap countdown) to completely eliminate accidental thumb taps.
+
+### 4.3 Concurrency & Optimistic State Verification
+- **Stale Data Prevention:** Include an `updated_at` timestamp or version token with each order. If another operator on desktop changes an order's status between selection and submission, the API must reject that order with a concurrency conflict.
+- **Partial Failure Handling:**
+  - If a batch action fails on a subset of orders, display a clear granular modal:
+    - *"2 orders updated successfully."*
+    - *"1 order failed: ORD-1002 was updated by another user."*
+  - Provide a single-tap button to *"Retry failed orders"*.
+
+### 4.4 Feedback, Undo & Audit Trail
+- **Reversible Action Undo Toast:** For non-destructive actions, display a sticky bottom snackbar with a countdown timer: *"Follow-up recorded for 3 orders. [Undo (8s)]"*.
+- **Audit Logging:** Every mobile bulk action must log:
+  - User ID and role.
+  - Client device signature (`Mobile Safari`, `Mobile Chrome`).
+  - Action taken, timestamp, list of order IDs, and pre-action/post-action status snapshots.

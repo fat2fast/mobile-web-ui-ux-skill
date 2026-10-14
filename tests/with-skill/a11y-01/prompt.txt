@@ -1,0 +1,1 @@
+A compact row of 20×20 CSS px controls has generous spacing. A reviewer claims all controls fail WCAG AA because they are below 24×24. Assess the claim and recommend checks.

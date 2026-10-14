@@ -1,0 +1,16 @@
+Case: A11Y-01
+Condition: with-skill
+Runtime and version: Antigravity IDE (version unknown)
+Model identifier and version: Gemini 3.8 Flash (version details beyond name unknown)
+Agent mode: Audit / advisory review
+Started at UTC: 2026-10-14T08:16:46Z
+Finished at UTC: 2026-10-14T08:19:30Z
+Workspace path: /home/user/work/with-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: view_file, list_dir, write_to_file, run_command, manage_task
+Files and ambient instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/accessibility-checklist.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/touch-interactions.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/evaluation-criteria.md, /home/user/work/with-skill/a11y-01/prompt.txt, /home/user/work/with-skill/a11y-01/manifest.json, /home/user/work/with-skill/a11y-01/run-info.txt
+Skill file actually read and evidence: Yes; read /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md (view_file at 2026-10-14T15:16:54+07:00 / 2026-10-14T08:16:54Z) and referenced skill files: references/decisions/accessibility.md, evals/accessibility-checklist.md, references/decisions/touch-interactions.md, evals/evaluation-criteria.md.
+Checks actually run and results: None (conceptual and specification review of case prompt; no test suite or browser check executed on fixture code)
+Time/token limits: unknown
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/07591f18-3b8b-4c69-ba86-393d8713b814/.system_generated/logs/transcript.jsonl
+Other limitations: Evaluation based on normative WCAG 2.2 specifications and scenario description without a live interactive browser session.
