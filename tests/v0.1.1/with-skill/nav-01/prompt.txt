@@ -1,0 +1,1 @@
+An existing admin order page has a sidebar, order search, filters, table and details. At 390px users struggle to find an order, read status and act, then return. Keep desktop and all current capabilities. Recommend a mobile UX decision with verification steps.

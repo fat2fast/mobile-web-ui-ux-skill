@@ -1,0 +1,361 @@
+# Mobile Contact Form & Error Recovery Recommendation
+
+## Mobile UX summary
+- Main user task(s): Submit a contact inquiry (name, email, message) quickly and accurately on a mobile device, with effortless recovery if an invalid email address is entered.
+- Observed problem(s): On mobile screens, email inputs are prone to typing errors due to cramped virtual keyboards, accidental autocorrect, and auto-capitalization. When errors occur, standard web forms often wipe user input, present ambiguous error text, fail to position the keyboard/focus at the error, or aggressively block input during mid-typing.
+- Context / assumption(s): Evaluated in mobile viewport context (320px–430px width, touch input, virtual software keyboard). Note: The repository fixture (`order-dashboard`) implements an operations table and does not contain a contact form implementation; recommendations are established design specifications based on mobile web ergonomics and WCAG 2.2 accessibility standards.
+
+## Decisions
+
+### Decision 1: Form Layout, Hierarchy, and Tap Ergonomics
+| Field | Content |
+| --- | --- |
+| Evidence | `INFERRED` from mobile form design standards and small-screen viewport constraints (< 430px). |
+| Mobile task | Enter name, email, and message without accidental taps, zoom disorientation, or obscured inputs. |
+| Candidates | 1. Single-column vertical stack with persistent top-aligned labels, ≥16px input font size, and 48px min touch targets.<br>2. Multi-step wizard separating fields across steps.<br>3. Floating inline labels with placeholders as labels. |
+| Selected | Candidate 1 (Single-column vertical stack with persistent labels): For a short 3-field form, a single-column layout provides a direct vertical scan path. Persistent top-aligned labels remain visible when virtual keyboards appear. Setting `font-size: 16px` (`1rem`) prevents iOS Safari from automatically zooming into the input and displacing layout context. |
+| Rejected | Candidate 2 rejected because breaking a 3-field contact form into multi-step screens introduces unnecessary taps and interaction overhead. Candidate 3 rejected because floating/placeholder labels disappear or shrink during entry, impairing recall and accessibility. |
+| Preserved | Standard tab order, browser autofill capabilities, and desktop responsive reflow. |
+| Verify | `NOT RUN` (No contact form in workspace fixture). Verification requires inspecting rendered layout at 375px viewport with virtual keyboard active. |
+
+### Decision 2: Mobile Virtual Keyboard Configuration for Email Input
+| Field | Content |
+| --- | --- |
+| Evidence | `INFERRED` from mobile browser virtual keyboard behaviors (iOS Safari, Android Chrome). |
+| Mobile task | Type or paste an email address without OS autocorrect tampering or accidental capitalization. |
+| Candidates | 1. Optimized semantic attributes: `type="email"`, `inputmode="email"`, `autocomplete="email"`, `autocapitalize="none"`, `autocorrect="off"`, `spellcheck="false"`.<br>2. Standard text input: `type="text"`. |
+| Selected | Candidate 1: Configures the mobile OS software keyboard specifically for email input. It surfaces the `@` symbol and period on the primary keyboard view, disables automatic sentence capitalization (preventing accidental initial-letter capitalization), disables autocorrect dictionary replacements on non-dictionary names/domains, disables red spellcheck squiggles, and triggers browser/password manager email autofill. |
+| Rejected | Candidate 2 rejected because standard text inputs default to automatic capitalization and auto-correct words, leading to frequent typos in email addresses on mobile devices. |
+| Preserved | Native paste functionality and browser autofill credentials. |
+| Verify | `NOT RUN` (No contact form in workspace fixture). Verification requires testing on physical iOS and Android virtual keyboards. |
+
+### Decision 3: Email Validation Timing and Non-Destructive Recovery
+| Field | Content |
+| --- | --- |
+| Evidence | `INFERRED` from user interaction heuristics and cognitive load during form input. |
+| Mobile task | Understand why an entered email is invalid and correct it with minimal friction. |
+| Candidates | 1. Non-destructive submit-time validation (or blur validation once dirty), preserving entered text, with focus shift and inline error.<br>2. Immediate keystroke validation (`onChange` / `onInput`) displaying error flags while typing.<br>3. Native browser modal alert (`alert()`) or detached toast banner. |
+| Selected | Candidate 1: Validating upon submission (or on blur after touch) prevents premature error states while the user is still actively typing the domain. If an error occurs, the user's entered text is strictly preserved in the field so only the typo needs fixing. Focus is programmatically shifted to the email input (`emailInput.focus()`), bringing the field into view and re-engaging the virtual keyboard. |
+| Rejected | Candidate 2 rejected because validating on every keystroke prematurely flags valid in-progress input (e.g., "user@" or "user@g") as invalid before the user finishes typing, generating anxiety and visual noise. Candidate 3 rejected because modal alerts or top-level toasts disconnect error feedback from the input field and fail to position the keyboard for correction. |
+| Preserved | All entered form field values (Name, Email, Message); user input is never cleared or reset on error. |
+| Verify | `NOT RUN` (No contact form in workspace fixture). Verification requires testing submit with invalid email format (e.g., `test@domain`) and verifying text retention and focus placement. |
+
+### Decision 4: Accessible Error Association & Messaging
+| Field | Content |
+| --- | --- |
+| Evidence | `INFERRED` from WCAG 2.2 Success Criteria 3.3.1 (Error Identification), 3.3.2 (Labels or Instructions), and 4.1.2 (Name, Role, Value). |
+| Mobile task | Screen reader and low-vision users can immediately perceive and understand the email error. |
+| Candidates | 1. Inline error message positioned directly below the email input, associated via `aria-describedby` and `aria-invalid="true"`, with specific actionable guidance.<br>2. Color change alone on the input border (red outline without descriptive text). |
+| Selected | Candidate 1: Uses a dedicated text container (`id="email-error"`) linked to the input via `aria-describedby="email-error"`. When an error is triggered, `aria-invalid="true"` is applied to the input. The message explicitly states what is missing/wrong (e.g., "Please enter a valid email address such as name@example.com"). Contrast meets WCAG 2.2 AA (≥ 4.5:1). |
+| Rejected | Candidate 2 rejected because relying solely on color fails WCAG 1.4.1 (Use of Color) and provides zero context to screen reader users or users with color vision deficiencies. |
+| Preserved | Accessible DOM tree and semantic input-label relationships. |
+| Verify | `NOT RUN` (No contact form in workspace fixture). Verification requires running axe-core / screen reader audit. |
+
+### Decision 5: Email Typo Suggestions and RFC 5321 Domain Rules
+| Field | Content |
+| --- | --- |
+| Evidence | `INFERRED` from email protocol specifications (RFC 5321 §2.4) and mobile tap target guidelines. |
+| Mobile task | Recover quickly from common domain misspellings (e.g., `user@gmai.com` or `user@domain.con`). |
+| Candidates | 1. Optional, non-blocking typo suggestion button (e.g., "Did you mean user@gmail.com? [Use]"), preserving local-part case and allowing original address submission on override.<br>2. Automatic silent autocorrection of domains upon submission.<br>3. Hard blocking submission on unrecognized domains or forcing all lowercase. |
+| Selected | Candidate 1: Suggests common domain typo fixes as an explicit, tap-to-accept action. If the user chooses not to accept the suggestion, the submission is not blocked if the email matches basic structural validation. Case of the local part is strictly preserved (as RFC 5321 §2.4 preserves case in mailbox local parts). |
+| Rejected | Candidate 2 rejected because automatic silent rewriting can alter intentional custom domains or aliases without consent. Candidate 3 rejected because forcing full lowercase or restricting domains blocks legitimate custom email domains and violates RFC specifications. |
+| Preserved | Original casing of mailbox local part; unhindered submission of valid private or uncommon domains. |
+| Verify | `NOT RUN` (No contact form in workspace fixture). Verification requires manual testing of suggestion chips with common typo strings. |
+
+## Recommended Implementation Specification
+
+### 1. HTML Markup Structure
+```html
+<form id="contact-form" novalidate aria-labelledby="contact-heading">
+  <h2 id="contact-heading">Contact Us</h2>
+
+  <!-- Name Field -->
+  <div class="form-group">
+    <label for="contact-name" class="form-label">
+      Full Name <span aria-hidden="true">*</span>
+    </label>
+    <input
+      type="text"
+      id="contact-name"
+      name="name"
+      class="form-input"
+      autocomplete="name"
+      autocapitalize="words"
+      required
+    />
+  </div>
+
+  <!-- Email Field with Error Container -->
+  <div class="form-group">
+    <label for="contact-email" class="form-label">
+      Email Address <span aria-hidden="true">*</span>
+    </label>
+    <input
+      type="email"
+      id="contact-email"
+      name="email"
+      class="form-input"
+      inputmode="email"
+      autocomplete="email"
+      autocapitalize="none"
+      autocorrect="off"
+      spellcheck="false"
+      enterkeyhint="next"
+      aria-describedby="email-hint email-error email-suggestion"
+      aria-invalid="false"
+      required
+    />
+    <p id="email-hint" class="form-hint">We'll use this to reply to your inquiry.</p>
+    
+    <!-- Inline error message (hidden when valid) -->
+    <p id="email-error" class="form-error" role="alert" hidden>
+      Please enter a valid email address (e.g., name@example.com).
+    </p>
+
+    <!-- Optional typo suggestion chip (hidden by default) -->
+    <div id="email-suggestion" class="suggestion-box" hidden>
+      <span>Did you mean </span>
+      <button type="button" class="btn-suggestion" id="btn-use-suggestion">
+        user@gmail.com
+      </button>?
+    </div>
+  </div>
+
+  <!-- Message Field -->
+  <div class="form-group">
+    <label for="contact-message" class="form-label">
+      Message <span aria-hidden="true">*</span>
+    </label>
+    <textarea
+      id="contact-message"
+      name="message"
+      class="form-textarea"
+      rows="5"
+      required
+    ></textarea>
+  </div>
+
+  <!-- In-flow Submit Action -->
+  <div class="form-actions">
+    <button type="submit" class="btn-submit">
+      Send Message
+    </button>
+  </div>
+</form>
+```
+
+### 2. Mobile-First CSS Rules
+```css
+/* Container & Spacing */
+#contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+/* Persistent Labels */
+.form-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Inputs & iOS Auto-zoom Prevention (font-size >= 16px) */
+.form-input,
+.form-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1rem; /* 16px prevents iOS Safari automatic page zoom */
+  line-height: 1.5;
+  padding: 0.75rem 0.875rem;
+  min-height: 48px; /* Touch target accessibility */
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  color: #111827;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Error State */
+.form-input[aria-invalid="true"] {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.form-input[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+.form-error {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #b91c1c; /* Contrast ratio > 4.5:1 against #ffffff and #fef2f2 */
+}
+
+/* Hints & Typo Suggestion Box */
+.form-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.suggestion-box {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  color: #374151;
+  background-color: #f3f4f6;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.btn-suggestion {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 24px;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%; /* Full-width thumb reach on mobile */
+  min-height: 48px; /* Comfortable hit area */
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-submit:active {
+  background-color: #1d4ed8;
+}
+```
+
+### 3. Error Recovery Logic (JavaScript)
+```javascript
+const form = document.getElementById('contact-form');
+const emailInput = document.getElementById('contact-email');
+const emailError = document.getElementById('email-error');
+const suggestionBox = document.getElementById('email-suggestion');
+const suggestionBtn = document.getElementById('btn-use-suggestion');
+
+// Standard non-restrictive email structure check
+function isValidEmailStructure(email) {
+  // Verifies user@domain.tld without blocking plus-addressing, uncommon TLDs, or uppercase local-part
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Common domain typo suggestions (optional helper)
+const commonDomains = {
+  'gmai.com': 'gmail.com',
+  'gamil.com': 'gmail.com',
+  'hotmial.com': 'hotmail.com',
+  'yaho.com': 'yahoo.com',
+  'outloo.com': 'outlook.com'
+};
+
+function checkDomainTypo(email) {
+  const parts = email.split('@');
+  if (parts.length !== 2) return null;
+  const localPart = parts[0];
+  const domainPart = parts[1].toLowerCase();
+  
+  if (commonDomains[domainPart]) {
+    // Preserve local-part case (RFC 5321 §2.4)
+    return `${localPart}@${commonDomains[domainPart]}`;
+  }
+  if (domainPart.endsWith('.con')) {
+    return `${localPart}@${domainPart.slice(0, -4)}.com`;
+  }
+  return null;
+}
+
+form.addEventListener('submit', (e) => {
+  const emailVal = emailInput.value.trim();
+  
+  if (!isValidEmailStructure(emailVal)) {
+    e.preventDefault();
+    
+    // 1. Mark input invalid without destroying entered text
+    emailInput.setAttribute('aria-invalid', 'true');
+    emailError.textContent = 'Please enter a valid email address (e.g., name@example.com).';
+    emailError.hidden = false;
+    
+    // 2. Programmatically shift focus to email field so mobile keyboard opens at the error
+    emailInput.focus();
+    
+    // Check for typo suggestion
+    const suggestion = checkDomainTypo(emailVal);
+    if (suggestion) {
+      suggestionBtn.textContent = suggestion;
+      suggestionBox.hidden = false;
+    } else {
+      suggestionBox.hidden = true;
+    }
+  } else {
+    emailInput.setAttribute('aria-invalid', 'false');
+    emailError.hidden = true;
+    suggestionBox.hidden = true;
+  }
+});
+
+// Clear error state dynamically as the user corrects their input
+emailInput.addEventListener('input', () => {
+  if (emailInput.getAttribute('aria-invalid') === 'true') {
+    if (isValidEmailStructure(emailInput.value.trim())) {
+      emailInput.setAttribute('aria-invalid', 'false');
+      emailError.hidden = true;
+      suggestionBox.hidden = true;
+    }
+  }
+});
+
+// Explicit user tap on typo suggestion
+suggestionBtn.addEventListener('click', () => {
+  emailInput.value = suggestionBtn.textContent;
+  emailInput.setAttribute('aria-invalid', 'false');
+  emailError.hidden = true;
+  suggestionBox.hidden = true;
+  emailInput.focus();
+});
+```
+
+## Verification
+- PASS — Case prompt file matched: `form-01/prompt.txt`.
+- PASS — UTC start/finish and system execution metrics recorded in `form-01/run-info.txt`.
+- NOT RUN — Physical mobile device keyboard rendering (iOS Safari / Android Chrome): Workspace fixture is `order-dashboard` and does not provide a contact form application; test requires mobile browser device testing.
+- NOT RUN — Screen reader announcement of `aria-invalid` and `role="alert"`: Requires live assistive technology testing (VoiceOver on iOS / TalkBack on Android).
+- NOT RUN — Typo suggestion chip interaction in rendered DOM: Requires live contact form runtime.
+
+## Remaining risks / next steps
+- Multi-field errors: If multiple fields (Name, Email, Message) fail simultaneously, ensure focus shifts to the first invalid field, with an accessible summary (`role="status"`) announcing total error count.
+- Virtual keyboard height variations: On small devices (e.g. iPhone SE / 320px width), ensure `scrollIntoView({ behavior: 'smooth', block: 'center' })` provides adequate clearance above the software keyboard.
+- Backend error handling: If the server rejects an email after submission (e.g., MX record check failure), return the user to the form with all submitted values preserved and display the specific server response inline next to the email field.

@@ -47,6 +47,7 @@ Make the **most important user tasks easier to complete on mobile**. Do not equa
 - **Verify:** Evaluate existing changes against user tasks, responsive behavior, a11y, and regressions; **do not modify code** unless explicitly asked.
 
 If the mode is unclear, infer it from the user's request. "Review/audit" means no edits. "Optimize/improve/fix" authorizes scoped edits when tools and repository access permit.
+For a request to recommend or advise, return UX decisions and verification steps. Include implementation code only when the user explicitly asks for code or implementation.
 
 ## Required workflow
 
@@ -84,6 +85,7 @@ Follow [verification criteria](references/verification-criteria.md). When tools 
 ### 6. Report
 
 Use the concise format in [report template](references/report-template.md): issue → UX choice → changed files → validation → remaining risk. For advice or audit, give the decision and checks without sample implementation code unless requested. Don't overwhelm non-designers with unexplained terminology.
+Before sending, check the entire answer against the [decision contract](references/decision-contract.md): no new business restriction without a source rule, no unsolicited implementation code, no unmeasured rendered dimensions or numerical benefit, and no verification claim stronger than its executed evidence.
 
 ## Quick rules of judgment
 

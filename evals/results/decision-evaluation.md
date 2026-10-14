@@ -22,7 +22,7 @@ Record format: [evidence template](../evidence-template.md). Protocol frozen in 
 | Navigation | NAV-03 | Prompt 3 | NOT RUN | [case](../decisions/navigation-cases.md); triage fixture absent |
 | Data display | DATA-01 | Prompt 4 | NOT RUN (protocol); exploratory pair reviewed | Raw outputs and reviewer above |
 | Data display | DATA-02 | Prompt 5 | NOT RUN | [case](../decisions/data-display-cases.md); comparison fixture absent |
-| Data display | DATA-03 | Prompt 6 | NOT RUN | [case](../decisions/data-display-cases.md); bulk scenario fixture absent |
+| Data display | DATA-03 | Prompt 6 | NOT RUN | [case](../decisions/data-display-cases.md); dashboard has bulk follow-up, but no protocol-compliant replay |
 | Forms | FORM-01 | Prompt 7 | NOT RUN | [case](../decisions/forms-cases.md); contact fixture absent |
 | Forms | FORM-02 | Prompt 8 | NOT RUN | [case](../decisions/forms-cases.md); checkout fixture absent |
 | Forms | FORM-03 | Prompt 9 | NOT RUN | [case](../decisions/forms-cases.md); runnable form exists, pair not generated |

@@ -1,0 +1,16 @@
+Case: DATA-03
+Condition: with-skill
+Runtime and version: Antigravity IDE (Linux x86_64; Node.js v26.10.0; git version 2.43.0; IDE version unknown)
+Model identifier and version: Gemini 3.8 Flash (High) (exact version unexposed)
+Agent mode: pair programming / assistant (advisory recommendation mode, no fixture edits)
+Started at UTC: 2026-10-14T12:13:45Z
+Finished at UTC: 2026-10-14T12:17:15Z
+Workspace path: /home/user/work/with-skill
+Tool access: run_command, replace_file_content, multi_replace_file_content, write_to_file, view_file, list_dir, grep_search, read_url_content, generate_image, browser_subagent, manage_task, schedule, ask_question
+Tools actually used: view_file, list_dir, run_command, write_to_file
+Files and instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/data-03/prompt.txt, /home/user/work/with-skill/data-03/run-info.txt, /home/user/work/with-skill/data-03/manifest.json, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/data-display.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/actions.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/mobile-ux-principles.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/verification-criteria.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/project-discovery.md, /home/user/work/with-skill/package.json, /home/user/work/with-skill/src/main.jsx, /home/user/work/with-skill/src/style.css, /home/user/work/with-skill/README.md
+Skill file actually read and evidence: Yes. /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md and associated references (data-display.md, actions.md, decision-contract.md, report-template.md, mobile-ux-principles.md, verification-criteria.md, project-discovery.md) were read using view_file calls recorded in tool execution logs.
+Checks actually run and results: None run (advisory recommendation task; static inspection of code performed, no automated tests or browser checks executed; fixture application kept unchanged per rule 1).
+Time/token limits: unknown
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/205fac01-0812-446d-beda-c416e560f0b8/.system_generated/logs/transcript.jsonl
+Other limitations: Decision-only comparison task; no code changes made to fixture application; advice and safety checks formulated through static code review and skill decision playbooks.

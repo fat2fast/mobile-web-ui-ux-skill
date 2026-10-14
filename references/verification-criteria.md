@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Check whether the proposed or implemented change helps users complete mobile tasks. **Do not give arbitrary numeric design scores.** Compare baseline and modified experience using observable evidence; a proposed UI remains `NOT RUN` until implemented and checked.
+Check whether the proposed or implemented change helps users complete mobile tasks. **Do not give arbitrary numeric design scores or unmeasured benefit percentages.** A quantitative improvement needs a named baseline, after measurement and method. Otherwise describe the expected benefit as a hypothesis. Compare baseline and modified experience using observable evidence; a proposed UI remains `NOT RUN` until implemented and checked.
 
 ## Scenario evaluation
 
@@ -20,10 +20,12 @@ Check whether the proposed or implemented change helps users complete mobile tas
 
 ## Evidence labels
 
-- **PASS:** Tested or directly observed and meets criterion.
-- **FAIL:** Tested and fails criterion; include reproduction steps.
+- **PASS:** An identified check ran and met its assertion; name the method and artifact. State whether it checked source, metadata or rendered behavior.
+- **FAIL:** An identified check ran and failed its assertion; include reproduction steps.
 - **NOT RUN:** A proposed interaction or assertion was not executed; provide the missing environment and replay steps.
-- **INFERRED:** A bounded conclusion from inspected source or a design hypothesis; name its basis and limits. Do not use it as the result of an unrun test.
+- **INFERRED:** A bounded conclusion from inspected source or a design hypothesis; name its basis and limits. Inspecting source does not make an unrun interaction check `PASS`.
+
+Keep source and metadata checks separate from UX results. A successful prompt-hash check, for example, establishes provenance, not form behavior.
 
 ## Baseline / after format
 

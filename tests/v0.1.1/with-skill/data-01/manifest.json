@@ -1,0 +1,38 @@
+{
+  "case": "DATA-01",
+  "condition": "with-skill",
+  "fixture": "order-dashboard",
+  "fixture_files_sha256": {
+    "README.md": "9cada27591ca8b505a719ac5ae279343325e19f9bf87683cbb550e8155c293c0",
+    "index.html": "a31813111bb9b0ac3e94cc11c61cd8b4aefddcdeec4b71a2ecb201ebbd91863b",
+    "package-lock.json": "2604107e7e347ef1f53b1c9f2c934435301f4fab3ffb541f57749268e52d4c55",
+    "package.json": "8660801bca28c8c4acd9c9b3eda7664a82510ac83861141bb3893bbb661abbb9",
+    "src/main.jsx": "5c92bf9befa72c07b686741328428c17af9ea404be8f2b32a959951d0877c10c",
+    "src/style.css": "7edba43aa754853e9ee086ac602cbf8904c5bcde1733acbc152da742f2a3aea1",
+    "vite.config.js": "1e52f99faca2043de3db29aac45a5945fdd5609a39a04385102fe6ed212ac25f"
+  },
+  "prompt_number": 4,
+  "prompt_sha256": "dcf728ba18f7140e82a008a2b9c13ccf9f04725679ab3058844365c71b5fb800",
+  "prepared_at_utc": "2026-10-14T11:58:05.154821+00:00",
+  "recording_instructions_sha256": "225e187b91b1edb050903dec9105ee3a2f256b0d0c4212c0d58515ff96bfd606",
+  "source_commit": "15470f315f98226e8d17399a206e60431988e27e",
+  "skill_files_sha256": {
+    "SKILL.md": "90fa522224ef0181317eafb4f97b7445459664259821af2d61cf78cc75044fe4",
+    "references/accessibility-checklist.md": "c2ff2961521d25fc04883567c5f4f94099161db238b58cb47286880f84e6fc49",
+    "references/agent-workflow.md": "02fe22bb5b0c0045ff271d663a804814f9ef6a6c15506aa33699ac9f4ad98254",
+    "references/decision-contract.md": "482ce80b2b22ee8362e83f504dfd02a0a331a129fc9b99b2ad0487509569b47e",
+    "references/decisions/accessibility.md": "b34b22c29aac7604de4ed4b29eab2195e2986f2722a66074c91a9adeccf7f346",
+    "references/decisions/actions.md": "e6b068c5b06fc5ddfb0cc00087f2bf78a0aa5425d6428d74bd8e345df102273f",
+    "references/decisions/content-hierarchy.md": "30d13f303c8c15859d5bc5b62fc1a16d6d4d41fa82d346bbdf8b74a2a0ad1693",
+    "references/decisions/data-display.md": "68221dba98e709f9bc767e08fd41bb5eb1d7191f0865af2ae3949375ed63ec1d",
+    "references/decisions/forms.md": "8986b524c128ed50351b4d250838a84ba764552dc82e0be66fea22cee0db5984",
+    "references/decisions/navigation.md": "dcb44dca2284c160b50ae40e8533aa0ca6fe1e9cab988132800f87626c451482",
+    "references/decisions/overlays.md": "d62e642e2566a1c5d03fcc82eae4310f82fe7866d0df435c6503a1eeaea2ad10",
+    "references/decisions/touch-interactions.md": "279b98f31db75c737d56240958b4e79883cd0cf4c80b54416f92dffb6848b40d",
+    "references/evidence-template.md": "7ec1bfca33c0f9dd3ec4f9ef4e872a0e79b508b32d1ca912f368e0f23c5eaaef",
+    "references/mobile-ux-principles.md": "6a27830f001f0e6b284ef185fdd86d8460a2339ea7d732058727b748cf259f5a",
+    "references/project-discovery.md": "f6e978f5d64c14ba67e783265584d9c0dfb834817aadd9425433d9e56137e5e3",
+    "references/report-template.md": "606546152b7ab48747dbbaf763c6f5076d4bd6bd8082a6a5abb66cdf8680ddd2",
+    "references/verification-criteria.md": "d306a0e395ed1705cf5cba573c57d72e01c291afd8bb6cac37749e191f124ee2"
+  }
+}

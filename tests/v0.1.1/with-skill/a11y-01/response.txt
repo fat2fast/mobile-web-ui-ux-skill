@@ -1,0 +1,107 @@
+# Assessment of WCAG AA Target Size Claim and Recommended Checks
+
+## Mobile UX summary
+- Main user task(s): Operating interactive controls within a compact row on web and mobile viewports (e.g., toolbar actions, pagination, table item actions).
+- Observed problem(s): A reviewer asserts that a compact row of 20×20 CSS px controls with generous spacing automatically fails WCAG AA because the target bounding boxes are below 24×24 CSS px.
+- Context / assumption(s): The evaluation concerns WCAG conformance (specifically WCAG 2.1 vs. WCAG 2.2 Level AA) and mobile touch ergonomics. The assessment is conducted as an audit-only review; no fixture code was altered, and all rendered tests are marked with their actual execution status.
+
+---
+
+## 1. Assessment of the Reviewer's Claim
+
+The reviewer's claim that **"all controls fail WCAG AA because they are below 24×24" is incorrect and premature**.
+
+### Why the Claim is Flawed
+
+1. **The WCAG 2.2 Spacing Exception (SC 2.5.8 Target Size (Minimum) - Level AA)**
+   - In WCAG 2.2, Success Criterion 2.5.8 (Level AA) sets a minimum target size of 24×24 CSS px, but explicitly provides a **Spacing Exception**:
+     > *Spacing: Undersized targets (those less than 24 by 24 CSS pixels) are positioned so that if a 24 CSS pixel diameter circle is centered on the bounding box of each, the circles do not intersect another target or the circle for another undersized target.*
+   - For a 20×20 CSS px square control:
+     - Centering a 24 CSS px circle on a 20×20 CSS px box means the circle extends outward by **2 CSS px** on each side ((24 - 20) / 2 = 2 px).
+     - Between two adjacent 20×20 CSS px controls, their 24 CSS px diameter circles will not intersect as long as the edge-to-edge gap is at least **4 CSS px** (which yields a center-to-center distance of ≥ 24 CSS px).
+     - Therefore, if the row of controls has "generous spacing" (e.g., ≥ 4 CSS px horizontal gap between adjacent targets and ≥ 2 CSS px clearance to any neighboring non-target or off-row target), the controls **satisfy the WCAG 2.2 SC 2.5.8 spacing exception**.
+
+2. **Subjective Descriptions vs. Geometric Verification**
+   - The phrase "generous spacing" is subjective. While a gap ≥ 4 CSS px is easily achieved in practice, compliance cannot be definitively asserted from phrasing alone. It requires geometric measurement of the rendered hit areas, margins/gaps, and neighboring elements (including above/below the row).
+
+3. **Other SC 2.5.8 Exceptions May Apply**
+   - **Inline**: The control is within a sentence or constrained by line height.
+   - **User Agent**: The control size is determined by the browser without author styling.
+   - **Essential**: A specific presentation is legally or functionally essential.
+   - **Equivalent**: An alternate control meeting 24×24 CSS px is available on the same page for the same function.
+
+4. **WCAG Version and Level Conflation**
+   - **WCAG 2.0 / 2.1 AA**: Does **not** include SC 2.5.8. If the project's compliance baseline is WCAG 2.1 AA, there is no 24×24 CSS px target size rule.
+   - **WCAG 2.1 / 2.2 AAA**: SC 2.5.5 (Target Size - Enhanced) requires 44×44 CSS px, but this is a Level **AAA** criterion, not AA. Conflating Level AA with Level AAA or platform recommendations is an audit error.
+
+5. **Accessibility Conformance vs. Touch Usability**
+   - While 20×20 CSS px controls with ≥ 4 CSS px spacing can pass WCAG 2.2 AA SC 2.5.8, they may still present usability challenges on mobile touchscreens where the average human finger contact patch is roughly 7–10 mm (38–48 CSS px). Best practice recommendations (e.g., Apple HIG 44×44 pt, Google Material 48×48 dp) are design standards, not mandatory WCAG AA fail conditions.
+
+---
+
+## 2. Mobile UX Decision Record
+
+| Field | Detail |
+| --- | --- |
+| Evidence | `INFERRED` (Claim contradicts WCAG 2.2 SC 2.5.8 normative spacing exception; exact rendered dimensions `NOT RUN`). |
+| Mobile task | Tapping and navigating compact controls in a row on mobile viewports without mis-taps or visual crowding. |
+| Candidates | 1. Forcibly inflate visual control footprint to 24×24 or 44×44 CSS px, risking layout breaking in dense mobile tables or toolbars.<br>2. **(Selected)** Validate WCAG 2.2 SC 2.5.8 spacing exception geometrically; if compliant, expand invisible hit area (via transparent padding or pseudo-elements) to ≥ 44×44 CSS px for touch ergonomics without altering the visual compact design.<br>3. Reject reviewer feedback entirely and leave 20×20 px touch targets unpadded solely because they meet the technical minimum exception. |
+| Selected | **Candidate 2**: Distinguish regulatory WCAG AA conformance from mobile touch ergonomics. Confirm spacing exception geometrically, then expand interactive hit areas for mobile users. |
+| Rejected | **Candidate 1** (disrupts intentional visual hierarchy and density unnecessarily) and **Candidate 3** (leaves mobile users vulnerable to mis-taps despite technical compliance). |
+| Preserved | Visual compact layout, row spacing, keyboard operability (`<button>` semantics, focus ring visibility), and desktop density. |
+| Verify | Measure computed bounding boxes and gaps; test keyboard focus visibility; run touch accuracy checks on mobile viewport (360px–390px). |
+
+---
+
+## 3. Recommended Checks
+
+### A. Normative WCAG 2.2 SC 2.5.8 Target Size Checks
+1. **Rendered Target Geometry Measurement**
+   - Measure computed bounding box of each control: `el.getBoundingClientRect()`.
+   - Verify if padding or pseudo-elements already expand the interactive hit area to ≥ 24×24 CSS px.
+   - *Status*: `NOT RUN` (Requires rendered inspection in browser).
+2. **Spacing Exception Calculation**
+   - For adjacent 20×20 CSS px controls, measure the edge-to-edge gap:
+     - Pass condition: Edge-to-edge gap ≥ 4 CSS px (center-to-center distance ≥ 24 CSS px) between adjacent undersized controls.
+     - Clearance to other adjacent interactive or non-interactive elements: ≥ 2 CSS px in all directions (top, bottom, left, right).
+   - *Status*: `NOT RUN`.
+3. **Alternative Exception Evaluation**
+   - Check if an equivalent 24×24 CSS px control exists on the page, or if inline/essential/user-agent exceptions apply.
+   - *Status*: `NOT RUN`.
+4. **Audit Scope & Conformance Baseline Confirmation**
+   - Verify whether the target compliance statement specifies WCAG 2.1 AA or WCAG 2.2 AA.
+   - *Status*: `NOT RUN`.
+
+### B. Mobile Touch Ergonomics Checks (Beyond WCAG AA Minimum)
+1. **Touch Target Expansion Inspection**
+   - Check whether the control hit target can be expanded to 44×44 CSS px using transparent padding or `::before` pseudo-elements (e.g., `position: absolute; inset: -12px;`) to meet mobile ergonomics without changing visual layout.
+   - *Status*: `NOT RUN`.
+2. **Narrow Viewport Reflow and Spacing Stability**
+   - Test row behavior on 320px–390px mobile viewports to ensure spacing does not collapse, wrap awkwardly, or cause horizontal page clipping.
+   - *Status*: `NOT RUN`.
+
+### C. Related Accessibility Checks (WCAG 2.2 A / AA)
+1. **Keyboard Operability & Visible Focus (SC 2.1.1 A, SC 2.4.7 AA, SC 2.4.11 AA)**
+   - Verify every control is reachable and activatable via keyboard.
+   - Verify that focus indicators are clearly visible and not obscured by adjoining controls or sticky containers.
+   - *Status*: `NOT RUN`.
+2. **Non-Text Contrast (SC 1.4.11 AA)**
+   - Check that the icons, glyphs, or borders of the 20×20 controls maintain at least a 3:1 contrast ratio against the adjacent background.
+   - *Status*: `NOT RUN`.
+3. **Accessible Name and Role (SC 4.1.2 A, SC 1.3.1 A)**
+   - For compact/icon-only controls, verify that programmatic names are provided (e.g., `aria-label`, visible text, or tooltip announcements) and proper semantic roles (`<button>`, `<a>`) are used.
+   - *Status*: `NOT RUN`.
+
+---
+
+## 4. Verification Summary
+- **PASS**: None (Audit and advisory response; no live rendered checks executed on a fixture implementation).
+- **FAIL**: Reviewer's categorical assertion that all 20×20 controls fail WCAG AA (`INFERRED` based on normative WCAG 2.2 SC 2.5.8 exception criteria).
+- **NOT RUN**: Geometric hit box measurements, spacing exception verification, keyboard focus testing, and touch accuracy testing on rendered controls.
+
+---
+
+## 5. Remaining Risks / Next Steps
+- Obtain the rendered DOM and CSS to compute exact bounding client rects and offsets.
+- Clarify whether the project's target benchmark is strictly WCAG 2.2 AA, or if AAA / platform mobile UX guidelines (44–48 px) are expected.
+- Implement hit area padding / pseudo-element expansions where feasible to ensure comfortable touch operation on mobile devices.

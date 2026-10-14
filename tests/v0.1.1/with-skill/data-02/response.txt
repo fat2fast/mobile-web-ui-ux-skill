@@ -1,0 +1,140 @@
+# Mobile Data Presentation Recommendation: Product Price & Feature Comparison Page
+
+## Mobile UX summary
+- **Main user task(s)**: Compare multiple products side-by-side across aligned dimensions (pricing tiers, feature availability, operational limits, and warranty coverage), evaluate trade-offs without losing context, and select/purchase a preferred product via a clear call-to-action (CTA).
+- **Observed problem(s)**: Multi-product comparison matrices are inherently two-dimensional data structures. On narrow mobile viewports (360px–390px), unadapted tables either overflow off-screen (causing users to lose row/feature context when panning horizontally) or get converted into disconnected vertical stacked cards. Converting to stacked cards forces users to scroll several screen heights between products to compare a single attribute (such as warranty length or storage limits), destroying mental comparison continuity and forcing high cognitive recall.
+- **Context / assumption(s)**: Consumer or B2B pricing and specification comparison page accessed via mobile web. Multiple products (typically 3 to 5 plans or hardware variants). Information density spans four key categories: pricing, core features, limits, and warranty terms. The workspace fixture (`order-dashboard`) does not model this scenario; recommendations are based on mobile UX principles, the mobile-web-ui-ux-skill playbooks (`references/decisions/data-display.md`), and responsive design patterns.
+
+---
+
+## Decision Record: Comparative Matrix Presentation
+
+| Field | Content |
+| --- | --- |
+| **Evidence** | `INFERRED` from mobile web UX constraints and `references/decisions/data-display.md` ("Aligned cross-record comparison: Horizontal table with visible row identity and explicit scroll affordance"). Workspace fixture does not implement this scenario. Standard mobile viewport (360px–390px) can comfortably display at most 1 feature label column (~120px–140px) plus 1.5 to 2 product columns (~110px–125px each) at a time. |
+| **Mobile task** | Enable rapid, low-friction comparison of 3+ products across aligned rows (price, features, limits, warranty) on phone screens without truncating information or losing orientation. |
+| **Candidates** | 1. **Horizontal Comparative Matrix Table with Pinned Feature Row Headers (Sticky Left), Pinned Product Column Headers (Sticky Top), and Explicit Scroll Affordance**.<br>2. **Vertical Stacked Product Cards** (each product listed sequentially with all its attributes).<br>3. **Tabbed Single-Product View** (tabs to switch between full specification lists).<br>4. **Head-to-Head 2-Product Comparison Dropdown / Selector**. |
+| **Selected** | **Candidate 1: Horizontal Matrix Table with Pinned Row Headers, Sticky Product Headers, and Section Grouping**.<br>*Reason*: Preserves the critical 2D cross-record comparison model. By freezing the feature/attribute column on the left and the product name/price/CTA headers at the top, customers can scroll horizontally to inspect other products while keeping exact row identity (e.g., "Warranty", "Storage Limit") and column identity (e.g., "Pro Plan") permanently visible. Zero information loss. |
+| **Rejected** | **Candidate 2 (Vertical Stacked Cards)**: High cognitive strain. Comparing "Warranty" between Product A and Product D requires scrolling up and down hundreds of vertical pixels repeatedly. Users cannot evaluate differences at a glance.<br>**Candidate 3 (Tabbed View)**: Flips the comparison model into a memory retention test. Tapping tabs back and forth prevents direct juxtaposition.<br>**Candidate 4 (Strict 2-Product Picker)**: Useful for comparing exact pairs, but hides remaining products and adds heavy interaction overhead if customers want to survey 3–4 available tiers. |
+| **Preserved** | - **Complete Domain Data**: All aligned features, full pricing details, numeric limits, and warranty conditions remain present and readable (no silent truncation or omission).<br>- **Product Actions**: Primary CTA per product (e.g. "Get Started", "Buy Now") remains permanently accessible via sticky column headers.<br>- **Units & Semantics**: Currency symbols, unit labels, checkmarks/crosses with accessible text labels, and boolean states are explicitly preserved.<br>- **Responsive Parity**: On desktop viewports (≥1024px), all product columns display simultaneously side-by-side in a wide comparative grid. |
+| **Verify** | Comprehensive verification steps detailed below. Evidence status: `NOT RUN` (design recommendation mode; fixture files unmodified). |
+
+---
+
+## Detailed Recommended Mobile Presentation
+
+### 1. Matrix Architecture & Sticky Coordinate System
+
+On mobile viewports (<768px), the comparison table uses a dual-axis sticky coordinate system wrapped in a smooth touch-scrolling container:
+
+```text
++-------------------+--------------------+--------------------+--- - -
+| Feature / Plan    | Basic              | Pro [Popular]      | Enterprise
+| (Sticky Top-Left) | $19/mo             | $49/mo             | $99/mo
+|                   | [Select]           | [Select]           | [Contact]
++-------------------+--------------------+--------------------+--- - -
+| PRICING & TERMS   |                    |                    |
++-------------------+--------------------+--------------------+--- - -
+| Billing           | Monthly / Annual   | Monthly / Annual   | Annual only
+| Warranty          | 1 Year Limited     | 2 Years Extended   | 3 Years 24/7
++-------------------+--------------------+--------------------+--- - -
+| LIMITS            |                    |                    |
++-------------------+--------------------+--------------------+--- - -
+| Team Members      | Up to 3            | Up to 15           | Unlimited
+| Storage Limit     | 50 GB SSD          | 500 GB NVMe        | 5 TB NVMe
++-------------------+--------------------+--------------------+--- - -
+| CORE FEATURES     |                    |                    |
++-------------------+--------------------+--------------------+--- - -
+| Real-time Sync    | Yes (Checkmark)    | Yes (Checkmark)    | Yes (Checkmark)
+| Custom Domain     | No (Dash)          | Yes (Checkmark)    | Yes (Checkmark)
++-------------------+--------------------+--------------------+--- - -
+<--- (Sticky Col) -> <---------- (Horizontally Scrollable) ----------->
+```
+
+#### Dual-Axis Coordinate Implementation
+1. **Pinned Left Feature Column (`position: sticky; left: 0`)**:
+   - Fixed width of ~120px–135px with an opaque background (matching theme surface) and a subtle right border/elevation shadow.
+   - Contains feature labels, attribute titles, and category headers. Row height is strictly synchronized with data cells.
+   - Never scrolls horizontally off-screen; users always know which feature, limit, or warranty term they are examining.
+2. **Pinned Top Product Header Row (`position: sticky; top: 0`)**:
+   - Contains Product Name, Tier Badge (e.g., "Most Popular"), Price ($/period), and Primary Action Button (minimum 44px touch height).
+   - Sticky to the top of the viewport when scrolling vertically down through long feature lists, ensuring the customer never loses sight of which column is which product, and can trigger the CTA at any point without scrolling back to the top.
+3. **Top-Left Intersection Anchor (`position: sticky; top: 0; left: 0; z-index: 40`)**:
+   - Remains anchored at both top and left coordinates.
+   - Houses an optional quick control: e.g., a "Show differences only" toggle or column count indicator (`1 of 4`).
+4. **Data Cells (Scrollable Columns)**:
+   - Each product column is allocated ~120px–140px width. On a standard 375px/390px mobile screen, this allows the fixed feature column plus ~1.8 to 2 product columns to be visible simultaneously.
+   - The partial cut-off of the second/third column provides a natural, intuitive visual cue that more content exists to the right.
+
+---
+
+### 2. Information Density & Scannability Enhancements
+
+To prevent mobile users from experiencing cognitive overload or scrolling fatigue down dozens of rows:
+
+1. **Collapsible Feature Category Sections**:
+   - Group aligned rows into logical accordion categories:
+     - **Pricing & Billing** (Price, billing cycle, setup fees, money-back guarantee)
+     - **Warranty & Support** (Coverage duration, replacement terms, support SLA)
+     - **Usage Limits** (User seats, storage, bandwidth, API rate limits)
+     - **Core & Advanced Features** (Functional capabilities, integrations)
+   - Categories start expanded by default (or the top 2 expanded), with tap headers allowing users to collapse sections they are not interested in.
+2. **"Highlight Differences" / "Show Differences Only" Toggle**:
+   - A sticky or top-level pill toggle: When switched on, filters out rows where all products have identical values (e.g. if all products have 24/7 email support and SSL).
+   - Dramatically reduces vertical scrolling distance by 40%–60%, focusing the buyer directly on distinguishing value drivers.
+3. **Explicit Accessible State Indicators**:
+   - For boolean features, avoid unadorned green checkmarks or red X's. Use high-contrast iconography paired with accessible text:
+     - Supported: Green check icon with visually hidden text (`<span className="sr-only">Included</span>`).
+     - Not supported: Subtle dash `—` or cross icon with visually hidden text (`<span className="sr-only">Not included</span>`).
+     - Conditional/Limited: Explicit note (e.g., `Add-on (+$5)` or `Limited to 10/day`).
+
+---
+
+### 3. Visual Scroll Affordance & Reachability
+
+Mobile browsers frequently hide scrollbars, which can cause users to miss horizontal swipeable content. To ensure discoverability:
+
+1. **Edge Elevation / Gradient Shadow**:
+   - A subtle CSS gradient shadow on the right edge of the sticky feature column, and another on the right edge of the viewport container, visibly communicating that columns extend underneath and beyond.
+2. **Pagination Dots / Column Indicators**:
+   - A compact indicator bar at the bottom or top showing active visible columns (e.g., `[● ● ○ ○] Product 1 & 2 of 4`).
+3. **CSS Scroll Snap (`scroll-snap-type: x mandatory`)**:
+   - Product columns snap into clean alignment when swiped, preventing awkward half-rendered columns at rest.
+4. **Touch & Gesture Safety**:
+   - Horizontal scrolling must be constrained strictly within the table wrapper (`touch-action: pan-x pan-y; overflow-x: auto`), preventing accidental horizontal viewport bouncing.
+
+---
+
+### 4. Alternative "Compare 2" Mode for Small Screens (320px–360px)
+
+For ultra-compact mobile viewports (e.g., 320px–360px width) or catalogs with 5+ products:
+- Allow a **"Focus Pair" quick switcher**: Two dropdown selectors at the top (`Compare [Product A ▼] with [Product B ▼]`).
+- Renders a clean 3-column table: Column 1 = Features (40% width), Column 2 = Product A (30%), Column 3 = Product B (30%).
+- Users can switch any product into either slot with zero scrolling, offering the ultimate focused head-to-head decision experience.
+
+---
+
+## Verification Plan
+
+### Test Matrix
+- **Viewports**:
+  - Small Mobile: 320×568 (iPhone 5/SE1), 360×640 (Android baseline).
+  - Standard Mobile: 375×667 (iPhone SE2/3), 390×844 (iPhone 12/13/14), 412×915 (Samsung Galaxy/Pixel).
+  - Tablet / Desktop: 768×1024, 1280×800.
+- **Input & Assistive Modes**: Touch swipe/flick, keyboard Tab/Arrow navigation, TalkBack / VoiceOver screen readers, 200% browser text zoom.
+
+### Observable Check Results
+- `NOT RUN` — **Sticky Coordinate Integrity**: Verify left feature column remains anchored at `left: 0` while scrolling horizontally, and product header row remains anchored at `top: 0` while scrolling vertically without z-index flickering or visual bleed.
+- `NOT RUN` — **Zero Information Loss**: Verify all attributes (pricing, features, limits, warranty) are present and readable across all products without clipping, ellipsis truncation of critical terms, or missing rows.
+- `NOT RUN` — **Horizontal Scroll & Snap Discovery**: Verify touch swipe horizontally advances columns smoothly; verify right-edge gradient shadow indicates hidden columns on load.
+- `NOT RUN` — **Call-to-Action Operability**: Verify each product CTA button in the sticky top header is minimum 44×44px touch target, clearly labeled, and clickable at any vertical scroll depth.
+- `NOT RUN` — **Toggle Differences Interaction**: Verify toggling "Show differences only" hides identical rows and recalculates table height without breaking sticky alignment.
+- `NOT RUN` — **Screen Reader Semantics**: Verify table markup uses semantic `<table>`, `<thead>`, `<tbody>`, `<th scope="col">` for product headers, and `<th scope="row">` for feature labels so screen readers announce coordinates correctly.
+- `NOT RUN` — **Desktop Viewport Transition**: Verify expanding viewport to ≥1024px transitions the table to show all products simultaneously without horizontal scrollbars.
+
+---
+
+## Remaining Risks & Next Steps
+1. **Uneven Row Heights**: If feature descriptions vary in text length, sticky row headers and data cells must dynamically match heights. Using CSS Subgrid (`grid-template-rows: subgrid`) or standard HTML `<table>` elements with `display: table` automatically enforces identical cell heights across columns.
+2. **Cell Overflow on Long Disclaimers**: Warranty and legal terms occasionally have detailed disclaimers. Place lengthy legal terms inside accessible popovers/tooltips or modal sheets (`(i)` icon with `aria-expanded`) rather than inflating row height for all products.
+3. **Product Catalog Scalability**: If the catalog exceeds 5 products, implement the "Compare 2" selector mode or a pre-selection screen ("Select up to 3 products to compare") to avoid excessive horizontal swipe depth.
