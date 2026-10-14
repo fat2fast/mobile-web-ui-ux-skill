@@ -18,7 +18,9 @@ function App() {
   const [message, setMessage] = useState('');
   useEffect(() => { const onPop = () => setPath(location.pathname); addEventListener('popstate', onPop); return () => removeEventListener('popstate', onPop); }, []);
   const go = (next) => { history.pushState({ fromApp: true }, '', next); setPath(next); };
-  const detailId = decodeURIComponent(path.match(/^\/orders\/([^/]+)$/)?.[1] || '');
+  const detailSegment = path.match(/^\/orders\/([^/]+)$/)?.[1] || '';
+  let detailId = detailSegment;
+  try { detailId = decodeURIComponent(detailSegment); } catch { /* Keep malformed URLs on the not-found path. */ }
   const detail = orders.find((order) => order.id === detailId);
   const visible = orders.filter((order) => `${order.id} ${order.customer}`.toLowerCase().includes(query.toLowerCase()) && (filter === 'All' || order.status === filter)).sort((a, b) => String(a[sort]).localeCompare(String(b[sort])));
   const act = (order) => { setMessage(`Follow-up recorded for ${order.id}`); };

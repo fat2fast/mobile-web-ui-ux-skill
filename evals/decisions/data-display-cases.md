@@ -29,5 +29,5 @@ Records follow the [decision contract](../../references/decision-contract.md). C
 - **Candidates:** compact table with selection controls and persistent count; selectable record list with the same count, sort/filter and review step.
 - **Selected:** compact table with selection controls because this scenario requires scanning several status/total columns while selecting many records.
 - **Rejected:** fully selectable list because repeated labeled values increase scan cost for cross-row comparison here; it remains viable if observation shows individual-record scanning dominates. A list without selection is invalid because it loses the bulk task, not merely a weaker pattern choice.
-- **Preserved:** record ID, status and mandatory fields, sort/filter/export, selection across pages, permissions, bulk/row actions, semantics and desktop.
+- **Preserved:** record ID, status and mandatory fields, sort/filter/export, selection across pages, permissions, bulk/row actions, semantics and desktop. In the dashboard fixture, `Follow-up` has no status eligibility restriction: selecting `Delivered` must still work. Any extra restriction or action needs a source-backed product rule.
 - **Verify:** `NOT RUN`; select, change filter/page, review count, cancel and act using keyboard/touch. Assert no accidental action.

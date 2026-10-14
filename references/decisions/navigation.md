@@ -11,5 +11,3 @@ Choose by route structure and switching frequency; retain existing URLs and perm
 | Access-controlled routes | Filter entries using existing authorization result | UI-only hiding is mistaken for access control |
 
 For each choice, record [evidence, task, candidates, selected, rejected, preserved, verify](../decision-contract.md). Keep direct URLs and browser Back, active/current state, focus on route changes, and all permitted destinations. Test direct deep link, Back after details, keyboard traversal and restricted roles when the actual auth system is available. Do not invent auth for a fixture.
-
-Examples and counterexample: [navigation cases](../../evals/decisions/navigation-cases.md).

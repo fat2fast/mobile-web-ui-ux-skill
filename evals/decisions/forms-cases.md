@@ -9,8 +9,8 @@ Records follow the [decision contract](../../references/decision-contract.md). P
 - **Candidates:** one in-flow form; multi-step wizard; sticky submit.
 - **Selected:** one column with visible labels, email type/autocomplete, inline associated error and in-flow submit.
 - **Rejected:** multi-step wizard adds navigation and state risk to three fields; sticky CTA offers little benefit.
-- **Preserved:** values after failure, validation, paste, zoom, focus, server response and desktop path.
-- **Verify:** `NOT RUN`; submit bad/valid email, inspect response, focus/error association and retained text at 390px and with phone keyboard.
+- **Preserved:** values after failure, existing validation, paste, zoom, focus, server response and desktop path. Domain typo suggestions, if offered, are optional; an address accepted by existing validation must remain submittable without accepting a suggestion or changing the local part's case.
+- **Verify:** `NOT RUN`; submit bad/valid email, decline an optional domain suggestion for a syntactically valid address, inspect response, focus/error association and retained text at 390px and with phone keyboard.
 
 ## FORM-02 — Long checkout
 

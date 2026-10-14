@@ -9,4 +9,4 @@ Classify each action by frequency, consequence and recovery. Use [decision recor
 | Infrequent secondary actions | Labeled contextual menu with visible trigger | Critical action is hidden behind guessing or hover |
 | Destructive or irreversible action | Distinct label plus confirmation/review; undo when feasible | Confirmation alone lacks context, or undo cannot restore data |
 
-Keep a visible route to the primary action and a safe route to cancel. Disable repeat submission during loading but announce progress and completion; do not silently change permissions or business effects. Do not make swipe/long press the only way to act. [Cases](../../evals/decisions/actions-cases.md).
+Keep a visible route to the primary action and a safe route to cancel. Confirm the existing action handler and eligibility rules before proposing a review step or guardrail; do not exclude records or add actions based only on their status label. Disable repeat submission during loading when the underlying action supports that state, and announce progress and completion. Do not silently change permissions or business effects. Do not make swipe/long press the only way to act.

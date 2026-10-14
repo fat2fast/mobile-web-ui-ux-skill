@@ -55,6 +55,19 @@ This project follows the [Agent Skills specification](https://agentskills.io/spe
 
 Skills directories differ between agents. Refer to your agent's documentation for its supported installation path. If automatic skill discovery is unavailable, ask the agent to read this repository's `SKILL.md`.
 
+### Create comparison projects
+
+From WSL, create two independent copies of the same runnable fixture in an existing destination directory:
+
+```bash
+make no-skill DEST=//work/mobile-ux-test
+make with-skill DEST=/work/mobile-ux-test
+```
+
+Both commands use `order-dashboard` by default. Add `FIXTURE=mobile-form` to use the form fixture. The second project includes the skill at `.agents/skills/mobile-web-ui-ux-skill/`, with its runtime references. Reviewer cases and rubrics stay in this repository. The first has no project skill. Generated projects omit `node_modules` and `dist`; run `npm ci` inside each project before starting it. Existing destination projects are never overwritten. Use a new `DEST` for another trial, and keep reviewer cases and results outside both generated projects.
+
+Each copy has identical `AGENTS.md` recording instructions and all 12 case folders from `evals/comparison-prompts.md`: `nav-01`–`nav-03`, `data-01`–`data-03`, `form-01`–`form-03`, and `a11y-01`–`a11y-03`. Each folder has its own `prompt.txt`, `run-info.txt`, and `manifest.json`. In a fresh Antigravity conversation for each case and project, send the exact text from that case's `prompt.txt` to both conditions. The agent is asked to write `response.txt` and fill `run-info.txt`. A fixture may not implement every scenario; record unrun checks honestly. Copy the matching case folders back under separate `no-skill/` and `with-skill/` parents for independent review. Check that both output files exist and no `PENDING` fields remain: agent-written metadata is a report, not an independent transcript, and unknown runtime fields must stay `unknown`. Compare all cases before deciding whether to change the skill.
+
 ## Example requests
 
 **Improve an existing mobile website**
@@ -75,12 +88,12 @@ Skills directories differ between agents. Refer to your agent's documentation fo
 SKILL.md                     Agent instructions and workflow
 README.md / README.vi.md     Project documentation
 docs/                        Product scope, MVP boundaries, roadmap
-references/                  Project discovery, UX principles, workflows
+references/                  Runtime guidance, verification criteria and evidence record
 references/decisions/        Eight task-based mobile UX playbooks
 evals/fixtures/              Runnable order dashboard and form baselines
 evals/scenarios/             Mobile UX evaluation scenarios
 evals/decisions/             Decision cases and counterexamples
-evals/evaluation-criteria.md Evaluation criteria
+evals/evaluation-criteria.md Reviewer entry point to shared verification criteria
 examples/                    Sample UX report
 scripts/validate_skill.py    Structure and Markdown-link validator
 .github/workflows/           CI validation
@@ -98,7 +111,7 @@ This validates the skill's structure, metadata, and local documentation links. *
 
 ## Project status
 
-**Decision guidance in progress.** The repository includes eight focused playbooks, a decision record contract, runnable order dashboard and form baselines, evaluation cases, and structural validation. The baselines intentionally retain mobile friction. One exploratory agent pair was reviewed, but the strict comparison protocol remains `NOT RUN` because clean no-skill isolation could not be established. This is **not yet a tested mobile UX improvement system**.
+**Decision guidance in progress.** The repository includes eight focused playbooks, a decision record contract, runnable order dashboard and form baselines, evaluation cases, and structural validation. The baselines intentionally retain mobile friction. Six exploratory answer pairs were [reviewed](tests/reports/261014-mobile-ux-skill-comparison-review.md); strict comparison remains `NOT RUN` because not all controls were documented. The guidance changes from that review have not been rerun with a fresh consumer. This is **not yet a tested mobile UX improvement system**.
 
 Next milestones are a protocol-compliant decision comparison, an improved fixture with before/after task checks, real phone keyboard/accessibility tests, and browser/PWA-specific guidance. See [MVP scope](docs/mvp-scope.md), [decision evaluation](evals/results/decision-evaluation.md), and [roadmap](docs/roadmap.md).
 
