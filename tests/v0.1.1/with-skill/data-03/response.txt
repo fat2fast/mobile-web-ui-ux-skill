@@ -1,0 +1,154 @@
+# Mobile UX Recommendations: Multi-Order Selection, Comparison, and Safe Bulk Actions
+
+## Mobile UX Summary
+- **Primary Mobile Tasks**:
+  1. Filter and search the order list by status, query, or sort order on a phone.
+  2. Quickly scan and compare order status and totals across multiple records.
+  3. Select multiple orders accurately via touch without mis-taps.
+  4. Review and execute permitted bulk operations safely without accidental triggers or invalid state transitions.
+- **Observed Baseline Problems** (`src/main.jsx`, `src/style.css`):
+  1. *Horizontal scrolling disconnect*: A 10-column table (`min-width: 1080px`) forces staff to scroll horizontally to see Status (col 4) and Total (col 5). The selection checkbox (col 1) scrolls out of view, breaking row context.
+  2. *Sidebar width consumption*: An uncollapsible `<aside>` takes 100px on narrow viewports (`@media(max-width: 600px)`), leaving only ~260–290px of usable width on standard 360–390px phones.
+  3. *Unreachable bulk action*: The bulk follow-up button sits below the entire wide table, requiring vertical and horizontal panning to find and tap.
+  4. *Zero safety guardrails*: The baseline bulk action triggers immediately on a single tap with no confirmation, no eligibility validation (e.g. checking if orders in `Shipped` or `Delivered` status permit the action), no aggregate value preview, and no double-tap protection during execution.
+- **Context & Constraints**:
+  - React 19 + Tailwind CSS v4 baseline (`src/main.jsx`).
+  - Target viewports: 360px to 430px smartphone widths.
+  - Advisory scope: preserve existing routing (`/orders`, `/orders/:id`, `/reports`, `/settings`), URL popstate behavior, search/filter logic, and desktop layout integrity while proposing phone-specific layout and safety guardrails.
+
+---
+
+## Decisions & Recommendations
+
+### Decision 1: Mobile Data Presentation for Status and Total Comparison
+- **Evidence**: `INFERRED` from `src/style.css:5` (`min-width: 1080px`) and `src/main.jsx:32`. Scanning status and totals across rows in a 1080px table on a 375px screen requires horizontal panning, hiding order identity.
+- **Mobile Task**: Allow staff to scan a filtered list, compare statuses and totals side-by-side, and identify candidates for bulk actions without losing row identity.
+- **Candidates**:
+  1. *Candidate A (Selected)*: Structured Mobile Order Cards with Pinned Comparison Metrics.
+  2. *Candidate B (Rejected)*: Pinned-column horizontal scrolling table (freezing Checkbox and ID, scrolling the rest).
+  3. *Candidate C (Rejected)*: Status quo 10-column full-width scrolling table.
+- **Selected & Why**: **Structured Mobile Order Cards with Pinned Comparison Metrics**.
+  - *Layout*: Each order is rendered as an individual card with a clear border/surface boundary.
+  - *Top Row*: Checkbox (44×44px hit target) + Order ID (bold, tap opens `/orders/:id`) + Customer Name.
+  - *Comparison Strip*: A dedicated horizontal strip on each card placing the **Status Badge** (semantic colored pill: e.g., Pending, Shipped, Delivered) on the left and the **Total Amount** (large bold tabular figures, e.g., `$240.00`) aligned on the right.
+  - *Secondary Info*: Date, item count, channel, and city placed in a compact, muted secondary line below the comparison strip.
+  - *Why*: Allows rapid vertical eye scanning down the phone screen to compare amounts and statuses across orders instantly, without horizontal dragging.
+- **Rejected & Why**:
+  - *Candidate B rejected*: Freezing Checkbox + ID columns consumes ~140px, leaving only ~220–250px on a 360–390px phone. Status and Total cannot comfortably sit together in the remaining viewport slit alongside 6 other columns without severe truncation.
+  - *Candidate C rejected*: Forces constant 2D panning; staff lose track of which row corresponds to which checkbox.
+- **Preserved**: Full 10-column desktop table on screens `>= 768px`; existing data fields (`id`, `customer`, `status`, `total`, `date`, `items`, `channel`, `city`); existing navigation to `/orders/:id`.
+- **Verify**: Inspect card layout at 360px, 375px, and 412px viewports (`NOT RUN`). Verify Status and Total are visible simultaneously without horizontal scrolling.
+
+---
+
+### Decision 2: Multi-Select Affordance and Filter Interface
+- **Evidence**: `INFERRED` from `src/main.jsx:31-32`. Search and dropdown filters wrap arbitrarily and push table contents down. Checkbox touch targets are default browser inputs (~13–16px), well below the 44×44px touch threshold.
+- **Mobile Task**: Filter orders by status/query and select individual or all visible orders quickly with thumbs.
+- **Candidates**:
+  1. *Candidate A (Selected)*: Compact Filter Bar + Dedicated Selection Header + Generous Touch Checkboxes.
+  2. *Candidate B (Rejected)*: Long-press gesture selection mode with hidden checkboxes until activated.
+- **Selected & Why**: **Compact Filter Bar with Visible Multi-Select Header**.
+  - *Filter UI*: Search input with one-tap clear (`×`), horizontal scrolling status chips (`All`, `Pending`, `Shipped`, `Delivered`) showing count per status, and a one-tap "Reset" button.
+  - *Selection Bar*: Above the card list, provide a persistent selection control:
+    - "Select all visible (N)" toggle checkbox.
+    - Active selection counter (e.g., "3 of 12 selected").
+    - "Clear" button when items are selected.
+  - *Card Touch Targets*: Enlarge the checkbox hit area to a minimum of 44×44 CSS px via padding/label wrapping. Tapping anywhere on the card header (outside the explicit Order ID link) toggles selection.
+- **Rejected & Why**: *Candidate B rejected*: Long-press is undiscoverable, conflicts with native browser text selection, and violates non-gesture accessibility rules (WCAG 2.5.1).
+- **Preserved**: Existing search filtering against ID/customer, status filtering, sort criteria (`id`, `customer`, `date`), and reset behavior.
+- **Verify**: Tap targets measured `>= 44x44px` on mobile viewports (`NOT RUN`). Verify selecting "All visible" only selects orders currently matching the active search and status filter.
+
+---
+
+### Decision 3: Docked Bottom Action Bar
+- **Evidence**: `INFERRED` from `src/main.jsx:32` (`button className="mt-4 border p-2" disabled={!selection.length}`). In lists with more than 3–4 orders, the action button is pushed below the fold.
+- **Mobile Task**: Keep bulk action triggers accessible at all times once orders are selected, without obscuring order content.
+- **Candidates**:
+  1. *Candidate A (Selected)*: Docked Bottom Bar (appears only when `selection.length > 0`) with safe-area spacing and selected aggregate summary.
+  2. *Candidate B (Rejected)*: Persistent floating action button (FAB) or sticky top bar.
+- **Selected & Why**: **Docked Bottom Bar with Selection Summary**.
+  - When `selection.length === 0`, the bar is hidden to maximize vertical reading room.
+  - When `selection.length > 0`, a bottom bar slides up and docks (`position: sticky` or `fixed` bottom) with `padding-bottom: env(safe-area-inset-bottom, 16px)`.
+  - Contents:
+    - Left side: Selected count and combined dollar sum (e.g., **"3 selected • $454.50"**). Showing the aggregate total gives immediate feedback on the magnitude of the batch.
+    - Right side: Primary bulk action button (e.g., **"Follow-up (3)"** or permitted action menu).
+    - Deselect / Cancel button to dismiss selection in one tap.
+  - Bottom scroll offset: The card list gets `padding-bottom: 80px` when active so the bottom bar never conceals the last order.
+- **Rejected & Why**:
+  - *Candidate B rejected*: A sticky top bar competes with navigation and filtering controls; a floating action button (FAB) lacks room for the critical summary text (count + aggregate total) and covers card details.
+- **Preserved**: Desktop action positioning (inline button or toolbar); disabled state when 0 orders are selected.
+- **Verify**: Viewport checks at 375px with safe-area insets (`NOT RUN`). Ensure the docked bar does not obscure the bottom card or input focus when keyboard is raised.
+
+---
+
+## Recommended Safety Checks & Guardrails for Permitted Bulk Actions
+
+Executing bulk operations on a phone carries high operational risk due to small screens, touch inaccuracies, and network variability. The following safety architecture must be implemented:
+
+### 1. Permission and Eligibility Gate
+- **Pre-Execution Validation**:
+  - The system must validate whether the selected action is permitted for *each* selected order based on its current status and staff role permissions (e.g., a "Ship" bulk action is permitted for `Pending`, but invalid for `Delivered`).
+  - *Visual Ineligibility Feedback*: If a user selects 4 orders and 1 is ineligible for the requested bulk action:
+    - Display an explicit warning badge in the summary bar: *"3 eligible, 1 ineligible"*.
+    - Prohibit silent failures.
+  - *Eligibility Resolution*: Offer two explicit choices:
+    1. "Apply to 3 eligible orders (skip 1)".
+    2. "Cancel to review selection".
+- **Product Owner Note**: The baseline application does not define business constraints on status transitions (any order can receive a follow-up). Confirm exact permission matrix and state machines before applying client-side restrictions.
+
+### 2. Pre-Execution Confirmation & Review Sheet (Blast-Radius Check)
+- **Do not execute directly on bottom bar tap**. Tapping the bulk action must open a modal Bottom Sheet or Dialog containing:
+  - **Action Name & Consequence**: Clear statement of the operation (e.g., "Record follow-up for 3 orders").
+  - **Financial & Scope Summary**:
+    - Total order count: `3 orders`
+    - Aggregate monetary value: `$454.50`
+    - Impacted customer IDs: `ORD-1001, ORD-1002, ORD-1003`
+  - **High-Risk / Irreversible Warning**: If the action alters inventory, charges cards, or sends customer notifications, display a prominent warning banner.
+  - **Explicit Confirmation CTA**:
+    - Primary button labeled with action and count: `Confirm Follow-up (3)`.
+    - Secondary dismiss button: `Keep Editing Selection`.
+
+### 3. Touch Ergonomics & Accidental Execution Prevention
+- **Separation of Selection vs Navigation**:
+  - The checkbox hit area (44×44px) must be physically separated from the Order ID link (`/orders/:id`). Tapping the link navigates; tapping the checkbox or card surface selects.
+- **Scope-Constrained "Select All"**:
+  - The "Select All" control must explicitly state: *"Select all visible (N)"* when filters are applied.
+  - Never allow an ambiguous "Select All" to inadvertently select off-screen, out-of-filter, or paginated orders without an explicit prompt (e.g., *"Select all 148 orders across all pages?"*).
+- **Destructive Action Friction**:
+  - For destructive bulk actions (e.g., bulk cancellation), require a two-step confirmation or explicit text acknowledgment before enabling the submit button.
+
+### 4. In-Flight Execution & Double-Tap Guard
+- **Submission Lock**:
+  - Upon tapping Confirm, immediately set the action button to `disabled` and display an in-line spinner with status text: *"Processing 3 orders..."*.
+  - Disables background card interactions and prevents duplicate submissions caused by impatient multi-tapping on slow mobile cellular networks.
+- **Partial Failure Handling**:
+  - If 2 orders succeed and 1 fails (e.g., due to a backend lock), do not wipe the entire selection. Update the successful orders, retain the failed order in the selected state, and display an actionable alert: *"2 orders updated. ORD-1003 failed (network timeout). [Retry]"*.
+
+### 5. Post-Action Status Announcement & Recovery
+- **Accessible Feedback**:
+  - Announce completion via `role="status"` with `aria-live="polite"`: *"Follow-up recorded for 3 orders ($454.50)"*.
+- **Undo Window**:
+  - If the operation is reversible, display a floating notification toast for 7–10 seconds with a one-tap **"Undo"** action before permanently finalizing the transaction.
+- **Selection Lifecycle**:
+  - Clear selection automatically only after verified success. Provide a quick "Re-select previous" link in case the user needs to apply a secondary bulk operation.
+
+---
+
+## Verification Plan
+
+| Check ID | Description | Device / Viewport | Expected Result | Status |
+| --- | --- | --- | --- | --- |
+| CHECK-01 | Baseline inspection | Desktop & Mobile source | 10-column table requires horizontal scroll; sidebar eats 100px width on mobile | `PASS` (Static review of `src/main.jsx` & `src/style.css`) |
+| CHECK-02 | Card comparison visibility | 360×640, 375×812, 390×844 | Order ID, Status badge, and Total amount visible together in vertical scroll without horizontal panning | `NOT RUN` (Proposed UI; requires implementation) |
+| CHECK-03 | Checkbox hit target size | 375×812 (touch emulation) | Checkbox clickable area >= 44×44 CSS px; no accidental navigation to `/orders/:id` | `NOT RUN` (Proposed UI) |
+| CHECK-04 | Filter + "Select All Visible" | 390×844 (Status = Pending) | "Select All Visible" selects only filtered items (ORD-1001, ORD-1003); count updates to 2 | `NOT RUN` (Proposed UI) |
+| CHECK-05 | Docked bar & keyboard clearance | 375×812 with virtual keyboard | Docked bottom bar recedes or stays above keyboard without covering active input | `NOT RUN` (Proposed UI) |
+| CHECK-06 | Ineligible bulk action guardrail | 375×812 (Mixed status selection) | Review sheet warns of ineligible orders; prevents invalid batch execution | `NOT RUN` (Proposed UI) |
+| CHECK-07 | Desktop layout regression | 1280×800 desktop viewport | Full 10-column table and left sidebar render unchanged at `>= 768px` | `NOT RUN` (Proposed UI) |
+
+---
+
+## Remaining Risks & Next Steps
+1. **Unspecified Backend Permissions**: The baseline application contains no authorization rules or state machine logic. The product team must define which roles can trigger bulk actions and which statuses are eligible.
+2. **Batch Volume & Pagination**: For large order sets (>50 items), card lists require pagination or virtualization (`windowing`) to maintain smooth 60fps scrolling on lower-end mobile devices.
+3. **PWA / Offline Considerations**: If staff operate in warehouse zones with intermittent connectivity, offline queuing with optimistic UI updates and conflict resolution must be architected.

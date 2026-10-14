@@ -1,0 +1,16 @@
+Case: DATA-01
+Condition: with-skill
+Runtime and version: Antigravity IDE (Linux x86_64)
+Model identifier and version: Gemini 3.8 Flash
+Agent mode: Pair programming agent
+Started at UTC: 2026-10-14T12:01:21Z
+Finished at UTC: 2026-10-14T12:04:45Z
+Workspace path: /home/user/work/with-skill
+Tool access: view_file, write_to_file, replace_file_content, multi_replace_file_content, run_command, list_dir, grep_search, browser_subagent, read_url_content, schedule, manage_task, generate_image, ask_question, search_web
+Tools actually used: view_file, list_dir, run_command, manage_task, write_to_file
+Files and ambient instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/data-01/prompt.txt, /home/user/work/with-skill/data-01/run-info.txt, /home/user/work/with-skill/data-01/manifest.json, /home/user/work/with-skill/README.md, /home/user/work/with-skill/package.json, /home/user/work/with-skill/src/main.jsx, /home/user/work/with-skill/src/style.css, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/data-display.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/actions.md
+Skill file actually read and evidence: yes; read /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md via view_file (with IsSkillFile: true), along with references references/decisions/data-display.md, references/decision-contract.md, references/report-template.md, and references/decisions/actions.md
+Checks actually run and results: None; design recommendation task; fixture files not modified; proposed verification checks marked NOT RUN
+Time/token limits: unknown
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/a62cd176-a9e5-4a12-b7fb-c6653aa1aa36/.system_generated/logs/transcript.jsonl
+Other limitations: No mobile browser session or test harness executed; fixture code modifications restricted by benchmark comparison instructions

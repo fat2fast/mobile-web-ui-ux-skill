@@ -1,0 +1,16 @@
+Case: FORM-01
+Condition: with-skill
+Runtime and version: Antigravity IDE / Linux
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Pair programming assistant
+Started at UTC: 2026-10-14T12:24:21Z
+Finished at UTC: 2026-10-14T12:27:46Z
+Workspace path: /home/user/work/with-skill
+Tool access: view_file, write_to_file, replace_file_content, multi_replace_file_content, run_command, manage_task, list_dir, grep_search, read_url_content, search_web, generate_image, browser_subagent, ask_question, schedule
+Tools actually used: view_file, list_dir, run_command, manage_task, write_to_file
+Files and ambient instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/form-01/prompt.txt, /home/user/work/with-skill/form-01/run-info.txt, /home/user/work/with-skill/form-01/manifest.json, /home/user/work/with-skill/src/main.jsx, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/forms.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/mobile-ux-principles.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md
+Skill file actually read and evidence: Yes; read /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md and related references via view_file
+Checks actually run and results: UTC timestamp commands (PASS: 2026-10-14T12:25:43Z, 2026-10-14T12:26:31Z, 2026-10-14T12:27:46Z); git status command (executed, code 128 - no git repo); Contact form browser checks NOT RUN (workspace fixture is order-dashboard without contact form)
+Time/token limits: unknown
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/9fa64b76-ad98-466d-95fc-d63c42c79757/.system_generated/logs/transcript.jsonl
+Other limitations: Fixture application (order-dashboard) does not implement a contact form; no live DOM or backend service to execute automated tests against.

@@ -32,12 +32,13 @@ RUN_INSTRUCTIONS = """# Comparison run
 
 This project is one side of a decision-only comparison. The same recording instructions are present in both projects.
 
-When the user sends one frozen task, match it to the corresponding `*/prompt.txt` file. Read only prompt files to identify the case, then work only in that case folder. If the user names a case instead, read that case's `prompt.txt` as the task.
+When the user sends one frozen task, match it to the corresponding `*/prompt.txt` file. Read only prompt files to identify the case, then work only in that case folder and the shared recording script. If the user names a case instead, read that case's `prompt.txt` as the task.
 
 1. Read only this project and the instructions normally available to you. Do not open another comparison project, the source skill repository, or reviewer cases and rubrics. Do not edit the fixture application. The selected fixture may not implement the task's scenario; do not invent screens or claim checks ran when they did not.
-2. Answer the task completely in the selected case's `response.txt`. Keep this file as the unedited answer for review; your final chat answer should reproduce it.
-3. Fill every `PENDING` field in the selected case's `run-info.txt` with the actual UTC start/end times if observable, runtime and model identifier if exposed, agent mode, workspace path, tool access and tools used, files and instructions read, whether a skill file was actually read (with path or tool evidence), checks actually run, and any limits. Use `unknown` for information you cannot observe. Do not infer a model version or claim a test ran without evidence.
-4. Confirm both output files exist. Do not grade or revise your answer against any case answer or rubric. The reviewer will do that after both runs finish.
+2. Answer the task completely in the selected case's `response.txt`. Keep the answer unchanged except for path redaction by the recording script; your final chat answer should reproduce the archived answer.
+3. Fill every `PENDING` field in the selected case's `run-info.txt` with the actual UTC start/end times if observable, runtime and model identifier if exposed, agent mode, tool access and tools used, files and instructions read, whether a skill file was actually read (with file/tool evidence), checks actually run, and any limits. The workspace field already uses a `/home/user/work/<condition>` alias; record other files relative to it. Never write the actual home directory or absolute workspace path into `response.txt` or `run-info.txt`. Use `unknown` for information you cannot observe. Do not infer a model version or claim a test ran without evidence.
+4. After finishing the answer and run-info, locate the runtime's raw `transcript.jsonl` if it is accessible. Run `python3 scripts/archive-comparison-case.py --case <case> --source <absolute-raw-transcript-path>` to copy a path-redacted JSONL transcript into the selected case folder and scrub local paths from the answer and run-info. Supply the actual source path only to this command, not in any saved file. If the transcript is unavailable, run the same command without `--source` and record `unavailable` in the raw transcript field; do not invent a transcript. The archived copy is path-redacted and may be a snapshot if the runtime writes more events after this command.
+5. Confirm `response.txt` and `run-info.txt` exist, and `transcript.jsonl` exists only when copied. Do not grade or revise your answer against any case answer or rubric. The reviewer will do that after both runs finish.
 
 The selected case's `prompt.txt` is frozen; its `manifest.json` records fixture file hashes and the project condition. Keep those files unchanged.
 """
@@ -93,6 +94,10 @@ def main() -> None:
         fixture_hashes = file_hashes(staged)
 
         (staged / "AGENTS.md").write_text(RUN_INSTRUCTIONS, encoding="utf-8")
+        recorder = staged / "scripts" / "archive-comparison-case.py"
+        recorder.parent.mkdir(exist_ok=True)
+        shutil.copy2(ROOT / "scripts" / "archive-comparison-case.py", recorder)
+        recorder_hash = hashlib.sha256(recorder.read_bytes()).hexdigest()
 
         if args.condition == "with-skill":
             skill = staged / ".agents" / "skills" / SKILL_NAME
@@ -121,7 +126,7 @@ def main() -> None:
                         "Agent mode: PENDING",
                         "Started at UTC: PENDING",
                         "Finished at UTC: PENDING",
-                        "Workspace path: PENDING",
+                        f"Workspace path: /home/user/work/{args.condition} (redacted)",
                         "Tool access: PENDING",
                         "Tools actually used: PENDING",
                         "Files and ambient instructions read: PENDING",
@@ -144,6 +149,7 @@ def main() -> None:
                 "prompt_sha256": hashlib.sha256(prompt_file.read_bytes()).hexdigest(),
                 "prepared_at_utc": prepared_at,
                 "recording_instructions_sha256": instructions_hash,
+                "recording_helper_sha256": recorder_hash,
                 "source_commit": commit,
                 "skill_files_sha256": skill_hashes,
             }

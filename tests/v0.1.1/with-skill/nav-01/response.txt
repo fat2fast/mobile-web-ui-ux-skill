@@ -1,0 +1,69 @@
+## Mobile UX summary
+- Main user task(s): On a 390px mobile viewport, find an order using search/filters, inspect its status and metadata, execute a follow-up action (individually or in bulk), navigate to order details when necessary, and return smoothly to the order list without losing context.
+- Observed problem(s):
+  1. At `@media(max-width: 600px)`, `aside` takes a fixed 100px width out of 390px, leaving only ~258px usable content width for `<main>` (accounting for 16px horizontal padding).
+  2. The orders table enforces `min-width: 1080px` (`overflow-x-auto`). Status is located in column 4 and the "Follow-up" action is located in column 10, requiring extensive horizontal panning where users lose the order ID/customer row header context.
+  3. Filter controls wrap into multiple vertical lines above the table, pushing initial content off-screen.
+  4. After acting on an order or navigating into details (`/orders/:id`), the return path requires scrolling back up to the top "Back to orders" text link, and action feedback (`role="status"`) renders below the wide table out of immediate mobile view.
+- Context / assumption(s): Admin web dashboard built with React 19, Tailwind CSS, and Vite. Desktop viewport and all existing capabilities (search, status filter, sort, reset, CSV export, multi-select, bulk follow-up, row follow-up, detail view, URL routing) must remain fully intact.
+
+## Decisions
+
+### 1. Navigation Shell: Responsive Header Toggle with Drawer
+| Field | Value |
+| --- | --- |
+| Evidence | `INFERRED` from `src/style.css` (lines 8-10) and `src/main.jsx` (lines 27-28). The persistent 100px sidebar consumes ~26% of screen width at 390px, leaving only ~258px width for order operations. |
+| Mobile task | Access admin sections (`Orders`, `Reports`, `Settings`) without permanently sacrificing 26% of screen width during order triage on 390px screens. |
+| Candidates | 1. Collapsible top app bar with off-canvas navigation drawer on mobile (`< md:`), preserving persistent 220px sidebar on desktop.<br>2. Persistent bottom navigation bar.<br>3. Status quo (fixed 100px sidebar). |
+| Selected | Collapsible top app bar with drawer on mobile. Reclaims full 390px width (358px usable content width) for the primary order workflow. Navigation between global admin sections is occasional rather than continuous. |
+| Rejected | Persistent bottom navigation bar. Dedicating 56px permanent bottom height for 3 secondary links steals vertical space and directly conflicts with mobile virtual keyboards and sticky bulk action affordances. |
+| Preserved | Desktop layout (`aside` width 220px at `md:`), existing route URLs (`/orders`, `/reports`, `/settings`), keyboard focus management, and client routing logic (`go`, `popstate`). |
+| Verify | Load at 390px viewport: verify sidebar is hidden by default and toggle reveals full menu. Switch to ≥768px: verify persistent 220px sidebar displays. (`NOT RUN` — design recommendation). |
+
+### 2. Data Display: Responsive Priority Cards on Mobile, Table on Desktop
+| Field | Value |
+| --- | --- |
+| Evidence | `INFERRED` from `src/style.css` (line 5: `min-width: 1080px`) and `src/main.jsx` (line 32). On a 390px viewport, Status is in column 4 and Action is in column 10 across a 1080px table, forcing lateral panning and disconnecting identity from actions. |
+| Mobile task | Quickly locate an order, immediately identify its status, and trigger the "Follow-up" action without horizontal panning or losing row identity. |
+| Candidates | 1. Responsive Priority Card list on mobile (`< md:`) with table on desktop (`md:`).<br>2. Horizontal scroll table with sticky ID/Select columns.<br>3. Truncated 3-column table (ID, Status, Action).<br>4. Status quo (1080px table). |
+| Selected | Responsive Priority Card list on mobile. Each card presents: header with selection checkbox, prominent Order ID link, and status badge; body with Customer, Total, Date; footer with direct 44×44px "Follow-up" button. Retains the 10-column table on desktop (`md:`). |
+| Rejected | Sticky column horizontal table. Pinning Select, ID, and Customer consumes ~180px, leaving only ~110px of visible scroll area on mobile, resulting in a cramped "peep-hole" experience prone to scroll conflicts. Truncated table was rejected because hiding Total, Customer, and Date forces unnecessary clicks into details. |
+| Preserved | All 10 fields and semantics (id, customer, status, total, date, items, channel, city), multi-select binding (`selection`), sorting, and complete desktop 1080px table layout. |
+| Verify | View orders at 390px: confirm cards display without horizontal scrollbar, status badge is immediately visible, and tapping "Follow-up" triggers the action handler. View at 1024px: confirm full 10-column table displays. (`NOT RUN` — design recommendation). |
+
+### 3. Controls & Bulk Actions: Compact Filter Bar with Sticky Bulk Action Affordance
+| Field | Value |
+| --- | --- |
+| Evidence | `INFERRED` from `src/main.jsx` (lines 31-32). Filter controls wrap into 4-5 lines consuming ~240px vertical space. The "Follow-up selected" button sits at the bottom of the table, requiring users to scroll past the entire dataset to act on checked rows. |
+| Mobile task | Search and filter orders quickly on mobile; trigger batch follow-up actions immediately upon checking orders without scrolling to page bottom. |
+| Candidates | 1. Persistent search field with collapsible "Filters & Sort" disclosure panel + contextual sticky bottom bulk action bar.<br>2. Full-screen modal filter sheet.<br>3. Status quo (stacked flex wrap inputs and bottom-anchored bulk button). |
+| Selected | Persistent search input + collapsible filter disclosure + contextual sticky bottom bar (`Follow-up selected ({n})` with `Clear` button) that appears only when `selection.length > 0`. |
+| Rejected | Full-screen modal filter sheet. For 3 simple controls (search, 1 filter, 1 sort), a full modal adds unnecessary interaction steps and disconnects the user from real-time result changes. |
+| Preserved | Search by ID/customer, status filter options (`All`, `Pending`, `Shipped`, `Delivered`), sort options, filter reset, CSV export functionality, and bulk action handler (`setMessage`). |
+| Verify | Enter search query at 390px: verify real-time filtering; check 2 items: verify sticky bulk action bar appears; tap "Follow-up selected": verify status message updates and selection clears. (`NOT RUN` — design recommendation). |
+
+### 4. Detail View & Return Navigation: Route Preservation with Sticky Header and Context Restoration
+| Field | Value |
+| --- | --- |
+| Evidence | `INFERRED` from `src/main.jsx` (lines 20-24, 30). Detail view replaces list view at `/orders/:id`. The "Back to orders" control is an unstyled inline link at the top, requiring users to scroll back up after reviewing details and recording a follow-up. |
+| Mobile task | View complete order attributes, record follow-up, and return to the list with previous filter state, search query, and scroll position preserved. |
+| Candidates | 1. Dedicated `/orders/:id` route with sticky top app bar containing prominent "← Back" button (min 44px tap target), inline status confirmation, and list context restoration.<br>2. Bottom sheet / modal dialog over list view.<br>3. Status quo (inline top text link, no sticky header). |
+| Selected | Dedicated `/orders/:id` route with sticky header Back button and inline action confirmation. Preserves clean URL deep linking, browser Back swipe gestures, and clear task completion feedback. |
+| Rejected | Bottom sheet modal. Eliminating the distinct `/orders/:id` route breaks deep linking, URL bookmarking/sharing, and conflicts with mobile browser back button gestures (which exit the app instead of closing the sheet). |
+| Preserved | URL pattern `/orders/:id`, direct deep link handling, browser history (`pushState`/`popstate`), `act(detail)` execution, and `role="status"` live region announcement. |
+| Verify | Navigate from list to `/orders/ORD-1001` at 390px: verify all fields render; tap "Record follow-up": verify feedback message appears adjacent to button; tap Back button: verify immediate return to `/orders` with active query and filter intact. (`NOT RUN` — design recommendation). |
+
+## Verification
+- PASS — Source inspection of `src/main.jsx` and `src/style.css` confirmed layout bottlenecks: fixed 100px aside width on `< 600px`, 1080px table min-width, and wrapped filter layout.
+- FAIL — None observed in existing baseline implementation.
+- NOT RUN — Live browser interaction checks on proposed mobile UX recommendations (environment not executed to keep fixture unmodified per evaluation rules). Recommended manual verification steps:
+  1. **Navigation Drawer Check**: Emulate 390×844px in Chrome DevTools. Verify navigation drawer toggle is visible, menu opens/closes with accessible focus, and content area spans full 390px.
+  2. **Order Card Scanning & Action Check**: At 390px, search for "ORD-1001". Confirm order card displays status badge prominently. Tap "Follow-up" and verify feedback message displays immediately.
+  3. **Bulk Selection Check**: At 390px, select 2 orders. Verify sticky bottom bar displays "Follow-up selected (2)". Tap the button and verify selection clears and feedback is announced.
+  4. **Detail & Return Flow Check**: Tap order ID to open `/orders/ORD-1002`. Verify sticky header displays "← Back to orders". Tap "Record follow-up", then tap Back. Confirm return to `/orders` without layout jumps.
+  5. **Viewport Matrix Check**: Test layout across 320px (iPhone SE min), 375px (iPhone mini), 390px (standard phone), 430px (Pro Max), 768px (tablet), and 1024px+ (desktop). Confirm desktop retains 220px sidebar and 1080px table.
+
+## Remaining risks / next steps
+- **Query Parameter Synchronization**: Search and filter states currently live in React component memory. Adding URL search parameters (`/orders?q=minh&status=Shipped`) will ensure filters persist across hard reloads and deep link sharing.
+- **Touch Target Padding**: Ensure all mobile interactive controls (checkboxes, drawer toggle, card buttons) enforce a minimum 44×44px hit area with `touch-action: manipulation`.
+- **Screen Reader Announcements**: Ensure action feedback updates using `aria-live="polite"` so mobile screen reader users are notified when follow-ups are recorded without shifting focus unexpectedly.

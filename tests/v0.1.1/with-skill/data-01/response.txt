@@ -1,0 +1,124 @@
+# Mobile Data Presentation Recommendation: Order Dashboard
+
+## Mobile UX summary
+- **Main user task(s)**: Locate an order (via quick visual scan or search), inspect order status at a glance, and open the full order details view (`/orders/:id`). Secondary tasks include filtering, sorting, exporting visible records to CSV, and executing individual or bulk follow-up actions.
+- **Observed problem(s)**: In the baseline (`src/main.jsx`, `src/style.css`), the order dashboard uses an unadapted 10-column desktop data table (`min-width: 1080px`) inside an `overflow-x-auto` wrapper. On standard mobile viewports (360px–390px width), this forces severe horizontal scrolling. Swiping right to view status, channel, city, or the row action button detaches the data from the order ID and customer name, causing cognitive disorientation and horizontal scroll fatigue. Furthermore, the filter/sort/export controls wrap irregularly across multiple rows, and the bulk action button requires scrolling past all records to reach.
+- **Context / assumption(s)**: Operations dashboard on mobile web (responsive web app). Existing tech stack is React 19 with Tailwind CSS. The desktop multi-column table experience must be preserved on larger viewports (`md:` breakpoint / ≥768px). No business logic, permissions, or API contracts are altered.
+
+---
+
+## Decision Record: Data Presentation & Layout Architecture
+
+| Field | Content |
+| --- | --- |
+| **Evidence** | `INFERRED` from source review of `src/main.jsx` (lines 25–33) and `src/style.css` (lines 5–7). The 10-column table requires 1080px minimum width; on narrow viewports (<600px), 8 columns and row action buttons are hidden off-screen to the right. |
+| **Mobile task** | Locate an individual order, immediately inspect status, and drill into `/orders/:id`, while maintaining quick access to search, status filtering, column sorting, CSV export, and bulk selection/actions. |
+| **Candidates** | 1. **Structured Mobile Card List** with top-line identity & status, compact metadata grid, and sticky/floating bulk action bar.<br>2. **Horizontally Scrolling Table with Pinned Columns** (frozen checkbox and ID columns).<br>3. **Accordion / Expandable Table Rows**. |
+| **Selected** | **Candidate 1: Structured Mobile Card List**.<br>*Reason*: Optimizes directly for the primary user flow (scan ID → check status → tap details). Elevates Order ID and Status Badge to the immediate top-level visual anchor of every card. Eliminates all horizontal scrolling, provides thumb-friendly touch targets (≥44×44px), and integrates row-level checkboxes naturally for bulk operations. |
+| **Rejected** | **Candidate 2 (Pinned Horizontal Table)**: Freezing Checkbox (~48px) and Order ID (~100px) consumes ~148px (~40%) of a 375px screen, leaving an awkward 227px viewport slit for the remaining 8 columns. Users still face repetitive horizontal swiping to inspect status or tap actions, causing high interaction friction and frequent horizontal gesture conflicts.<br>**Candidate 3 (Accordion / Expandable Rows)**: Ambiguous touch affordances on mobile web (tap-to-expand vs tap-to-navigate `/orders/:id`). Conceals secondary metadata behind repetitive expansion taps without solving quick status inspection. |
+| **Preserved** | - **Data semantics**: All 8 data fields (ID, customer, status, total, date, items, channel, city) remain accessible (key attributes on the card, full attributes on `/orders/:id`).<br>- **Filtering & Search**: `query` input (searches ID and customer), `filter` dropdown (`All`, `Pending`, `Shipped`, `Delivered`), and "Reset filters" button remain fully functional.<br>- **Sorting**: `sort` select (by `id`, `customer`, `date`) remains operational.<br>- **Export**: "Export visible" triggers the identical CSV Blob download (`id,customer,status,total`).<br>- **Bulk actions**: Multi-select checkboxes and "Follow-up selected (N)" action remain intact, elevated to an accessible sticky toolbar when items are selected.<br>- **Row action**: "Follow-up" button per order remains accessible on each card.<br>- **Routing & Deep links**: Direct navigation to `/orders/:id`, back navigation (`history.back()` / popstate), and direct URL linking work identically.<br>- **Desktop layout**: Desktop viewport (≥768px) preserves the full 10-column tabular layout. |
+| **Verify** | Detailed manual and automated steps provided below. Evidence status: `NOT RUN` (design recommendation mode; fixture files unmodified). |
+
+---
+
+## Detailed Recommended Mobile Presentation
+
+### 1. Mobile Card Architecture (Viewport < 768px)
+
+Each order record renders as a self-contained, high-scan card:
+
+```text
++-------------------------------------------------------------+
+| [ ] ORD-1001                              [ Pending (Badge) ]|  <-- Header: Checkbox + Prominent Link + Status
+|     Lan Nguyen                            $125.00            |  <-- Body: Customer Name + Order Total
+|     2026-10-10  *  2 items  *  Web  *  Hanoi                 |  <-- Metadata: Date, Items, Channel, City
++-------------------------------------------------------------+
+| [ Follow-up ]                              [ View Details > ]|  <-- Footer: Primary row action & Drill-down
++-------------------------------------------------------------+
+```
+
+#### Visual & Interaction Hierarchy
+1. **Header Row (Top Anchor)**:
+   - **Checkbox**: 24×24px visual checkbox within a 44×44px touch container on the left, bound to `selection` state.
+   - **Order ID (`ORD-1001`)**: Rendered as a prominent bold link (`font-semibold text-blue-600 text-base`) that routes directly to `/orders/${order.id}` via `go('/orders/' + order.id)`.
+   - **Status Badge**: Placed in the top-right corner with distinct color-coding for rapid peripheral recognition (e.g., `Pending`: amber/warm neutral; `Shipped`: blue; `Delivered`: emerald/green).
+2. **Body Row (Primary Attributes)**:
+   - **Customer Name**: Clear, legible text (`font-medium text-gray-900`).
+   - **Order Total**: Bold, right-aligned formatted currency (`$125.00`), providing immediate financial context.
+3. **Metadata Row (Secondary Attributes)**:
+   - A single horizontal wrapping line or 2-column key-value grid for `Date` (`2026-10-10`), `Items` (`2 items`), `Channel` (`Web`), and `City` (`Hanoi`) using muted secondary typography (`text-xs text-gray-600`).
+4. **Action Row (Card Footer)**:
+   - **"Follow-up" Button**: Compact outline button with minimum 44px touch height triggering `act(order)`.
+   - **"View Details" Link / Chevron**: Explicit secondary affordance for navigating to `/orders/${order.id}`, supplementing the clickable Order ID.
+
+---
+
+### 2. Mobile Filter, Sort & Export Toolbar
+
+In the baseline, `<div className="mb-4 flex flex-wrap gap-3">` creates an unorganized cluster of inputs on mobile. The recommended layout organizes controls into a clean, mobile-first control bar:
+
+1. **Full-Width Search Field**:
+   - `Search orders` input expands to `w-full` with an internal search icon and clear ("✕") button when active.
+2. **Two-Column Filter & Sort Grid**:
+   - `Status` dropdown (`w-1/2`) and `Sort` dropdown (`w-1/2`) positioned side-by-side on the next row.
+   - Native HTML `<select>` elements used to leverage mobile OS picker sheets (iOS wheel / Android dialog).
+3. **Utility Action Bar**:
+   - "Reset filters" and "Export visible" styled as distinct buttons side-by-side or stacked cleanly.
+   - "Reset filters" disabled or subtly styled when no query or filter is active.
+   - "Export visible" retains the existing CSV generator and download trigger without requiring horizontal panning.
+
+---
+
+### 3. Bulk Selection & Persistent Action Bar
+
+To keep bulk actions usable without forcing users to scroll to the bottom of the card list:
+
+1. **Header Select-All Affordance**:
+   - Positioned directly above the card list: `Select All visible ({visible.length})` toggle and active selection count (`{selection.length} selected`).
+2. **Sticky Bottom Bulk Action Sheet / Bar**:
+   - When `selection.length > 0`, a sticky bottom bar appears above the mobile bottom safe area:
+     ```text
+     +---------------------------------------------------------+
+     | 2 orders selected              [ Follow-up selected (2) ]|
+     +---------------------------------------------------------+
+     ```
+   - Includes a clear/dismiss button and the primary "Follow-up selected (N)" action button.
+   - When `selection.length === 0`, the bar is hidden to avoid blocking screen real estate.
+   - Includes `padding-bottom: env(safe-area-inset-bottom)` to respect mobile navigation gestures.
+
+---
+
+### 4. Preservation of Desktop Tabular View
+
+The responsive transition should use standard responsive breakpoints (e.g. Tailwind's `md:` / `min-width: 768px`):
+- **On Mobile (`< 768px`)**: Hide `<div className="overflow-x-auto"><table>...</table></div>`; display the `<div className="space-y-3 md:hidden">` Card List.
+- **On Desktop (`≥ 768px`)**: Hide the Card List (`hidden md:block`); display the 10-column table and baseline controls.
+
+---
+
+## Verification Plan
+
+### Test Matrix
+- **Viewports**:
+  - Small Mobile: 360×640 (Android baseline), 375×667 (iPhone SE).
+  - Standard Mobile: 390×844 (iPhone 12/13/14), 412×915 (Pixel).
+  - Tablet / Desktop: 768×1024, 1280×800.
+- **Input Methods**: Touch taps, on-screen virtual keyboard, mobile screen reader (TalkBack / VoiceOver).
+
+### Observable Check Results
+- `NOT RUN` — **Layout & Viewport Adaptability**: Verify cards render within 360px viewport without triggering window-level horizontal scroll (`document.documentElement.scrollWidth === window.innerWidth`).
+- `NOT RUN` — **Status Inspection at a Glance**: Verify Order ID and Status Badge are visible within the first fold without user scrolling.
+- `NOT RUN` — **Search & Filter Functionality**: Verify typing into search filters cards by ID and Customer; verify Status dropdown isolates matching records; verify "Reset filters" restores all records.
+- `NOT RUN` — **Sorting**: Verify selecting "Customer", "Date", or "ID" updates card display order identically to desktop table sort.
+- `NOT RUN` — **CSV Export**: Verify tapping "Export visible" triggers the download of `orders.csv` containing the currently filtered records.
+- `NOT RUN` — **Multi-Select & Bulk Follow-up**: Verify tapping checkboxes selects multiple cards; verify sticky bulk action button triggers `Follow-up recorded for ORD-XXXX, ORD-YYYY`; verify selection resets after action.
+- `NOT RUN` — **Single Row Action**: Verify tapping "Follow-up" on an individual card displays `Follow-up recorded for ORD-XXXX` in the live status region.
+- `NOT RUN` — **Navigation & History**: Verify tapping Order ID navigates to `/orders/ORD-XXXX`; verify browser Back button and in-page "Back to orders" button return to `/orders` with active query, filter, and sort intact.
+- `NOT RUN` — **Desktop Non-Regression**: Verify viewports ≥ 768px render the original 10-column tabular layout without visual or functional regressions.
+
+---
+
+## Remaining Risks & Next Steps
+1. **Large Dataset Pagination / Infinite Scroll**: The current fixture operates on a small in-memory dataset (4 records). If the order volume grows to dozens or hundreds of records, list rendering should adopt virtual scrolling or paginated batches (e.g. 15–20 cards per page) to prevent excessive vertical DOM scroll.
+2. **Bulk Selection Memory across Filtering**: If a user selects 2 orders and then changes the search filter, the current baseline retains selection state while filtering visible items. This behavior is preserved, but product owners should clarify whether hidden selected items should remain selected during bulk execution.
+3. **Safe Area Insets**: When implementing the sticky bottom bulk action bar, verify spacing against mobile browser URL bars and home indicator bars (`env(safe-area-inset-bottom)`).

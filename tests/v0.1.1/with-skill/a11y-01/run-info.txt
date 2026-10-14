@@ -1,0 +1,16 @@
+Case: A11Y-01
+Condition: with-skill
+Runtime and version: Antigravity IDE (version unknown)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Audit only
+Started at UTC: 2026-10-14T12:19:34Z
+Finished at UTC: 2026-10-14T12:22:30Z
+Workspace path: /home/user/work/with-skill
+Tool access: run_command, view_file, write_to_file, replace_file_content, multi_replace_file_content, list_dir, grep_search, ask_question, manage_task, schedule, search_web, read_url_content, generate_image, browser_subagent
+Tools actually used: list_dir, view_file, run_command, manage_task, write_to_file
+Files and ambient instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/a11y-01/prompt.txt, /home/user/work/with-skill/a11y-01/manifest.json, /home/user/work/with-skill/a11y-01/run-info.txt, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/accessibility-checklist.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md
+Skill file actually read and evidence: Yes: /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md read via view_file with IsSkillFile: true, along with references/decisions/accessibility.md, references/accessibility-checklist.md, references/decision-contract.md, and references/report-template.md
+Checks actually run and results: None run against live browser/rendered UI (scenario evaluated analytically; all geometric, contrast, and keyboard checks marked NOT RUN; reviewer assertion marked FAIL via SC 2.5.8 exception logic)
+Time/token limits: unknown
+Raw transcript location or availability: Available at /home/user/.gemini/antigravity-ide/brain/5a37b1f6-f8ea-4540-a3c7-4f24b1c10f5f/.system_generated/logs/transcript.jsonl
+Other limitations: The prompt describes an abstract scenario not implemented in the order-dashboard fixture; no code changes made to fixture per audit-only constraints and AGENTS.md rules.
