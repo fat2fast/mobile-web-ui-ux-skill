@@ -1,6 +1,6 @@
 # Scenario A — Dense Order Dashboard
 
-**Status:** Specification only; runnable fixture not yet included.
+**Status:** Runnable baseline at [order dashboard](../fixtures/order-dashboard/README.md). See [observations](../results/order-dashboard-baseline.md); this is not a before/after improvement.
 
 ## Product context
 

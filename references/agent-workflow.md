@@ -12,18 +12,7 @@ Prioritize blockers for task completion first, then discoverability/clarity, the
 
 ## Step 3: Decide
 
-For each issue produce a short decision record:
-
-```text
-Problem:
-Evidence:
-Task affected:
-Chosen mobile UX pattern:
-Why it fits:
-Rejected alternative / why:
-Behavior/data to preserve:
-Validation needed:
-```
+For each consequential choice, use the [decision contract](decision-contract.md): evidence and its status, mobile task, candidates, selected and rejected patterns with reasons, preserved behavior, and verification. A reasoned choice is not a verified implementation.
 
 Read only the applicable focused playbook(s). Consider the current design system, content density and browser conventions.
 

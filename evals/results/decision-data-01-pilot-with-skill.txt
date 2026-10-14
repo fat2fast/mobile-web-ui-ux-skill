@@ -1,0 +1,9 @@
+**Recommendation:** Keep the desktop table. On phones, show a compact order list with each order’s ID, customer, status, total, and date. Make the ID a clear link to the existing details route, where items, channel, city, and all other fields remain available with labels. Keep the per-order Follow-up action visible.
+
+The source shows a table with a 1080px minimum width, so locating one order on a narrow screen likely requires horizontal scrolling. A full-width scrolling table remains useful when comparing columns, but comparison is secondary to the stated task. The list better supports finding an order and checking its status while preserving a route to every field.
+
+Keep Search, Status, Sort, Reset filters, and Export visible or in an obvious labeled control area above the list. Preserve their current behavior, including export of the filtered, sorted visible orders. Add a clear selection control to each list item and retain **Follow-up selected** with its count; selection must work without gestures or hover. Use semantic links, buttons, labels, and a predictable keyboard focus order.
+
+**Verification — not run:** At narrow and desktop widths, check search, each filter and sort option, reset, export contents, detail navigation and Back, individual Follow-up, multi-selection and bulk Follow-up. Also check long names, text zoom, and keyboard access. This is a source-based recommendation; no UI changes or browser tests were performed.
+
+Status: DONE — Recommended a mobile order list with full details access and all existing data actions preserved.

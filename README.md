@@ -76,8 +76,10 @@ SKILL.md                     Agent instructions and workflow
 README.md / README.vi.md     Project documentation
 docs/                        Product scope, MVP boundaries, roadmap
 references/                  Project discovery, UX principles, workflows
-references/decisions/        Navigation, data-display, and forms playbooks
+references/decisions/        Eight task-based mobile UX playbooks
+evals/fixtures/              Runnable order dashboard and form baselines
 evals/scenarios/             Mobile UX evaluation scenarios
+evals/decisions/             Decision cases and counterexamples
 evals/evaluation-criteria.md Evaluation criteria
 examples/                    Sample UX report
 scripts/validate_skill.py    Structure and Markdown-link validator
@@ -89,16 +91,16 @@ scripts/validate_skill.py    Structure and Markdown-link validator
 Requires Python 3.9+ (standard library only):
 
 ```
-python scripts/validate_skill.py
+python3 scripts/validate_skill.py
 ```
 
 This validates the skill's structure, metadata, and local documentation links. **It does not measure usability or prove that mobile UX has improved.** Actual UX verification requires runnable examples, interaction tests, and/or device testing.
 
 ## Project status
 
-**v0.1 — initial foundation.** The repository currently includes the core workflow, three initial decision playbooks (navigation, data display, forms), evaluation scenario specifications, and structural validation. It is **not yet a fully tested automated mobile UX optimization system**.
+**Decision guidance in progress.** The repository includes eight focused playbooks, a decision record contract, runnable order dashboard and form baselines, evaluation cases, and structural validation. The baselines intentionally retain mobile friction. One exploratory agent pair was reviewed, but the strict comparison protocol remains `NOT RUN` because clean no-skill isolation could not be established. This is **not yet a tested mobile UX improvement system**.
 
-Next milestones include refining decision playbooks, testing against working web-app fixtures, introducing repeatable mobile interaction checks, and deepening browser/PWA-specific guidance. See [MVP scope](docs/mvp-scope.md) and [roadmap](docs/roadmap.md).
+Next milestones are a protocol-compliant decision comparison, an improved fixture with before/after task checks, real phone keyboard/accessibility tests, and browser/PWA-specific guidance. See [MVP scope](docs/mvp-scope.md), [decision evaluation](evals/results/decision-evaluation.md), and [roadmap](docs/roadmap.md).
 
 ## Contributing
 

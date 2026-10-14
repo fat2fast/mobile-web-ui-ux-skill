@@ -14,3 +14,9 @@ playwright-report/
 test-results/
 evals/results/*
 !evals/results/.gitkeep
+!evals/results/order-dashboard-baseline.md
+!evals/results/form-baseline.md
+!evals/results/decision-evaluation.md
+!evals/results/mobile-form-390.png
+!evals/results/order-dashboard-390.png
+!evals/results/decision-data-01-*.txt

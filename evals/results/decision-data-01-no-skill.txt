@@ -1,0 +1,24 @@
+Use a compact vertical order list on mobile, with one entry per order. Users can scan identity and status together, then open details without scrolling across eight columns.
+
+Each entry should show:
+
+- A separate, labeled selection checkbox.
+- Order ID as the explicit details link, with customer name beneath it.
+- Status in text, optionally supported by color.
+- Total and date as secondary information.
+- The existing Follow-up action as a separate button.
+
+Keep items, channel and city accessible on the existing details page. Avoid making the entire entry clickable: selection, follow-up and navigation need distinct targets.
+
+Keep search visible above the list. Retain labeled status and sort controls, reset filters and Export visible; allow these controls to stack on narrow screens. Export should continue using the filtered and sorted results with its existing CSV fields.
+
+Retain selection across filtering, matching current behavior. Show the total selected count and indicate when selected orders are outside the current results, so users understand the scope of “Follow-up selected.” Keep the bulk action reachable without covering the last entry. Preserve the desktop table and use the same filtering, sorting, selection and action state for both presentations.
+
+The mobile navigation also needs to release space: replace the current 100px sidebar with a compact navigation control that retains Orders, Reports and Settings.
+
+Verification: I inspected `src/main.jsx`, `src/style.css` and `package.json`. The table has a 1080px minimum width; the current mobile sidebar further reduces the available space. Existing details expose all eight order fields, so the proposed list can prioritize scanning while preserving access to the full record.
+
+Before delivery, verify narrow widths, keyboard navigation, labeled checkboxes, readable status text, details/back navigation, filtered export, individual follow-up and bulk selection across filters. Confirm desktop behavior remains intact. No code was changed and no tests were run.
+
+Status: DONE  
+Summary: Recommend a compact mobile order list backed by existing dashboard state, preserving all actions, complete details and the desktop table.

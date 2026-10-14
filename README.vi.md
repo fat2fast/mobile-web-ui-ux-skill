@@ -76,8 +76,10 @@ SKILL.md                     Hướng dẫn và workflow cho AI agent
 README.md / README.vi.md     Tài liệu dự án
 docs/                        Product scope, MVP scope, roadmap
 references/                  Quy trình phân tích và nguyên tắc mobile UX
-references/decisions/        Playbook cho navigation, dữ liệu và form
+references/decisions/        Tám playbook chọn UX theo tác vụ
+evals/fixtures/              Baseline dashboard và form chạy được
 evals/scenarios/             Các kịch bản đánh giá mobile UX
+evals/decisions/             Decision cases và phản ví dụ
 evals/evaluation-criteria.md Tiêu chí đánh giá
 examples/                    Báo cáo UX mẫu
 scripts/validate_skill.py    Kiểm tra cấu trúc và liên kết Markdown
@@ -89,16 +91,16 @@ scripts/validate_skill.py    Kiểm tra cấu trúc và liên kết Markdown
 Yêu cầu Python 3.9+ (chỉ sử dụng thư viện chuẩn):
 
 ```
-python scripts/validate_skill.py
+python3 scripts/validate_skill.py
 ```
 
 Lệnh này kiểm tra cấu trúc skill, metadata và các liên kết nội bộ. **Nó không đánh giá chất lượng sử dụng và cũng không chứng minh UX đã được cải thiện.** Việc kiểm chứng thực tế cần ứng dụng mẫu có thể chạy, interaction tests và/hoặc kiểm thử trên thiết bị.
 
 ## Trạng thái phát triển
 
-**v0.1 — bản khởi tạo.** Hiện repository có workflow cốt lõi, ba playbook ban đầu (navigation, data display, forms), các kịch bản đánh giá và công cụ kiểm tra cấu trúc. Đây **chưa phải hệ thống tự động tối ưu mobile UX đã được kiểm thử đầy đủ**.
+**Hướng dẫn quyết định đang hoàn thiện.** Repository có tám playbook, decision contract, baseline dashboard và form chạy được, các decision cases và validator cấu trúc. Baseline cố ý giữ trở ngại mobile. Một cặp agent thăm dò đã được review nhưng đánh giá đối chứng theo protocol vẫn `NOT RUN` vì chưa chứng minh được cô lập no-skill. Đây **chưa phải hệ thống cải thiện mobile UX đã được kiểm thử đầy đủ**.
 
-Các bước tiếp theo gồm nâng chất lượng decision playbooks, thử nghiệm trên web app thực tế, bổ sung kiểm thử tương tác mobile có thể lặp lại và mở rộng kiến thức chuyên sâu cho browser/PWA. Xem [MVP scope](docs/mvp-scope.md) và [roadmap](docs/roadmap.md).
+Các bước tiếp theo gồm đối chứng decision đúng protocol, triển khai cải thiện fixture với kiểm tra before/after, thử bàn phím và accessibility trên điện thoại thật, rồi mở rộng browser/PWA. Xem [MVP scope](docs/mvp-scope.md), [kết quả decision](evals/results/decision-evaluation.md) và [roadmap](docs/roadmap.md).
 
 ## Đóng góp
 

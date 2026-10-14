@@ -6,7 +6,7 @@ Phases are sequential milestones, not fixed-duration sprints.
 | --- | --- | --- |
 | P00 Product scope & eval plan | Define user, constraints and three test scenarios | Product/MVP scope + scenario specs |
 | P01 Skill foundation | Agent Skills metadata, workflow, lightweight validator | Local validation passes |
-| P02 Decision intelligence | Navigation, tables, forms, then actions/content/overlays/touch | Playbooks with conditions, tradeoffs, examples |
+| P02 Decision intelligence | Eight task-based playbooks and decision comparison | Playbooks/cases exist; protocol-compliant comparison remains `NOT RUN` |
 | P03 Implementation guidance | Apply patterns with minimal codebase changes | One reproducible fixture modified successfully |
 | P04 Verification & evaluation | Before/after task tests, mobile widths, desktop regression | Recorded results, not hypothetical grades |
 | P05 Browser/PWA specialization | Keyboard, visual viewport, standalone, offline/update | Browser-specific test matrix |
@@ -31,4 +31,4 @@ Phases are sequential milestones, not fixed-duration sprints.
 - **Useful alpha:** P02/P03 validated on ≥1 actual fixture.
 - **MVP 0.1 release:** P04 checks on all three scenarios, desktop regressions investigated.
 
-Do not label this starter archive as a tested UX MVP solely because structural validation succeeds.
+The order and form baselines now run; they remain intentionally awkward. Decision comparison is [recorded as `NOT RUN` under the strict protocol](../evals/results/decision-evaluation.md) despite one exploratory reviewed pair. Do not label this repository a tested UX MVP solely because structural validation or baseline tasks pass.

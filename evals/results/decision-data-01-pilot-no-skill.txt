@@ -1,0 +1,7 @@
+**Recommendation:** Use a compact order list on mobile and keep the table on desktop. Each mobile row should show the order ID, customer, status, total, and date, with a clear tap target to open the existing order detail page. Put items, channel, and city on that page so every field remains available without forcing an eight-column horizontal scroll.
+
+Keep search visible above the list. Place status filter and sort in accessible controls, and keep “Export visible” available for the current result set. Each row needs a selection checkbox and its existing follow-up action; show “Follow-up selected” with the count when orders are selected. Preserve the current filtering, sorting, export, and selection behavior across both layouts.
+
+**Verification:** Check a narrow phone viewport for readable rows and usable controls. Then check that search, filter, sort, export, selection, individual follow-up, and detail navigation produce the same results as on desktop. Confirm the desktop table still shows all columns. No implementation or tests were run.
+
+Status: DONE — Recommended a mobile order list that preserves the dashboard’s data and actions.

@@ -9,9 +9,7 @@ Write a concise, readable report after audit/change/verification.
 - Context / assumption(s): ...
 
 ## Decisions
-| Issue | Mobile UX improvement | Why it fits | Preserved behavior |
-|---|---|---|---|
-| ... | ... | ... | ... |
+Use the [decision contract](decision-contract.md) for each consequential choice: Evidence (`PASS`/`FAIL`/`INFERRED`/`NOT RUN`), Mobile task, Candidates, Selected + why, Rejected + why, Preserved, Verify. Summarize a few choices here without dropping rejected alternatives or preservation.
 
 ## Changes (omit for audit-only)
 - `path/to/file` — ...
