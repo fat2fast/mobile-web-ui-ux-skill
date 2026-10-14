@@ -1,0 +1,7 @@
+PASS dashboard mobile 390x844: search, status, detail, action, browser Back
+PASS dashboard malformed client route: not-found state, no page error
+PASS dashboard direct deep link: visible Back returns to orders
+PASS dashboard desktop 1280x800: search, detail, action, browser Back
+PASS form 390x844: HTTP 422, error visible, entered value retained
+PASS form 390x844: HTTP 200, receipt visible after correction
+Browser: Chromium 153.0.8010.12; Playwright 1.56.1; WSL Ubuntu

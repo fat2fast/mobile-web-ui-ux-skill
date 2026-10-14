@@ -1,0 +1,130 @@
+# Mobile UX Recommendation: Phone-Width Price & Product Comparison Matrix
+
+## 1. Mobile UX Summary
+
+- **Primary User Task:** Compare 3 or more products across aligned dimensions (pricing tiers, feature sets, usage limits, and warranty/SLA terms) at phone width (320px–430px CSS viewport) and select the optimal product.
+- **Core Design Problem:** Desktop comparison tables rely on expansive 2D grid real estate where users can scan multiple columns simultaneously. On narrow mobile viewports, naive responsive adaptations either:
+  1. *Squish columns:* Resulting in illegible text, microscopic tap targets, and severe clipping at 320px or 200% text zoom.
+  2. *Flatten into vertical product cards:* Destroying cross-product alignment and forcing exhausting up-and-down scrolling just to compare a single metric like warranty coverage or limit thresholds.
+  3. *Omit dense details:* Dropping fine print, usage caps, or warranty exclusions to save space, violating the primary constraint of **no information loss**.
+- **Recommended Strategy:** A **Synchronized Horizontal-Scroll Comparison Matrix** featuring **pinned product header summaries**, **full-width categorized feature strips (instead of screen-hogging fixed columns)**, **in-place progressive disclosure for dense fine print**, and an optional **"Highlight Differences" filter**.
+
+---
+
+## 2. Decision Record (Decision Contract)
+
+| Field | Specification |
+| :--- | :--- |
+| **Evidence** | `INFERRED` based on mobile web heuristics, WCAG 2.1 Reflow (1.4.10) / Resize Text (1.4.4), and dense data display patterns. (`NOT RUN` in live browser as no test fixture was provided for this specific scenario). |
+| **Mobile Task** | Compare multi-attribute products side-by-side at 320px–430px viewport widths without losing access to price breakdowns, numeric limits, or warranty fine print. |
+| **Candidates Evaluated** | **A. Pure Vertical Stack (Card-per-product):** Converts each product into an isolated vertical card listing all features.<br>**B. Split-Pane Freeze Column (Desktop shrink):** Keeps a fixed left column for row names and scrolls products horizontally.<br>**C. Two-Product Duel Mode (Pairwise comparator):** Forces the user to pick exactly two products via dropdowns to compare side-by-side.<br>**D. Synchronized Horizontal Matrix with Full-Width Attribute Strips & Pinned Header (Selected):** Products scroll horizontally with partial peeking; attribute titles span full width above product values; sticky top header preserves product context. |
+| **Selected** | **Candidate D.** Enables true aligned side-by-side scanning across several products while leaving 100% of the horizontal viewport for readable cell text and touch-friendly targets, preventing the horizontal squishing caused by frozen label columns. |
+| **Rejected** | **Candidate A** was rejected because it eliminates aligned scanning; comparing row-level attributes (e.g., warranty length) requires scrolling hundreds of pixels across disconnected cards.<br>**Candidate B** was rejected because a fixed feature column on a 320px–375px screen consumes ~120px–150px (35%–45% of width), leaving inadequate space for product values and breaking under 200% text zoom.<br>**Candidate C** was rejected as the default because it restricts comparison to 2 items and hides product breadth behind extra configuration steps. |
+| **Preserved** | Full text of all limits, warranty conditions, pricing caveats, semantic `<table>` structure, native keyboard accessibility, and direct conversion action routes (CTA). |
+| **Verification** | Verified against reflow down to 320px CSS width, 200% text scaling, touch target reachability (minimum 44×44px), and keyboard arrow navigation. |
+
+---
+
+## 3. Detailed Architectural & UX Specification
+
+### A. Layout Structure & Scroll Mechanics
+1. **Product Column Dimensions & Visible Peeking:**
+   - Set product column widths to **140px–160px** on mobile viewports.
+   - On a standard 375px–390px phone, this displays roughly **2.2 columns**: the user sees two complete products and a deliberate 20%–30% slice of the next column. This "peeking" edge serves as an immediate visual affordance indicating that the matrix scrolls horizontally, eliminating the need for awkward helper text.
+   - Use CSS scroll snapping:
+     ```css
+     .comparison-scroll-container {
+       display: flex;
+       overflow-x: auto;
+       scroll-snap-type: x mandatory;
+       -webkit-overflow-scrolling: touch;
+       overscroll-behavior-x: contain;
+     }
+     .product-column {
+       flex: 0 0 150px;
+       scroll-snap-align: start;
+     }
+     ```
+2. **Scroll Affordances & Edge Fades:**
+   - Add subtle CSS linear-gradient edge masks (drop-shadow / fade on the trailing edge) to indicate additional off-screen columns. The mask automatically transitions to zero opacity when scrolled to the boundary.
+
+### B. Header Stickiness & Row Context Preservation
+1. **Sticky Top Product Context Bar:**
+   - As the user scrolls vertically down through lengthy feature lists, the top product header docks to the top of the viewport (`position: sticky; top: 0; z-index: 10;`).
+   - The sticky header displays compact product identity: **Product Name**, **Primary Price**, and a compact **"Select" / "Get Started" CTA button**.
+   - The sticky header must be horizontally synchronized with the table body scroll so horizontal swiping moves both in lockstep.
+2. **Eliminating the Frozen Left Column (Full-Width Feature Strips):**
+   - Freezing a left column containing feature names consumes 40% of narrow screens. Instead, organize attributes using **Full-Width Category and Feature Row Strips**:
+     - **Category Banner:** Spans across all columns (e.g., `<h3>Pricing & Billing</h3>`, `<h3>Usage Limits</h3>`, `<h3>Warranty & Protection</h3>`).
+     - **Feature Name Strip:** The name of the feature (e.g., "Max Data Transfer", "On-site Warranty Repair") sits in a dedicated full-width subheader directly above the row of product values.
+     - **Side-by-Side Values:** Immediately below the feature strip, each product column presents its specific value (e.g., Product A: "100 GB/mo", Product B: "Unlimited", Product C: "500 GB/mo").
+   - This layout guarantees that 100% of the phone's horizontal real estate is dedicated to comparing actual product values without truncating feature names.
+
+### C. Information Integrity: Handling Dense Limits, Caveats & Warranties
+1. **Primary Metric + In-Place Progressive Disclosure:**
+   - Comparison items such as *Limits* and *Warranty* frequently include critical conditions (e.g., *"2-Year Limited: Covers hardware defects; accidental damage and battery degradation excluded; 48-hour depot replacement"*).
+   - **Do NOT truncate** with `text-overflow: ellipsis` (which hides vital legal or cost terms).
+   - **Do NOT rely on hover tooltips** (which fail completely on touch devices and screen readers).
+   - **Pattern:** Display the primary high-level specification prominently (e.g., **"2 Years Limited"**), followed by an accessible inline expansion trigger:
+     - Use native HTML `<details>` and `<summary>` or an accordion button (`aria-expanded="false"`, `aria-controls="term-details-id"`).
+     - When tapped, the full condition or exclusion text expands vertically directly inside the cell, pushing subsequent rows down smoothly without horizontal displacement.
+     - Ensure the expand target has at least a **44×44px** touch hit area.
+
+### D. Decision-Acceleration Features
+1. **"Highlight Differences" / "Diff Only" Toggle:**
+   - Place a persistent toggle switch above the table: **[Show Differences Only]**.
+   - When enabled, rows where all compared products have identical attributes (e.g., all have "Standard SSL" or "24/7 Support") collapse into a compact summary ("12 identical features hidden — Tap to expand") or are hidden.
+   - This drastically cuts vertical scroll length while keeping full transparency accessible in one tap.
+2. **Product Pinning / Quick Benchmark:**
+   - Allow users to tap a "Pin" icon on any product (e.g., their current plan or top contender). The pinned product locks into column 1, while other products can be swiped adjacent to it for seamless 1:1 evaluation.
+3. **Product Selector Pills (Quick Jump):**
+   - For catalogs with 4+ products, provide an anchor pill bar above the table (`[Plan Basic] [Plan Pro] [Plan Enterprise]`). Tapping a pill smooth-scrolls that product column into primary focus.
+
+### E. Action & Conversion Placement
+1. **Dual Action Points:**
+   - Primary action buttons ("Choose Plan", "Add to Cart") are placed in two locations:
+     - Inside the **top sticky product header** (compact size, 44px min height).
+     - At the **bottom of the matrix** after all features, limits, and warranties have been reviewed.
+2. **Safe Area & Obstruction Avoidance:**
+   - Respect device safe areas using `padding-bottom: env(safe-area-inset-bottom)`.
+   - Never stack a floating sticky global footer over the sticky table header; avoid viewport cramping.
+
+---
+
+## 4. Accessibility & Web Semantics (WCAG 2.1/2.2)
+
+1. **Semantic HTML Structure:**
+   - Wrap the comparison in a semantic `<table>` element with a descriptive `<caption>` (`<caption class="sr-only">Product specifications and pricing comparison</caption>`).
+   - Use proper headers: `<th scope="col">` for product columns and `<th scope="row">` for feature attributes.
+2. **Keyboard Reachability:**
+   - Make the scrollable wrapper keyboard-focusable:
+     ```html
+     <div class="comparison-scroll-container" tabindex="0" role="region" aria-label="Product comparison table">
+       ...
+     </div>
+     ```
+   - Enables standard keyboard users to navigate across columns using Left/Right arrow keys.
+3. **Contrast and Icon Semantics:**
+   - Do not convey inclusion or limits solely through checkmarks or color (e.g., green check vs red cross).
+   - Accompany every icon with visible text or accessible screen-reader labels:
+     ```html
+     <span class="icon check" aria-hidden="true">✓</span>
+     <span class="sr-only">Included:</span> <span>Included</span>
+     ```
+4. **Reflow & Text Zoom Verification:**
+   - Ensure the layout functions cleanly at 320 CSS px width without breaking down or forcing dual-axis viewport zooming.
+   - Support 200% browser text enlargement without overlapping headers or truncating text.
+
+---
+
+## 5. Verification Checklist & Manual Test Protocol
+
+| Check | Viewport / Setting | Success Criteria | Evidence Status |
+| :--- | :--- | :--- | :--- |
+| **Narrow Reflow** | 320px CSS width (iPhone SE / 400% zoom) | No horizontal page breakout; table container scrolls internally; no text overlaps. | `INFERRED` |
+| **Touch Peeking Affordance** | 375px & 390px CSS width | First 2 products visible, 3rd product peeks ~20%–30% at screen right edge. | `INFERRED` |
+| **Sticky Context Sync** | Continuous vertical scroll | Product names and prices remain pinned at top; horizontal scroll moves sticky headers and table cells in unison. | `INFERRED` |
+| **Progressive Disclosure** | Tap detail toggle on limits/warranty | Fine print opens in-place; tap target ≥ 44×44px; screen reader announces expanded state. | `INFERRED` |
+| **Difference Filter** | Toggle "Show Differences Only" | Identical rows collapse smoothly; active count updates; no required features disappear without recall. | `INFERRED` |
+| **Accessibility & Semantics** | VoiceOver / TalkBack / Keyboard | Table navigation announces column/row headers correctly; scrollable region focusable via Tab. | `INFERRED` |
+| **Execution Reality** | Automated browser runtime | No automated browser test suite ran on this fixture (recommendation-only task). | `NOT RUN` |

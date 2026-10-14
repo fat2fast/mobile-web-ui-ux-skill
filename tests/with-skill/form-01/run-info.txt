@@ -1,0 +1,16 @@
+Case: FORM-01
+Condition: with-skill
+Runtime and version: Antigravity IDE (version unknown)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Pair programming assistant / recommendation mode (autonomous tool execution)
+Started at UTC: 2026-10-14T08:03:35Z
+Finished at UTC: 2026-10-14T08:08:00Z
+Workspace path: /home/user/work/with-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: view_file, list_dir, run_command, manage_task, write_to_file
+Files and ambient instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/form-01/prompt.txt, /home/user/work/with-skill/form-01/manifest.json, /home/user/work/with-skill/form-01/run-info.txt, /home/user/work/with-skill/src/main.jsx, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/forms.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/evaluation-criteria.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/mobile-ux-principles.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/accessibility-checklist.md
+Skill file actually read and evidence: Yes; read /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md using view_file with IsSkillFile:true at 2026-10-14T15:03:49+07:00 (08:03:49 UTC); also read skill reference playbooks in references/ and evals/.
+Checks actually run and results: None; advisory recommendation on form scenario; fixture app is order-dashboard; no tests or browser sessions run.
+Time/token limits: None encountered; session active.
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/1aac20ec-9035-4034-a773-eded6cf1f4a6/.system_generated/logs/transcript.jsonl
+Other limitations: Advisory recommendation without modifying fixture code per case instructions; fixture application in repository is order-dashboard.

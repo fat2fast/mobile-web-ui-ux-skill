@@ -21,3 +21,4 @@ evals/results/*
 !evals/results/order-dashboard-390.png
 !evals/results/decision-data-01-*.txt
 !evals/results/baseline-browser-check.txt
+*:Zone.Identifier

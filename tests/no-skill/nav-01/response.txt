@@ -1,0 +1,216 @@
+# Mobile UX Decision & Verification Protocol: Admin Order Dashboard at 390px
+
+## 1. Problem Analysis & Baseline Bottlenecks at 390px
+
+At a mobile viewport of 390px (e.g., iPhone 12/13/14/15/16 Pro width), the baseline order dashboard fails critical user journeys due to desktop-centric layout choices:
+
+1. **Persistent Sidebar Screen Cannibalization**:
+   - The desktop sidebar collapses from 220px to 100px on small screens (`max-width: 600px`). On a 390px display, a 100px sidebar consumes over 25% of the total screen width, cramming the order workspace into an unusable 290px column.
+2. **Horizontal Table Disconnect (1080px Table on 290px/390px)**:
+   - The 10-column table requires `min-width: 1080px`. Viewing Order ID (`ORD-1001`) in column 2 and Status (`Pending`) in column 4 or the row Action (`Follow-up`) in column 10 requires panning sideways over 700 pixels.
+   - When scrolling horizontally to reach the Action button, the Order ID and Customer name scroll completely out of view, causing loss of context and frequent mis-clicks.
+3. **Filter Control Vertical Stacking**:
+   - The search input, status dropdown, sort selector, reset button, and export button wrap into multiple uneven rows, pushing order records deep below the fold.
+4. **Sub-standard Touch Target Ergonomics**:
+   - Table checkboxes, inline text links, and row action buttons (`p-1`) measure well below the standard 44×44px minimum tap target, increasing touch error rates.
+   - The batch action button (`Follow-up selected`) is fixed below the table, forcing users to scroll all the way to the bottom to execute multi-order operations.
+5. **Details Navigation & Return Loop Friction**:
+   - Tapping an order opens `/orders/:id`, but returning via "Back to orders" or browser back risks losing active search filters, sort criteria, and scroll position.
+
+---
+
+## 2. Recommended Mobile UX Decision
+
+To solve the mobile ergonomics at 390px while maintaining full desktop parity and preserving 100% of existing capabilities, we adopt a **Responsive Hybrid Architecture**:
+
+```
++-------------------------------------------------------+
+|  Mobile Viewport (390px):                             |
+|  [☰ Ops]  Orders                      [Reset] [Export]|
+|  +-------------------------------------------------+  |
+|  | 🔍 Search orders...                             |  |
+|  +-------------------------------------------------+  |
+|  [Status: All ▾]  [Sort: ID ▾]                        |
+|                                                       |
+|  +-------------------------------------------------+  |
+|  | [ ] ORD-1001                   [ Pending ]     |  |
+|  |     Lan Nguyen • $125.00                       |  |
+|  |     2026-10-10 • 2 items • Web • Hanoi         |  |
+|  |     [ Follow-up (44px target) ]                |  |
+|  +-------------------------------------------------+  |
+|  | [✓] ORD-1002                   [ Shipped ]     |  |
+|  |     Minh Tran • $89.50                         |  |
+|  |     2026-10-11 • 1 item • Web • Da Nang        |  |
+|  |     [ Follow-up (44px target) ]                |  |
+|  +-------------------------------------------------+  |
+|                                                       |
+|  +-------------------------------------------------+  |
+|  | Sticky Bottom Bar: 1 selected | [Follow-up (1)] |  |
+|  +-------------------------------------------------+  |
++-------------------------------------------------------+
+```
+
+### Component-by-Component Decisions:
+
+### A. Navigation Shell: Off-Canvas Drawer (< 768px)
+- **Desktop (≥ 768px)**: Keep the permanent 220px dark sidebar intact on the left.
+- **Mobile (< 768px, including 390px)**:
+  - Collapse the sidebar into an **Off-Canvas Navigation Drawer** toggled by a hamburger button (`☰ Ops`) in a slim top app header.
+  - Tapping the hamburger button slides in the navigation menu over an accessible backdrop. Selecting a section or tapping outside closes the drawer.
+  - **Outcome**: The entire 390px width is dedicated to order triage and actions.
+
+### B. Data Presentation: Responsive Triage Card List (< 768px)
+- **Desktop (≥ 768px)**: Keep the full 10-column data table (`table min-w-[1080px]`) with desktop padding, hover states, and row alignment.
+- **Mobile (< 768px, including 390px)**:
+  - Hide the table header and horizontal scroll container.
+  - Transform each order into an **Order Triage Card**:
+    1. **Top Header Row**:
+       - Multi-select checkbox with expanded 44×44px tap area.
+       - Clickable Order ID (e.g., `ORD-1001`) with bold typography and clear touch target linking to `/orders/:id`.
+       - High-visibility Status Badge: Distinct pill badge with dedicated status styling (e.g., Amber for `Pending`, Blue for `Shipped`, Green for `Delivered`).
+       - Order Total: Prominently displayed in bold right-aligned text (e.g., `$125.00`).
+    2. **Middle Metadata Row**:
+       - Scannable secondary metadata: Customer Name (`Lan Nguyen`), Date (`2026-10-10`), Item Count (`2 items`), Channel (`Web`), and City (`Hanoi`).
+    3. **Bottom Action Row**:
+       - Direct, full-width or prominent single-tap `Follow-up` button with a minimum 44px height.
+       - Tapping triggers `act(order)` and displays instantaneous inline status feedback (`Follow-up recorded for ORD-1001`).
+  - **Outcome**: Completely eliminates horizontal scrolling. Users view Order ID, Status, Customer, Total, and the Action button in a single glance within 390px.
+
+### C. Search, Filter, and Batch Action Optimization
+1. **Search & Filter Controls**:
+   - Full-width search bar at the top of the mobile content area with an instant clear button (`✕`).
+   - Compact horizontal filter bar directly below the search input:
+     - `Status` dropdown styled as a clean select pill.
+     - `Sort` dropdown styled as a clean select pill.
+     - Secondary controls (`Reset`, `Export CSV`) housed in a lightweight utility row or overflow menu to conserve vertical real estate.
+2. **Sticky Bottom Batch Action Bar**:
+   - When one or more cards are checked (`selection.length > 0`), a floating/sticky bar docks to the bottom of the viewport:
+     - Display: `"N orders selected"` + Primary button `Follow-up selected (N)`.
+     - Clicking executes the batch follow-up and resets selection without requiring users to scroll down.
+
+### D. Details View & State-Preserving Return Loop
+1. **Detail View Optimization**:
+   - Sticky top bar with a prominent back navigation element: `← Orders` with a minimum 44×44px touch target.
+   - Single-column card layout for key-value fields (`Customer`, `Status`, `Total`, `Date`, `Items`, `Channel`, `City`), styled with readable typography and clear dividers.
+   - Sticky or prominent primary action button: `Record follow-up` (minimum 44px height).
+2. **Return Loop & State Preservation**:
+   - Return navigation via `history.back()` or explicit `← Orders` button preserves active search query, status filter, sort order, and scroll position (synchronized with URL query params or browser history state).
+   - If a follow-up action is recorded inside the detail view, show an immediate toast/banner notification and retain a rapid single-tap return path to the orders list.
+
+---
+
+## 3. Preservation of Desktop & Existing Capabilities
+
+| Capability | Desktop (≥ 768px) | Mobile (390px) | Status |
+| :--- | :--- | :--- | :--- |
+| **Sidebar Navigation** | Persistent 220px dark sidebar on left | Off-canvas drawer via hamburger toggle | Preserved |
+| **Order Search** | Instant filter by ID/Customer in top bar | Full-width search input with clear button | Preserved |
+| **Status Filter** | All, Pending, Shipped, Delivered select | Mobile-optimized status select chip | Preserved |
+| **Sorting** | ID, Customer, Date select | Mobile-optimized sort select chip | Preserved |
+| **Data Presentation** | 10-column table with horizontal scroll | Responsive triage cards (0 horizontal scroll) | Preserved & Enhanced |
+| **Row Follow-up** | Row action button (`Follow-up`) | High-tap-target button on card bottom | Preserved |
+| **Multi-selection** | Table row checkboxes | Card header checkboxes (44×44px hit area) | Preserved |
+| **Batch Follow-up** | Bottom button (`Follow-up selected`) | Sticky bottom action bar when selection > 0 | Preserved & Enhanced |
+| **CSV Export** | Export visible orders to CSV | Retained in utility bar / top action | Preserved |
+| **Filter Reset** | Clear query and reset filter to 'All' | Retained as instant tap action | Preserved |
+| **Order Details** | `/orders/:id` with key-value definition list | Responsive card detail with sticky back button | Preserved |
+| **Deep Linking & 404**| Direct URL loading & fallback handling | Identical URL routing & not-found states | Preserved |
+
+---
+
+## 4. Step-by-Step Verification Protocol
+
+### Test Environment Setup
+- **Mobile Emulation**: Chrome/Firefox DevTools responsive mode set to **390px × 844px** (Device Pixel Ratio 3.0, Touch Emulation enabled).
+- **Desktop Emulation**: Standard desktop window set to **1280px × 800px**.
+
+---
+
+### Phase A: Mobile Viewport (390px) Verification
+
+#### Step 1: Layout Shell & Zero Horizontal Overflow
+1. Load `http://127.0.0.1:4173/orders` at 390px width.
+2. **Verify**:
+   - The permanent sidebar is hidden from the main viewport.
+   - A top header shows the hamburger button `☰ Ops` and title `Orders`.
+   - In browser console, run: `document.documentElement.scrollWidth <= window.innerWidth`. Confirm result is `true` (no horizontal window scrolling).
+3. Tap `☰ Ops`.
+   - **Verify**: Off-canvas drawer slides open with links to `Orders`, `Reports`, `Settings`.
+   - Tap outside or on `Orders`; verify drawer closes smoothly.
+
+#### Step 2: Search, Filter, and Sort Workflows
+1. Focus the search input and type `"Lan"`.
+   - **Verify**: The card list instantly filters to show only `ORD-1001 (Lan Nguyen)`.
+2. Clear the search input or tap `✕`.
+   - **Verify**: All 4 orders reappear.
+3. Select `Status: Pending`.
+   - **Verify**: Only `ORD-1001` and `ORD-1003` are visible.
+4. Select `Sort: Customer`.
+   - **Verify**: Cards reorder alphabetically by customer (`Hoa Pham` before `Lan Nguyen`).
+5. Tap `Reset filters`.
+   - **Verify**: Filter resets to `All`, query resets to empty, and default ordering restores.
+6. Tap `Export visible`.
+   - **Verify**: `orders.csv` is generated and triggered for download with the expected headers and rows.
+
+#### Step 3: Card Scanning & Single-Order Follow-up
+1. Inspect the first visible order card (`ORD-1001`).
+   - **Verify**: Order ID (`ORD-1001`), Customer (`Lan Nguyen`), Status badge (`Pending`), Total (`$125.00`), Date (`2026-10-10`), Items (`2`), Channel (`Web`), and City (`Hanoi`) are all fully visible without horizontal panning.
+2. Inspect touch target size:
+   - Ensure the `Follow-up` button has a minimum tap height of 44px.
+3. Tap `Follow-up` on `ORD-1001`.
+   - **Verify**: Feedback message `Follow-up recorded for ORD-1001` appears clearly below/on the card or in a status alert without page jump.
+
+#### Step 4: Multi-Select & Batch Follow-up
+1. Tap the checkbox on `ORD-1001`.
+   - **Verify**: Card highlights or checkbox shows checked state with tap target ≥ 44×44px.
+2. Tap the checkbox on `ORD-1003`.
+   - **Verify**: Both cards are selected.
+   - **Verify**: A sticky bottom action bar appears at the bottom of the 390px screen: `"Follow-up selected (2)"`.
+3. Tap `Follow-up selected (2)`.
+   - **Verify**: Feedback message `Follow-up recorded for ORD-1001, ORD-1003` is displayed.
+   - **Verify**: Selection clears and sticky bottom bar dismisses.
+
+#### Step 5: Detail Navigation, Action, and Return Loop
+1. Apply filter `Status: Shipped` (displays `ORD-1002`).
+2. Tap the Order ID link `ORD-1002`.
+   - **Verify**: URL changes to `/orders/ORD-1002` and detail view renders with all fields (`customer`, `status`, `total`, `date`, `items`, `channel`, `city`).
+3. Tap `Record follow-up` inside the detail view.
+   - **Verify**: Status message `Follow-up recorded for ORD-1002` appears.
+4. Tap `Back to orders` (or browser back button).
+   - **Verify**: Navigation returns to `/orders`.
+   - **Verify**: The previous filter state (`Status: Shipped`) and scroll position are preserved; `ORD-1002` remains displayed.
+
+---
+
+### Phase B: Desktop Regression (1280px) Verification
+
+#### Step 1: Layout Shell Integrity
+1. Resize viewport to 1280px × 800px.
+2. Load `http://127.0.0.1:4173/orders`.
+3. **Verify**:
+   - The permanent dark left sidebar is visible with width 220px, showing `Ops`, `Orders`, `Reports`, and `Settings`.
+   - The hamburger button is hidden (`hidden md:block` / `block md:hidden`).
+   - Main content area occupies the remaining screen space.
+
+#### Step 2: Table & Desktop Capabilities
+1. **Verify**:
+   - Full 10-column table is visible (`Select`, `ID`, `Customer`, `Status`, `Total`, `Date`, `Items`, `Channel`, `City`, `Action`).
+   - Mobile card list is hidden.
+   - Table controls (Search, Status select, Sort select, Reset filters, Export visible) remain accessible in top toolbar.
+2. Test selection and batch action:
+   - Check multiple rows, click `Follow-up selected (N)` below the table, and verify status message.
+3. Test detail navigation and back navigation:
+   - Click `ORD-1004`, verify detail view, click `Back to orders`, and verify return.
+4. Test direct URL loading:
+   - Navigate directly to `http://127.0.0.1:4173/orders/ORD-1003`. Verify detail view loads directly.
+   - Navigate to `http://127.0.0.1:4173/orders/ORD-UNKNOWN`. Verify `Order not found` message displays.
+
+---
+
+## 5. Summary of Decision Value
+
+By transforming the navigation into an off-canvas drawer and rendering the 10-column table as high-contrast triage cards on screens < 768px:
+- **Zero horizontal scroll** is achieved on 390px viewports.
+- **Cognitive load is minimized**: ID, customer, status, total, and primary actions are coupled in a single vertical scan.
+- **Touch target compliance**: All interactive targets satisfy the 44×44px accessibility baseline.
+- **Desktop experience remains 100% identical and uncompromised**, ensuring power users on wide screens maintain their full tabular data density and workflow efficiency.

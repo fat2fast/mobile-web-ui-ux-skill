@@ -1,0 +1,1 @@
+A contact form has name, email and message. Users sometimes enter an invalid email. Recommend a mobile form and error recovery.

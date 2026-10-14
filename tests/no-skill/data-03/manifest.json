@@ -1,0 +1,20 @@
+{
+  "case": "DATA-03",
+  "condition": "no-skill",
+  "fixture": "order-dashboard",
+  "fixture_files_sha256": {
+    "README.md": "9cada27591ca8b505a719ac5ae279343325e19f9bf87683cbb550e8155c293c0",
+    "index.html": "a31813111bb9b0ac3e94cc11c61cd8b4aefddcdeec4b71a2ecb201ebbd91863b",
+    "package-lock.json": "2604107e7e347ef1f53b1c9f2c934435301f4fab3ffb541f57749268e52d4c55",
+    "package.json": "8660801bca28c8c4acd9c9b3eda7664a82510ac83861141bb3893bbb661abbb9",
+    "src/main.jsx": "5c92bf9befa72c07b686741328428c17af9ea404be8f2b32a959951d0877c10c",
+    "src/style.css": "7edba43aa754853e9ee086ac602cbf8904c5bcde1733acbc152da742f2a3aea1",
+    "vite.config.js": "1e52f99faca2043de3db29aac45a5945fdd5609a39a04385102fe6ed212ac25f"
+  },
+  "prompt_number": 6,
+  "prompt_sha256": "9439ab85a542d32049c7c55cd6c0d4fcb4e556bf16fd36a562be292eda91ac5e",
+  "prepared_at_utc": "2026-10-14T07:49:26.446943+00:00",
+  "recording_instructions_sha256": "225e187b91b1edb050903dec9105ee3a2f256b0d0c4212c0d58515ff96bfd606",
+  "source_commit": "67960c55f97c62e2fab3d6b2ff00b99a644470b6",
+  "skill_files_sha256": null
+}

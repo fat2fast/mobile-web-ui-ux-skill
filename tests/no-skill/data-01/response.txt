@@ -1,0 +1,154 @@
+# Mobile Data Presentation Recommendation for Order Dashboard
+
+## 1. Executive Summary & Recommended Pattern
+
+For an order dashboard with approximately 8–10 columns where users primarily **locate an order, inspect its status, and open details**, the recommended mobile data presentation is a **Responsive Card-Based List (Structured Feed)** combined with a **Contextual Action Bar and Filter Drawer**.
+
+### Why the Traditional Table Fails on Mobile
+* **Loss of Context:** A wide multi-column table (ID, Customer, Status, Total, Date, Items, Channel, City, Actions) requires horizontal scrolling (~1000px+ width). On a 360–412px smartphone display, users lose track of which row corresponds to which customer when scrolling horizontally to check status or trigger actions.
+* **Friction in Primary Tasks:** Locating an order and checking status requires instant, vertical scannability. Forcing two-dimensional panning degrades operator speed and introduces cognitive friction.
+* **Poor Touch Ergonomics:** Small tabular checkboxes and row-level action buttons are cramped, violating minimum touch target standards (44×44px) and causing frequent mis-taps.
+
+### The Card-Based Solution
+A card layout reorganizes tabular rows into vertically stacked, touch-friendly cards. It establishes an explicit visual hierarchy that surfaces the primary decision variables (Order ID, Status badge, Customer name) at a glance while preserving full access to secondary metadata, filtering, sorting, CSV export, and bulk operations.
+
+---
+
+## 2. Card Anatomy & Information Hierarchy
+
+Each order row is converted into a distinct, bounded card with a clear three-tier information hierarchy:
+
+```
++-------------------------------------------------------------+
+|  [ ] ORD-1001                                [ PENDING ]    |  <-- Primary: ID + Status Badge
+|  Lan Nguyen                                      $125.00    |  <-- Secondary: Customer + Total
+|  2026-10-10 · 2 items · Web · Hanoi                         |  <-- Tertiary: Metadata Strip
++-------------------------------------------------------------+
+|  [ Record Follow-up ]                 [ View Details > ]   |  <-- Actions / Navigation
++-------------------------------------------------------------+
+```
+
+### Information Tiers:
+1. **Primary Tier (Instant Visual Triage):**
+   * **Order ID:** Prominent, bold monospace font (e.g., `#ORD-1001`). Serves as a direct clickable anchor.
+   * **Status Badge:** Positioned at the top-right corner using high-contrast pill styling:
+     * *Pending:* Amber/Yellow background with dark text.
+     * *Shipped:* Blue/Cyan background with dark or white text.
+     * *Delivered:* Green background with dark or white text.
+2. **Secondary Tier (Commercial Context):**
+   * **Customer Name:** Medium-weight text (16px) for effortless legibility.
+   * **Order Total:** Right-aligned currency amount (`$125.00`) aligned with the customer name.
+3. **Tertiary Tier (Operational Details):**
+   * A compact inline metadata string separated by middle dots (`·`): `Date · Items · Channel · City` (e.g., `2026-10-10 · 2 items · Web · Hanoi`).
+4. **Interaction & Affordance:**
+   * Tapping anywhere on the card body (or the "View Details >" chevron) navigates directly to `/orders/:id`.
+   * A dedicated single-order quick action button ("Record Follow-up") meets the minimum 44×44px touch target.
+
+---
+
+## 3. Retaining Required Capabilities on Mobile
+
+All four secondary capabilities (**Filtering, Sort, Export, and Bulk Actions**) must remain fully functional without cluttering the compact viewport.
+
+### A. Locate & Search
+* **Sticky Search Header:** A persistent search input pinned at the top of the viewport.
+* Real-time query matching on both `Order ID` and `Customer Name` with an instant "clear" button (`✕`).
+
+### B. Filtering
+* **Quick Status Chips (Primary Filter):** A horizontally scrollable row of pill buttons directly beneath search (`All`, `Pending (2)`, `Shipped (1)`, `Delivered (1)`). Tapping a chip immediately filters the card list with zero modal overhead.
+* **Filter Drawer / Bottom Sheet (Secondary Filters):** A "Filter" icon button displaying the count of active filters (e.g., `Filters (1)`). Tapping opens a slide-up bottom sheet containing secondary filter controls (Channel, City, Date range) with "Clear All" and "Apply" buttons.
+
+### C. Sorting
+* A compact "Sort" dropdown/button positioned next to the filter bar (e.g., `Sort: Date ↓`).
+* Tapping opens a bottom action sheet with clear, readable touch targets:
+  * Date: Newest first (Default)
+  * Date: Oldest first
+  * Order ID: Ascending / Descending
+  * Customer Name: A to Z
+  * Total: High to Low
+
+### D. Export
+* To avoid cluttering the primary header, place the **Export** option inside an overflow utility menu (`⋮` icon) or a dedicated export icon button adjacent to the search/filter header.
+* Export dynamically respects the currently filtered/visible set (`visible.length`), downloading `orders.csv` or invoking the native mobile share sheet.
+
+### E. Bulk Actions & Multi-Select Workflow
+Permanent checkboxes on every mobile card create visual clutter and risk accidental selection during scrolling. A **dedicated multi-select mode** solves this:
+
+1. **Entering Selection Mode:**
+   * Triggered either by tapping a "Select" button in the top action bar or by long-pressing any order card.
+2. **In Selection Mode:**
+   * Checkboxes smoothly expand into view on the left edge of each card.
+   * Tapping anywhere on a card toggles its checkbox (navigation to details is temporarily suspended during selection mode).
+   * The top header updates to show: `[X] Cancel`, `N Selected`, and `Select All`.
+3. **Sticky Bottom Action Bar:**
+   * A floating bottom action bar slides up, anchored above the screen bottom:
+     `[ Follow-up Selected (N) ]`
+   * Executing the bulk action updates the status, displays a non-blocking confirmation toast, and exits selection mode.
+
+---
+
+## 4. Mobile Shell & Layout Integration
+
+* **Collapsible Navigation:** Replace the desktop sidebar (`aside`, which shrinks the viewport on mobile) with a standard mobile top app bar (with a hamburger drawer) or a bottom navigation bar (`Orders`, `Reports`, `Settings`). This grants 100% of the screen width to the order cards.
+* **Responsive Breakpoint Behavior:**
+  * **Viewports < 768px (Mobile):** Render the Card List layout, sticky search/filter bar, and bottom action bar.
+  * **Viewports ≥ 768px (Desktop/Tablet):** Retain the multi-column tabular grid with standard sorting headers and inline row actions.
+
+---
+
+## 5. UI Layout Blueprint
+
+### Normal Browsing State (Mobile Portrait)
+```
++---------------------------------------------+
+| [=] Ops Dashboard               [Export] [:]|
++---------------------------------------------+
+| [ Search orders by ID or customer...    [X] ]|
++---------------------------------------------+
+| ( All )  ( Pending: 2 )* ( Shipped ) (Deliv)|
+| [ Sort: Date (Newest) v ]   [ Select Mode ] |
++---------------------------------------------+
+| +-----------------------------------------+ |
+| | ORD-1001                    [ PENDING ] | |
+| | Lan Nguyen                      $125.00 | |
+| | 2026-10-10 · 2 items · Web · Hanoi      | |
+| | [ Follow-up ]         [ View Details > ]| |
+| +-----------------------------------------+ |
+| +-----------------------------------------+ |
+| | ORD-1003                    [ PENDING ] | |
+| | Hoa Pham                        $240.00 | |
+| | 2026-10-12 · 4 items · Partner · HCMC   | |
+| | [ Follow-up ]         [ View Details > ]| |
+| +-----------------------------------------+ |
++---------------------------------------------+
+```
+
+### Bulk Selection State (Mobile Portrait)
+```
++---------------------------------------------+
+| [X] Exit     2 Orders Selected   [Select All]|
++---------------------------------------------+
+| +-----------------------------------------+ |
+| | [v] ORD-1001                [ PENDING ] | |
+| |     Lan Nguyen                  $125.00 | |
+| |     2026-10-10 · 2 items · Web · Hanoi  | |
+| +-----------------------------------------+ |
+| +-----------------------------------------+ |
+| | [v] ORD-1003                [ PENDING ] | |
+| |     Hoa Pham                    $240.00 | |
+| |     2026-10-12 · 4 items · Partner · HCMC|
+| +-----------------------------------------+ |
++---------------------------------------------+
+| =========================================== |
+| [=== Follow-up Selected (2) ===============] |
++---------------------------------------------+
+```
+
+---
+
+## 6. Accessibility & Performance Considerations
+
+* **Touch Target Sizing:** All interactive elements (status pills, card action buttons, checkboxes, and sort triggers) maintain at least 44×44px hit areas.
+* **Color Contrast:** Status badges and text maintain WCAG AA minimum contrast ratio (≥ 4.5:1 for body text, ≥ 3:1 for large text and badge borders).
+* **Screen Reader Navigation:** Cards use semantic markup (`<article aria-labelledby="order-ORD-1001">` or `<ul role="list"><li>`), ensuring screen reader users can navigate by order landmark or heading without losing record context.
+* **ARIA Live Feedback:** Confirmation messages ("Follow-up recorded for ORD-1001") are announced via `aria-live="polite"` status regions so mobile screen reader users receive immediate auditory feedback without disrupting their position in the list.

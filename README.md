@@ -57,14 +57,21 @@ Skills directories differ between agents. Refer to your agent's documentation fo
 
 ### Create comparison projects
 
-From WSL, create two independent copies of the same runnable fixture in an existing destination directory:
+From WSL, create two independent copies of the same runnable fixture in an existing destination directory outside this repository:
 
 ```bash
-make no-skill DEST=//work/mobile-ux-test
-make with-skill DEST=/work/mobile-ux-test
+# View detailed usage instructions
+make help
+
+# Create both projects at once (recommended)
+make both DEST=~/work/mobile-ux-test
+
+# Or create projects individually
+make no-skill DEST=~/work/mobile-ux-test
+make with-skill DEST=~/work/mobile-ux-test
 ```
 
-Both commands use `order-dashboard` by default. Add `FIXTURE=mobile-form` to use the form fixture. The second project includes the skill at `.agents/skills/mobile-web-ui-ux-skill/`, with its runtime references. Reviewer cases and rubrics stay in this repository. The first has no project skill. Generated projects omit `node_modules` and `dist`; run `npm ci` inside each project before starting it. Existing destination projects are never overwritten. Use a new `DEST` for another trial, and keep reviewer cases and results outside both generated projects.
+Both commands use `order-dashboard` by default. Add `FIXTURE=mobile-form` to use the form fixture. Note that `DEST` must be an existing parent directory (create it beforehand if needed with `mkdir -p <DEST>`). The second project includes the skill at `.agents/skills/mobile-web-ui-ux-skill/`, with its runtime references. Reviewer cases and rubrics stay in this repository. The first has no project skill. Generated projects omit `node_modules` and `dist`; run `npm ci` inside each project before starting it. Existing destination projects are never overwritten. Use a new `DEST` for another trial, and keep reviewer cases and results outside both generated projects.
 
 Each copy has identical `AGENTS.md` recording instructions and all 12 case folders from `evals/comparison-prompts.md`: `nav-01`–`nav-03`, `data-01`–`data-03`, `form-01`–`form-03`, and `a11y-01`–`a11y-03`. Each folder has its own `prompt.txt`, `run-info.txt`, and `manifest.json`. In a fresh Antigravity conversation for each case and project, send the exact text from that case's `prompt.txt` to both conditions. The agent is asked to write `response.txt` and fill `run-info.txt`. A fixture may not implement every scenario; record unrun checks honestly. Copy the matching case folders back under separate `no-skill/` and `with-skill/` parents for independent review. Check that both output files exist and no `PENDING` fields remain: agent-written metadata is a report, not an independent transcript, and unknown runtime fields must stay `unknown`. Compare all cases before deciding whether to change the skill.
 

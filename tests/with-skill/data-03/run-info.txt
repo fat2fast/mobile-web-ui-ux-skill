@@ -1,0 +1,16 @@
+Case: DATA-03
+Condition: with-skill
+Runtime and version: Antigravity IDE (version unknown)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: Advisory / decision-only
+Started at UTC: 2026-10-14T07:57:40Z
+Finished at UTC: 2026-10-14T08:01:25Z
+Workspace path: /home/user/work/with-skill
+Tool access: run_command, replace_file_content, multi_replace_file_content, write_to_file, view_file, list_dir, grep_search, read_url_content, generate_image, browser_subagent, ask_question, schedule, manage_task
+Tools actually used: view_file, list_dir, write_to_file
+Files and ambient instructions read: /home/user/work/with-skill/AGENTS.md, /home/user/work/with-skill/data-03/prompt.txt, /home/user/work/with-skill/data-03/run-info.txt, /home/user/work/with-skill/data-03/manifest.json, /home/user/work/with-skill/README.md, /home/user/work/with-skill/src/main.jsx, /home/user/work/with-skill/src/style.css, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/data-display.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/actions.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/report-template.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/mobile-ux-principles.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/evaluation-criteria.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/evals/evidence-template.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/touch-interactions.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/overlays.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/forms.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/content-hierarchy.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/project-discovery.md, /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/references/agent-workflow.md
+Skill file actually read and evidence: yes - /home/user/work/with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md read via view_file tool call (IsSkillFile: true) at 2026-10-14T07:58:19Z
+Checks actually run and results: none (NOT RUN: Decision-only comparison task. Rule 1 prohibits editing or modifying the fixture application, and no test suite was executed)
+Time/token limits: unknown
+Raw transcript location or availability: /home/user/.gemini/antigravity-ide/brain/d4923afa-a16e-4cf3-a5da-fce6599659d4/.system_generated/logs/transcript.jsonl
+Other limitations: Static source and architecture analysis only; fixture application was not modified per comparison instructions; no browser runtime or physical mobile device testing was performed.

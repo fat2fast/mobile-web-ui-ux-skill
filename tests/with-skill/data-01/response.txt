@@ -1,0 +1,153 @@
+# Mobile Data Presentation Recommendation for Order Dashboard
+
+## 1. Executive Summary & Recommended Pattern
+
+For an order dashboard with approximately eight columns where mobile users primarily **locate an individual order, inspect its status, and open full details**, the recommended presentation is a **Priority Card / List layout on mobile viewports (<768px)** paired with a **responsive breakpoint that preserves the standard multi-column table on desktop screens (≥768px)**.
+
+Forcing an 8–10 column data table onto mobile screens (~360px–393px width) requires extreme horizontal panning where row context, order identity, and row actions are severed from the viewport. Because user tasks on mobile are single-record lookups rather than broad multi-column cross-row comparisons, structuring each order as a scannable, vertically stacked card provides immediate status inspection and ergonomic tap targets while fully retaining filtering, sorting, export, and bulk actions.
+
+---
+
+## 2. Card Anatomy & Data Hierarchy
+
+Each order card is structured to prioritize the primary scan path:
+
+1. **Card Header (Identity & Immediate Status):**
+   - **Selection Checkbox:** Sized with a minimum 44×44px touch target (with explicit `aria-label="Select order ORD-XXXX"`), placed top-left for easy thumb selection.
+   - **Order ID:** Displayed prominently as a high-contrast, tappable link or button (`/orders/:id`) to open full details.
+   - **Status Badge:** Placed top-right as a distinct visual chip (`Pending`, `Shipped`, `Delivered`) using accessible background-to-text contrast ratios. Users can verify status in under a second without horizontal panning.
+2. **Card Body (Key Contextual Attributes):**
+   - **Customer Name:** Clear primary text identifier directly under the ID.
+   - **Order Total & Date:** Placed in a compact two-column key-value summary row (e.g., `Total: $125.00` | `Date: 2026-10-10`).
+3. **Progressive Disclosure (Secondary Attributes):**
+   - Secondary attributes that clutter quick mobile scanning (such as `Items`, `Channel`, and `City`) are omitted from the top-level card surface and surfaced immediately upon opening the order detail route (`/orders/:id`).
+4. **Card Footer (Row Action):**
+   - Direct, visible single-order action button (e.g., `Follow-up`) with an accessible touch target, preventing reliance on swipe gestures or hidden contextual menus.
+
+---
+
+## 3. Preserving Required Dashboard Capabilities
+
+| Capability | Mobile Implementation Pattern | Usability & Accessibility Rationale |
+| :--- | :--- | :--- |
+| **Filtering (Search & Status)** | Stacked, full-width search input and status `<select>` dropdown in a top control bar, followed by a visible "Reset filters" button. | Preserves native browser input handling and virtual keyboard clearance; avoids hidden flyout panels that obscure active filter state. |
+| **Sorting** | Accessible native `<select>` dropdown (Sort by: ID, Customer, Date) inline with the filter controls. | Standardized single-tap selection that works predictably across all mobile web browsers without taking up excessive vertical screen space. |
+| **Export** | Dedicated "Export CSV" button placed in the top control toolbar alongside filter reset. | Retains direct access to data export without burying it inside overflow submenus. |
+| **Bulk Actions** | Sticky bottom floating action bar that appears whenever `selection.length > 0`, displaying `Follow-up selected (N)` and a `Deselect all` button. | On mobile, after selecting cards down a long list, users should not have to scroll to the very bottom of the page to trigger the bulk action. A persistent bottom bar provides immediate actionability and clear selection count feedback. |
+
+---
+
+## 4. Mobile UX Decision Record
+
+```markdown
+### Decision Contract: Mobile Order Presentation
+
+- Evidence: INFERRED from dashboard requirements and baseline source code (src/main.jsx, src/style.css). The baseline relies on a min-width: 1080px table with overflow-x: auto, causing horizontal scroll disconnection where status and actions drop off-screen on phones.
+- Mobile task: Locate an individual order, inspect its status immediately, open full details, and perform filtering, sorting, CSV export, or multi-order bulk follow-up.
+- Candidates:
+  1. Priority Card / List layout with persistent/sticky bulk bar (Selected).
+  2. Horizontally scrollable table with frozen/sticky Order ID and Status columns (Rejected).
+  3. Inline accordion table rows expanding details on tap (Rejected).
+- Selected: Priority Card / List layout.
+  - Reason: Directly optimizes for the dominant mobile tasks (find, inspect status, open details) by placing ID and status at the top of each card with zero horizontal scrolling, while offering touch-sized targets (≥44px) for selection and follow-up.
+- Rejected:
+  - Horizontally scrollable table with sticky columns: On 360px viewports, freezing ID + Status + Checkbox leaves barely 100px for remaining columns, creating awkward nested scrolling, high accidental gesture risk, and clipped text.
+  - Inline accordion expansion: Conflicts with dedicated URL routing (/orders/:id), creates sudden vertical layout shifts while scrolling, and causes ambiguity between row expansion and item selection.
+- Preserved:
+  - Full desktop multi-column table view preserved above 768px breakpoint.
+  - All existing filters (search query, status filter, reset).
+  - All sorting options (ID, customer, date).
+  - Data export (CSV generation and download).
+  - Single-order and bulk follow-up actions with status messages.
+  - Native browser history, Back button, and deep linking (/orders/:id).
+- Verify:
+  - Mobile viewport scan test: On 360px and 390px widths, verify that Order ID and Status badge are visible on screen without any horizontal scroll.
+  - Detail navigation test: Tap Order ID link, confirm browser route transitions to /orders/:id, confirm browser Back button returns cleanly to /orders with filters and scroll position intact.
+  - Bulk action test: Select 2 order cards, verify sticky bottom bar displays "Follow-up selected (2)", tap action, confirm follow-up status message is announced.
+  - Desktop regression test: On viewport ≥768px / 1080px, confirm full tabular layout displays all columns in a single row without regression.
+  - Verification status: NOT RUN (decision and design recommendation phase).
+```
+
+---
+
+## 5. Responsive Implementation Blueprint
+
+```css
+/* Responsive presentation structure */
+
+/* Mobile First: Card List (<768px) */
+.orders-table {
+  display: none; /* Hide multi-column table on mobile */
+}
+
+.orders-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card {
+  border: 1px solid #d7dce2;
+  border-radius: 8px;
+  padding: 16px;
+  background: #ffffff;
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.order-status-badge {
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.bulk-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #172638;
+  color: #ffffff;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+}
+
+/* Desktop Breakpoint (≥768px) */
+@media (min-width: 768px) {
+  .orders-card-list {
+    display: none; /* Hide cards on desktop */
+  }
+  .orders-table {
+    display: table; /* Restore full tabular grid */
+    min-width: 100%;
+  }
+  .bulk-action-bar {
+    position: static;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+```
+
+---
+
+## 6. Verification Checklist & Remaining Risks
+
+- **Manual Verification Steps (Recommended prior to deployment):**
+  1. *Viewport Testing:* Test widths at 360px (narrow Android), 390px (iPhone standard), and 768px+ (desktop breakpoint).
+  2. *Accessibility:* Verify touch targets are at least 44×44px, status badges meet WCAG AA contrast (≥4.5:1), and checkboxes have descriptive `aria-label` tags.
+  3. *Keyboard & Focus:* Verify Tab key navigates logically from Card Checkbox → Order ID link → Card Action Button → Next Card.
+  4. *Bulk Action Floating Bar:* Verify the floating bottom bar does not obscure the bottom-most order card (ensure sufficient `padding-bottom` on the list container).
+- **Remaining Risks:**
+  - When order lists contain hundreds of records, vertical scrolling on mobile can become lengthy; introducing pagination or virtualized infinite scrolling is recommended as the dataset grows beyond initial demo volumes.

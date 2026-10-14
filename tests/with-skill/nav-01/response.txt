@@ -1,0 +1,216 @@
+# Mobile UX Decision & Verification Recommendation: Admin Order Dashboard
+
+## Mobile UX Summary
+
+- **Target Route & Viewport:** Admin Orders page (`/orders` and `/orders/:id`) at 390px viewport width (standard modern smartphone, e.g., iPhone 12/13/14/15/16).
+- **Primary Mobile Tasks:**
+  1. *Find an order:* Rapidly locate an order using search query and status filter without excessive vertical or horizontal panning.
+  2. *Read status & metadata:* Immediately identify order ID, customer name, order total, and fulfillment status (`Pending`, `Shipped`, `Delivered`) at a glance.
+  3. *Act:* Execute single-order follow-up action or select multiple orders for bulk follow-up.
+  4. *Inspect details & return:* Tap an order to view comprehensive order details at `/orders/:id`, execute detail follow-up, and return to the exact filtered order list position.
+- **Observed Problems at 390px:**
+  - *Sidebar obstruction:* `aside` is styled with `width: 100px` on screens $\le$ 600px (`src/style.css:10`), permanently consuming 25.6% of horizontal viewport width. This leaves only 290px for the operational workspace.
+  - *Data table sprawl:* The table has `min-width: 1080px` across 10 columns (`src/style.css:5`, `src/main.jsx:32`). Status is in column 4 and the "Follow-up" action button is in column 10 (over 900px off-screen). Users must scroll horizontally back and forth across 1080px to read status, tap action, or check boxes.
+  - *Filter wrapping:* Search, Status dropdown, Sort dropdown, Reset, and Export buttons flex-wrap into 4–5 stacked rows (`src/main.jsx:31`), pushing orders below the fold.
+  - *Detail view cramped:* Order details render in the squeezed 290px container beside the 100px sidebar with a small text back link (`src/main.jsx:30`).
+- **Context & Constraints:**
+  - Stack: React + Tailwind CSS (`src/main.jsx`, `src/style.css`).
+  - Desktop layout ($\ge$ 600px/768px) and all existing capabilities (sidebar, 10-column table, search, status filter, sort, CSV export, single follow-up, bulk follow-up, order details) must be preserved without loss.
+
+---
+
+## Consequential UX Decisions
+
+### Decision 1: Navigation & Layout Architecture (Drawer Navigation on Mobile vs Persistent Sidebar)
+
+| Field | Content |
+|---|---|
+| **Evidence** | `INFERRED` from `src/style.css:8-10` and `src/main.jsx:27-28`. On $\le$ 600px screens, `aside` stays at `width: 100px` fixed. At 390px, this consumes 100px (25.6%) of screen width, leaving only 290px for content. |
+| **Mobile Task** | Navigate between administrative sections (`/orders`, `/reports`, `/settings`) when needed, while dedicating 100% of viewport width (390px) to searching, reading, and managing orders. |
+| **Candidates** | 1. **Selected:** Responsive Top App Bar with Off-Canvas Drawer toggle (hamburger) on mobile ($< 640$px); retain persistent 220px desktop sidebar on $\ge 640$px.<br>2. **Rejected (Bottom Navigation Bar):** 3-tab bottom bar (`Orders`, `Reports`, `Settings`).<br>3. **Rejected (Status Quo):** Persistent 100px sidebar on mobile. |
+| **Selected Reason** | An off-canvas drawer reclaims 100% of the 390px viewport for order management tasks. Navigation between Ops sections is occasional (secondary), whereas order triage is continuous and data-dense. |
+| **Rejected Reason** | - Bottom Navigation: Clashes with mobile on-screen keyboards during search, competes with floating/sticky bulk action buttons (`Follow-up selected`), and wastes persistent vertical space for low-frequency section switches.<br>- Status Quo: Squeezes the active workspace into 290px, worsening table clipping and multi-line wrapping. |
+| **Preserved** | All routes (`/orders`, `/reports`, `/settings`), active route state, semantic `<aside>` navigation inside drawer with ARIA attributes (`aria-expanded`, `aria-hidden`), and exact 220px desktop sidebar layout. |
+| **Verify** | At 390px viewport, verify the sidebar is hidden by default and `<main>` spans the full 390px width. Tapping the menu button opens the navigation drawer with smooth focus management; tapping outside or on a link closes the drawer. At 1024px, the full 220px sidebar remains permanently visible. Evidence status: `NOT RUN`. |
+
+---
+
+### Decision 2: Data Presentation (Responsive Order Cards with Status Badges vs 1080px Table)
+
+| Field | Content |
+|---|---|
+| **Evidence** | `INFERRED` from `src/style.css:5` (`min-width: 1080px`) and `src/main.jsx:32`. Status is column 4 and Follow-up action is column 10. At 390px, reading status and tapping action requires panning across 1080px of table width. |
+| **Mobile Task** | Scan order ID and customer name, immediately read order status, and trigger follow-up action or toggle selection with a single tap, without horizontal panning. |
+| **Candidates** | 1. **Selected:** Responsive Order Card List on mobile ($< 640$px); full 10-column table on desktop ($\ge 640$px).<br>2. **Rejected (Sticky Columns on Table):** Freeze checkbox, ID, and Action columns while scrolling intermediate columns.<br>3. **Rejected (Status Quo Table):** Keep 1080px horizontal scroll table. |
+| **Selected Reason** | Order cards stack key information vertically in the natural reading order for mobile triage. Each card displays: (a) Header with selection checkbox, Order ID link, and colored Status badge; (b) Body with Customer, Total, and Date; (c) Footer with full-width primary action button (`Follow-up`, min 44px touch target) and link to full details. |
+| **Rejected Reason** | - Sticky Table Columns: Pinning Select (40px), ID (90px), and Action (80px) consumes 210px of 390px, leaving only 180px for the 7 remaining columns. This causes severe horizontal scroll trapping, clipped content, and awkward alignment.<br>- Status Quo: Requires 800px+ horizontal panning per row, leading to high interaction friction, disorientation, and accidental mis-taps. |
+| **Preserved** | Desktop 10-column table (`min-width: 1080px`) completely untouched at $\ge 640$px. All data fields (ID, Customer, Status, Total, Date, Items, Channel, City) remain accessible (secondary fields accessible on card expansion or via `/orders/:id`). |
+| **Verify** | At 390px, verify orders display as vertical cards fitting within 390px with zero horizontal page scroll. Status badge is immediately visible. The "Follow-up" button has $\ge 44\times 44$px touch area and triggers `act(order)`. At 1024px, verify standard table displays all 10 columns. Evidence status: `NOT RUN`. |
+
+---
+
+### Decision 3: Order Details Inspection & Return Flow (Dedicated Full-Width Detail View with Sticky Back Affordance)
+
+| Field | Content |
+|---|---|
+| **Evidence** | `INFERRED` from `src/main.jsx:20-24, 30`. Navigation updates URL to `/orders/:id` via `pushState`. Detail view currently has a small text button `Back to orders` and is constrained by the 100px sidebar. |
+| **Mobile Task** | Inspect complete order breakdown (Items, Channel, City, Totals), record follow-up on the order, and return to the order list without losing previous search queries, status filters, or scroll position. |
+| **Candidates** | 1. **Selected:** Full-width mobile detail page with prominent sticky header containing `← Back to Orders` button (min 44px tap target), order status badge, and sticky bottom action bar for `Record follow-up`.<br>2. **Rejected (Modal / Bottom Sheet Overlay):** Display order details in an overlay dialog.<br>3. **Rejected (Inline Accordion Expansion):** Expand details directly inside the list without URL change. |
+| **Selected Reason** | Full-width dedicated detail view honors the existing routing model (`/orders/:id`), allows bookmarking/sharing, works seamlessly with browser Back (`popstate`), and provides ample room for structured definition lists (`<dl>`) without modal scroll chaining. |
+| **Rejected Reason** | - Modal/Sheet: On 390px screens, displaying 8 key-value pairs inside a modal causes nested scroll chaining, conflicts with the mobile address bar, and complicates browser history navigation.<br>- Inline Accordion: Destroys deep linking (`/orders/:id`), causes abrupt vertical page shifts, and complicates focused action execution. |
+| **Preserved** | Deep link URL `/orders/:id`, direct page load fallback (`history.state?.fromApp ? history.back() : go('/orders')`), browser Back/Forward integration, list filter/query state persistence in React state, and desktop layout. |
+| **Verify** | From `/orders`, tap `ORD-1001` at 390px. Verify full detail view loads across 390px. Tap `Record follow-up` and observe status message. Tap `← Back to Orders` or use browser back swipe/button. Verify return to `/orders` with query and filter state intact. Evidence status: `NOT RUN`. |
+
+---
+
+### Decision 4: Mobile Filter Toolbar & Sticky Bulk Action Affordance
+
+| Field | Content |
+|---|---|
+| **Evidence** | `INFERRED` from `src/main.jsx:31-33`. Filter inputs flex-wrap with `gap-3`, and the bulk action button `Follow-up selected (N)` is placed below the 1080px table, requiring users to scroll past the table to execute bulk actions. |
+| **Mobile Task** | Filter orders by keyword or status with minimal taps, and trigger bulk follow-up actions immediately upon selecting orders without hunting for the action button. |
+| **Candidates** | 1. **Selected:** Full-width search bar with `type="search"`, horizontal scrollable filter pills for Status (`All`, `Pending`, `Shipped`, `Delivered`), and a floating bottom action sheet/bar that animates in only when `selection.length > 0`.<br>2. **Rejected (Status Quo):** Unstructured flex-wrapping input controls and distant bulk action button.<br>3. **Rejected (Collapsed Filter Modal):** Move all filters into a separate filter dialog. |
+| **Selected Reason** | Status filtering is a primary triage task on mobile and should be a 1-tap operation (pill chips). The floating bulk action bar keeps the high-value action within the thumb zone immediately when checkboxes are checked. |
+| **Rejected Reason** | - Status Quo: Takes up 200px+ of vertical height on mobile and places the bulk button at the bottom of a horizontally scrolling container.<br>- Filter Modal: Adds unnecessary friction (2 extra taps) for a simple 4-state status filter. |
+| **Preserved** | Search query, Status filter options, Sort options, Reset filter button, CSV export functionality, and bulk action contract. |
+| **Verify** | At 390px, type search query and tap `Pending` chip; verify list filters instantaneously. Check 2 orders; verify sticky bottom action bar appears with `Follow-up selected (2)`. Tap button and verify message updates and selection clears. Evidence status: `NOT RUN`. |
+
+---
+
+## Recommended Implementation Specifications
+
+### 1. CSS & Layout Architecture (`src/style.css`)
+```css
+/* Retain desktop sidebar at >= 640px, transform to off-canvas drawer on mobile */
+@media (max-width: 639px) {
+  aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease-in-out;
+  }
+  aside.drawer-open {
+    transform: translateX(0);
+  }
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 40;
+  }
+}
+
+/* Responsive Data View: Table on desktop, Cards on mobile */
+@media (max-width: 639px) {
+  .desktop-table-container {
+    display: none;
+  }
+  .mobile-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+@media (min-width: 640px) {
+  .mobile-card-container {
+    display: none;
+  }
+  .desktop-table-container {
+    display: block;
+  }
+}
+```
+
+### 2. Mobile Order Card Structure (`src/main.jsx`)
+```jsx
+<div className="mobile-card-container">
+  {visible.map((order) => (
+    <div key={order.id} className="border rounded-lg p-4 bg-white shadow-sm flex flex-col gap-3">
+      {/* Top row: Checkbox, ID, and Status Badge */}
+      <div className="flex items-center justify-between">
+        <label className="flex items-center gap-2 font-bold">
+          <input
+            type="checkbox"
+            className="w-5 h-5"
+            aria-label={`Select ${order.id}`}
+            checked={selection.includes(order.id)}
+            onChange={(e) => setSelection(e.target.checked ? [...selection, order.id] : selection.filter(id => id !== order.id))}
+          />
+          <button className="underline text-blue-600 text-lg" onClick={() => go(`/orders/${order.id}`)}>
+            {order.id}
+          </button>
+        </label>
+        <span className={`px-2 py-1 rounded text-xs font-semibold ${
+          order.status === 'Pending' ? 'bg-amber-100 text-amber-800' :
+          order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+          'bg-green-100 text-green-800'
+        }`}>
+          {order.status}
+        </span>
+      </div>
+
+      {/* Middle: Customer & Total */}
+      <div className="flex justify-between text-sm text-gray-700">
+        <div>
+          <span className="font-medium text-gray-900">{order.customer}</span>
+          <span className="block text-xs text-gray-500">{order.city} • {order.channel}</span>
+        </div>
+        <div className="text-right">
+          <span className="font-bold text-gray-900 text-base">{order.total}</span>
+          <span className="block text-xs text-gray-500">{order.date}</span>
+        </div>
+      </div>
+
+      {/* Bottom: Action */}
+      <div className="pt-2 border-t flex justify-end">
+        <button
+          className="w-full py-2.5 px-4 bg-gray-100 hover:bg-gray-200 border rounded font-medium text-sm active:bg-gray-300"
+          onClick={() => act(order)}
+        >
+          Follow-up
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+```
+
+### 3. Detail View Back Navigation Affordance
+```jsx
+<div className="sticky top-0 bg-white border-b py-3 mb-4 flex items-center justify-between">
+  <button
+    className="flex items-center gap-1.5 py-2 px-3 text-blue-600 font-medium active:bg-blue-50 rounded"
+    onClick={() => history.state?.fromApp ? history.back() : go('/orders')}
+  >
+    <span aria-hidden="true">←</span> Back to orders
+  </button>
+  <span className="font-bold text-gray-800">{detail.id}</span>
+</div>
+```
+
+---
+
+## Verification Plan & Observable Results
+
+All verification steps are specified for execution against the target browser viewport matrix.
+
+| Test Case | Viewport | Target Flow | Expected Observable Result | Status |
+|---|---|---|---|---|
+| **TC-01: Layout & Viewport Clearance** | 390px × 844px | Open `/orders` | The 100px sidebar is hidden off-canvas. Top bar provides a header with menu toggle. Main content occupies 100% (390px) width with no horizontal page scroll. | `NOT RUN` (Manual check recommended) |
+| **TC-02: Search & Filter Ergonomics** | 390px × 844px | Type "Lan" in search, then tap "Pending" status chip | Order list instantly filters to `ORD-1001`. Filter chips are horizontally swipeable and single-tap operable. | `NOT RUN` (Manual check recommended) |
+| **TC-03: Order Status & Direct Action** | 390px × 844px | View `ORD-1001` card, tap "Follow-up" button | Status badge "Pending" is clearly legible without scrolling. Tapping "Follow-up" button ($\ge 44$px height) displays feedback message: `Follow-up recorded for ORD-1001`. | `NOT RUN` (Manual check recommended) |
+| **TC-04: Detail Navigation & Return** | 390px × 844px | Tap `ORD-1001` link, view details, tap `← Back to orders` | URL changes to `/orders/ORD-1001`. Full details render cleanly. Tapping Back returns immediately to `/orders` with query and filter intact. Browser swipe back also works. | `NOT RUN` (Manual check recommended) |
+| **TC-05: Bulk Selection & Sticky Action** | 390px × 844px | Select checkboxes for `ORD-1001` and `ORD-1003` | Sticky bottom bar appears with button `Follow-up selected (2)`. Tapping it triggers follow-up for both orders and clears selection. | `NOT RUN` (Manual check recommended) |
+| **TC-06: Desktop Non-Regression** | 1024px × 768px | Open `/orders` on desktop | 220px dark sidebar is visible on the left. Full 10-column table (`min-width: 1080px`) renders with all columns, sort, filter, and CSV export intact. | `NOT RUN` (Manual check recommended) |
+
+---
+
+## Remaining Risks & Next Steps
+
+1. **Virtual Keyboard Layout Shifts:** On iOS Safari and Chrome Android, focusing the search input pushes the viewport up. Ensure any sticky action bars use `position: sticky` rather than fixed-bottom without keyboard compensation, or hide the sticky bulk bar while the search input has focus.
+2. **Safe Area Insets:** When applying sticky headers or bottom action bars on mobile, include `padding-bottom: env(safe-area-inset-bottom)` and `padding-top: env(safe-area-inset-top)` for devices with navigation bars or dynamic islands.
+3. **Large Datasets:** For hundreds of orders, mobile card lists require pagination or virtualization (`windowing`) to avoid excessive DOM nodes and memory pressure.

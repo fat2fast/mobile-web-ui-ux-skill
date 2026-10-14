@@ -1,0 +1,16 @@
+Case: FORM-01
+Condition: no-skill
+Runtime and version: Google Antigravity IDE (version unknown)
+Model identifier and version: Gemini 3.8 Flash (High)
+Agent mode: pair programming / autonomous agent
+Started at UTC: 2026-10-14T07:58:33Z
+Finished at UTC: 2026-10-14T08:05:42Z
+Workspace path: /home/user/work/no-skill
+Tool access: ask_question, browser_subagent, generate_image, grep_search, list_dir, manage_task, multi_replace_file_content, read_url_content, replace_file_content, run_command, schedule, search_web, view_file, write_to_file
+Tools actually used: view_file, list_dir, run_command, manage_task, write_to_file
+Files and ambient instructions read: /home/user/work/no-skill/AGENTS.md, /home/user/work/no-skill/form-01/prompt.txt, /home/user/work/no-skill/form-01/run-info.txt, /home/user/work/no-skill/form-01/manifest.json
+Skill file actually read and evidence: none (no skill files were read)
+Checks actually run and results: run_command: date -u +"%Y-%m-%dT%H:%M:%SZ" (exit code 0); no test suite or build checks run (fixture application not edited per instructions)
+Time/token limits: unknown
+Raw transcript location or availability: file:///home/user/.gemini/antigravity-ide/brain/b680b3d3-a3a6-4160-b273-fe28f8267d98/.system_generated/logs/transcript.jsonl
+Other limitations: Decision-only comparison run; fixture application not edited; prompt.txt and manifest.json kept unmodified.

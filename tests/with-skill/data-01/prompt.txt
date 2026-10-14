@@ -1,0 +1,1 @@
+An order dashboard has about eight columns and users mostly locate one order, inspect status and open details. Filtering, sort, export and bulk actions must remain. Recommend a mobile data presentation.
