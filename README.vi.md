@@ -118,7 +118,7 @@ Lệnh này kiểm tra cấu trúc skill, metadata và các liên kết nội b�
 
 ## Trạng thái phát triển
 
-**Hướng dẫn quyết định đang hoàn thiện.** Repository có tám playbook, decision contract, baseline dashboard và form chạy được, các decision cases và validator cấu trúc. Baseline cố ý giữ trở ngại mobile. Sáu cặp output thăm dò đã được [review](tests/reports/261014-mobile-ux-skill-comparison-review.md) và lưu ở v0.1.0; đối chứng nghiêm ngặt vẫn `NOT RUN` vì chưa ghi nhận đủ các điều kiện kiểm soát. Bản hướng dẫn sửa từ review này chưa được chạy lại với agent mới. [Báo cáo kiểm toán độc lập](plans/reports/audit-261014-1849-mobile-ux-codebase-review.md) ghi các việc chặn replay v0.1.1. Đây **chưa phải hệ thống cải thiện mobile UX đã được kiểm thử đầy đủ**.
+**Hướng dẫn quyết định đang hoàn thiện.** Repository có tám playbook, decision contract, baseline dashboard và form chạy được, các decision cases và validator cấu trúc. Baseline cố ý giữ trở ngại mobile. Sáu cặp output thăm dò đã được [review](tests/reports/261014-mobile-ux-skill-comparison-review.md) và lưu ở v0.1.0; đối chứng nghiêm ngặt vẫn `NOT RUN` vì chưa ghi nhận đủ các điều kiện kiểm soát. Bản hướng dẫn sửa từ review này chưa được chạy lại với agent mới. [Báo cáo kiểm toán độc lập](tests/reports/audit-261014-1849-mobile-ux-codebase-review.md) ghi các việc chặn replay v0.1.1. Đây **chưa phải hệ thống cải thiện mobile UX đã được kiểm thử đầy đủ**.
 
 Các bước tiếp theo gồm đối chứng decision đúng protocol, triển khai cải thiện fixture với kiểm tra before/after, thử bàn phím và accessibility trên điện thoại thật, rồi mở rộng browser/PWA. Xem [MVP scope](docs/mvp-scope.md), [kết quả decision](evals/results/decision-evaluation.md) và [roadmap](docs/roadmap.md).
 
