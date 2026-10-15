@@ -31,3 +31,13 @@ Records follow the [decision contract](../../references/decision-contract.md). T
 - **Rejected:** bottom navigation because queue views are local, and global destinations would lose their hierarchy.
 - **Preserved:** Back, direct filtered URL, permissions on assigned work, filters, selection policy and desktop navigation.
 - **Verify:** `NOT RUN`; replay tab → detail → Back and deep link per role; assert filter state and focus.
+
+## IMAGE-3 — Enterprise drawer navigation (Visual Reference 3)
+
+- **Evidence:** `INFERRED` visual observation from Case 3: multi-level navigation drawer with numerous expanded sections and vertical gaps. Route structure and auth permissions are unknown.
+- **Mobile task:** Navigate to target workspace sections on mobile and easily dismiss the menu.
+- **Candidates:** Collapsible mobile drawer with progressive disclosure; universal bottom navigation bar.
+- **Selected:** Collapsible mobile drawer with clear close affordance, focus management, and progressive disclosure for deep hierarchies.
+- **Rejected:** Bottom navigation bar because 8+ multi-level enterprise sections cannot fit in 4-5 bottom tabs without omitting essential routes.
+- **Preserved:** All navigation destinations, route hierarchy, escape/close handlers, and desktop sidebar.
+- **Verify:** `NOT RUN`; requires full routing application. Test drawer open, dismiss, keyboard focus trap, and touch scrolling at 320px/390px.

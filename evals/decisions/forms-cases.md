@@ -33,3 +33,13 @@ Records follow the [decision contract](../../references/decision-contract.md). P
 - **Verify:** `PASS` baseline invalid/valid response and retained name; `NOT RUN` proposed UI and physical keyboard. Replay `REJECT` then `OK` at 390px and on device.
 
 **Plain-language prompt review (`INFERRED`):** “My order page is awkward on my phone” routes to DATA-01 and NAV-01 records; “my form loses me when an error happens” routes to FORM-03. Both records choose and reject a pattern without asking the user to name UI components. This is text review, not a separate agent execution.
+
+## IMAGE-5 — Create Request Form (Visual Reference 5)
+
+- **Evidence:** `INFERRED` visual observation from Case 5: single-column request form with date inputs, computed days (`Số ngày`), drag-and-drop file upload zone, and submit CTA far below the fold. Backend rules and file size limits are unknown.
+- **Mobile task:** Select request type, choose valid date range, verify calculated duration, attach file, and submit on phone without keyboard occlusion.
+- **Candidates:** Coherent single-column form with manual+picker dates, mobile file browse button, and verified-clearance submit; multi-step wizard with drag-and-drop.
+- **Selected:** Coherent single-column form with accessible date controls, manual date typing (`YYYY-MM-DD`), reactive day calculation, mobile touch file picker, and reachable submit CTA.
+- **Rejected:** Multi-step wizard because splitting a short form adds navigation friction; drag-and-drop upload cue because it is non-standard for phone touch interactions.
+- **Preserved:** All request parameters, calculated days logic, file attachment handlers, error recovery, and desktop layout. Validation specifics remain inferred.
+- **Verify:** `NOT RUN`; requires full request endpoint. Verify manual typing, derived day calculation, file selection, and keyboard clearance at 320px/390px.

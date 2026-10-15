@@ -1,0 +1,1 @@
+{"name":"order-dashboard-baseline","private":true,"version":"1.0.0","type":"module","scripts":{"dev":"vite --host 127.0.0.1 --port 4178","build":"vite build"},"dependencies":{"@tailwindcss/vite":"4.1.13","react":"19.1.1","react-dom":"19.1.1","tailwindcss":"4.1.13"},"devDependencies":{"vite":"7.3.7"}}

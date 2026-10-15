@@ -1,0 +1,41 @@
+{
+  "status": "ok",
+  "projects": {
+    "evals/fixtures/order-dashboard": {
+      "exit_code": 0,
+      "success": true,
+      "stdout": "nt for production...\ntransforming...\n\u2713 23 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.36 kB \u2502 gzip:  0.27 kB\ndist/assets/index-CpSZXb89.css    5.72 kB \u2502 gzip:  1.95 kB\ndist/assets/index-RketQHzN.js   190.77 kB \u2502 gzip: 60.22 kB\n\u2713 built in 1.04s\n",
+      "stderr": "(node:1860015) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n"
+    },
+    "evals/implementations/task-first/order-dashboard": {
+      "exit_code": 0,
+      "success": true,
+      "stdout": "nt for production...\ntransforming...\n\u2713 23 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.36 kB \u2502 gzip:  0.27 kB\ndist/assets/index-DAezPtLK.css    9.77 kB \u2502 gzip:  2.82 kB\ndist/assets/index-ab_rq3UG.js   192.21 kB \u2502 gzip: 60.59 kB\n\u2713 built in 846ms\n",
+      "stderr": "(node:1860092) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n"
+    },
+    "evals/fixtures/comparison-table": {
+      "exit_code": 0,
+      "success": true,
+      "stdout": "nt for production...\ntransforming...\n\u2713 23 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.41 kB \u2502 gzip:  0.28 kB\ndist/assets/index-C3bryypa.css    6.57 kB \u2502 gzip:  2.16 kB\ndist/assets/index-lzAzp-FF.js   187.89 kB \u2502 gzip: 59.38 kB\n\u2713 built in 826ms\n",
+      "stderr": "(node:1860196) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n"
+    },
+    "evals/implementations/task-first/comparison-table": {
+      "exit_code": 0,
+      "success": true,
+      "stdout": "nt for production...\ntransforming...\n\u2713 23 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.41 kB \u2502 gzip:  0.28 kB\ndist/assets/index-D7rDik9m.css   11.11 kB \u2502 gzip:  3.08 kB\ndist/assets/index-CrMeBvJ2.js   189.14 kB \u2502 gzip: 59.83 kB\n\u2713 built in 830ms\n",
+      "stderr": "(node:1860387) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n"
+    },
+    "evals/fixtures/request-form": {
+      "exit_code": 0,
+      "success": true,
+      "stdout": "nt for production...\ntransforming...\n\u2713 23 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.41 kB \u2502 gzip:  0.27 kB\ndist/assets/index-LqgWAcnl.css    6.91 kB \u2502 gzip:  2.19 kB\ndist/assets/index-7tZkoWi6.js   188.53 kB \u2502 gzip: 59.49 kB\n\u2713 built in 813ms\n",
+      "stderr": "(node:1860484) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n"
+    },
+    "evals/implementations/task-first/request-form": {
+      "exit_code": 0,
+      "success": true,
+      "stdout": "nt for production...\ntransforming...\n\u2713 23 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.41 kB \u2502 gzip:  0.28 kB\ndist/assets/index-CRqSfwWr.css   11.22 kB \u2502 gzip:  3.09 kB\ndist/assets/index-C02AQ4GW.js   192.68 kB \u2502 gzip: 60.61 kB\n\u2713 built in 863ms\n",
+      "stderr": "(node:1860562) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n"
+    }
+  }
+}
