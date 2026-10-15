@@ -1,13 +1,20 @@
-# Dense data decisions
+﻿# Dense data decisions
 
 First identify whether users scan records, compare columns, filter, or act on a selection. Inventory identity, mandatory fields, sorting, filtering, export, bulk actions and per-record permissions before changing presentation.
 
 | Conditions | Candidate and trade-off | Reject when |
 | --- | --- | --- |
-| Scan individual records by identity/status | Mobile list or cards with labeled details; faster scan | Side-by-side comparison or dense bulk editing dominates |
-| Aligned cross-record comparison | Horizontal table with visible row identity and explicit scroll affordance | Context or actions disappear without a recovery path |
-| Dense table with a few mobile priorities | Priority summary plus full details route | Any mandatory field becomes unreachable |
-| Filter-heavy workflow | Compact filter panel with visible active filters/reset | Filter state becomes hidden or requires repeated navigation |
-| Multi-select and bulk action | Table or selection mode with selection count and clear action | Cards drop selection, sort, or safe bulk affordance |
+| Scan individual records by identity/status | Mobile list or cards with labeled details; identity, status, and primary action visible without horizontal scroll | Side-by-side comparison or dense bulk editing dominates |
+| Aligned cross-record comparison | Horizontal semantic table with visible pinned row identity, intact units, and explicit scroll cues | Context or actions disappear without a recovery path, or converting to cards destroys cross-metric alignment |
+| Dense table with a few mobile priorities | Priority summary list plus full details route for secondary fields | Any mandatory field or action becomes unreachable |
+| Filter-heavy workflow | Compact filter panel with visible active filter chips and reset | Filter state becomes hidden or requires repeated navigation |
+| Multi-select and bulk action | Selectable list or compact table with selection count, persistent state across filters, and clear action | Cards drop selection affordance, sort, or safe bulk action |
 
-Preserve meaningful row identity, units, money/date formatting, data semantics, sort/filter/export and actions. If cards replace table markup, associate each value with a visible/accessible label. Horizontal scrolling may be appropriate for genuinely two-dimensional data; test row context and keyboard reachability. Record the choice via the [decision contract](../decision-contract.md).
+## Conditional Pattern Guidance
+
+Both **mobile list/detail** and **semantic horizontally scrolling tables** are valid conditional choices depending on the primary user task:
+- **Choose Mobile List / Detail** when the primary mobile task is triage or inspection of individual records (finding an order, inspecting status, and triggering a record action). Ensure 0px sideways scroll is required for identity, status, and action at 320px and 390px.
+- **Choose Semantic Scroll Table** when the primary mobile task is two-dimensional cross-record comparison (benchmarking pricing plans, spec sheets, or aligned metric matrices). Keep row identity pinned, show visual scroll cues, preserve all units, and provide full keyboard navigation. Do not decompose aligned comparisons into disconnected cards.
+- **Always preserve desktop:** On viewports >= 1024px, maintain the standard multi-column table layout and complete feature set.
+
+Preserve meaningful row identity, units, money/date formatting, data semantics, sort/filter/export and actions. If cards replace table markup, associate each value with a visible/accessible label. Horizontal scrolling is appropriate for genuinely two-dimensional data; test row context and keyboard reachability. Record the choice via the [decision contract](../decision-contract.md).

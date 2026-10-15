@@ -1,0 +1,993 @@
+{
+  "config": {
+    "argv": [
+      "/home/linuxbrew/.linuxbrew/Cellar/node/26.10.0_1/bin/node",
+      "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux/playwright.config.cjs",
+    "rootDir": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.cjs/"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux",
+        "snapshotDir": "/home/phatp/work/mobile-web-ui-ux-skill/tests/task-ux",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 45000,
+        "use": {
+          "headless": true,
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "comparison.spec.cjs",
+      "file": "comparison.spec.cjs",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Aligned Comparison Table - Baseline Observations",
+          "file": "comparison.spec.cjs",
+          "line": 7,
+          "column": 6,
+          "specs": [
+            {
+              "title": "baseline table requires horizontal scroll and lacks sticky labels",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 293,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:57.483Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-570eb2db593b92e86017",
+              "file": "comparison.spec.cjs",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "baseline handles plan selection action",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 395,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:57.920Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-43b59294d05d022104fb",
+              "file": "comparison.spec.cjs",
+              "line": 26,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Aligned Comparison Table - Task-First Implementation",
+          "file": "comparison.spec.cjs",
+          "line": 35,
+          "column": 6,
+          "specs": [
+            {
+              "title": "comparison table at 320px preserves alignment, sticky labels and scroll cues",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 265,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:58.332Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-43a6f6125983ab7ec6c4",
+              "file": "comparison.spec.cjs",
+              "line": 37,
+              "column": 5
+            },
+            {
+              "title": "comparison table at 390px preserves alignment, sticky labels and scroll cues",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 238,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:58.620Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-e2001f4875f9f38985dc",
+              "file": "comparison.spec.cjs",
+              "line": 37,
+              "column": 5
+            },
+            {
+              "title": "all metrics, units, and plan selection actions are preserved",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 405,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:58.875Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-be4b44cbb0abb3403d35",
+              "file": "comparison.spec.cjs",
+              "line": 76,
+              "column": 3
+            },
+            {
+              "title": "keyboard traversal navigates cells and triggers plan selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 612,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:59.297Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-312ad2db2ce0005e6795",
+              "file": "comparison.spec.cjs",
+              "line": 94,
+              "column": 3
+            },
+            {
+              "title": "desktop layout at 1280px displays full comparison matrix without mobile cues",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 234,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:03:59.924Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9a7b16da98a83eb6d510-6d10a95b1f14f14086ed",
+              "file": "comparison.spec.cjs",
+              "line": 119,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "order.spec.cjs",
+      "file": "order.spec.cjs",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dense Order Dashboard - Baseline Observations",
+          "file": "order.spec.cjs",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "baseline table causes horizontal overflow and measures scroll distance to action",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 263,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:00.185Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ada490552fc81b9c5782-9c323adfbfa8b446a278",
+              "file": "order.spec.cjs",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "baseline preserves search, detail, filter, sort, export, selection invariants",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 706,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:00.464Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ada490552fc81b9c5782-bf0408fe304abd051c0d",
+              "file": "order.spec.cjs",
+              "line": 34,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Dense Order Dashboard - Task-First Mobile Implementation",
+          "file": "order.spec.cjs",
+          "line": 79,
+          "column": 6,
+          "specs": [
+            {
+              "title": "primary task at 320px requires 0px horizontal scrolling to reach action",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 275,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:01.192Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ada490552fc81b9c5782-f4fe3104b8e12f147c60",
+              "file": "order.spec.cjs",
+              "line": 81,
+              "column": 5
+            },
+            {
+              "title": "primary task at 390px requires 0px horizontal scrolling to reach action",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 253,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:01.478Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ada490552fc81b9c5782-ef0d5b9a9ee40c7068a0",
+              "file": "order.spec.cjs",
+              "line": 81,
+              "column": 5
+            },
+            {
+              "title": "mobile search, detail, filter, sort, export, selection invariants succeed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 793,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:01.741Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ada490552fc81b9c5782-fa621fa42ddccfce6c25",
+              "file": "order.spec.cjs",
+              "line": 122,
+              "column": 3
+            },
+            {
+              "title": "desktop table layout is preserved at 1280px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 223,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:02.544Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ada490552fc81b9c5782-0f45e15ef84219cc6414",
+              "file": "order.spec.cjs",
+              "line": 189,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "request-form.spec.cjs",
+      "file": "request-form.spec.cjs",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Contextual Request Form - Baseline Observations",
+          "file": "request-form.spec.cjs",
+          "line": 7,
+          "column": 6,
+          "specs": [
+            {
+              "title": "baseline submit button uses fixed positioning that risks viewport occlusion at reduced height",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 199,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:02.782Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-ad8b15d716f038b293a1",
+              "file": "request-form.spec.cjs",
+              "line": 8,
+              "column": 3
+            },
+            {
+              "title": "baseline handles server 422 rejection and retains input values",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 348,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:02.991Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-0044fa92662abd1bf986",
+              "file": "request-form.spec.cjs",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "baseline handles successful multipart file submission",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 306,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:03.357Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-6899e5294e91cca99b2b",
+              "file": "request-form.spec.cjs",
+              "line": 52,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Contextual Request Form - Task-First Implementation",
+          "file": "request-form.spec.cjs",
+          "line": 79,
+          "column": 6,
+          "specs": [
+            {
+              "title": "viewport 320px has zero horizontal overflow and clear geometric CTA clearance at reduced height",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 230,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:03.678Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-745a925b4e7123c19cae",
+              "file": "request-form.spec.cjs",
+              "line": 81,
+              "column": 5
+            },
+            {
+              "title": "viewport 375px has zero horizontal overflow and clear geometric CTA clearance at reduced height",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 236,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:03.921Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-c1de06adada801d797e1",
+              "file": "request-form.spec.cjs",
+              "line": 81,
+              "column": 5
+            },
+            {
+              "title": "viewport 390px has zero horizontal overflow and clear geometric CTA clearance at reduced height",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 201,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:04.167Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-ce8a53a0ed27f0e833ea",
+              "file": "request-form.spec.cjs",
+              "line": 81,
+              "column": 5
+            },
+            {
+              "title": "viewport 430px has zero horizontal overflow and clear geometric CTA clearance at reduced height",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 299,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:04.379Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-23cbe6b3132652cf49ef",
+              "file": "request-form.spec.cjs",
+              "line": 81,
+              "column": 5
+            },
+            {
+              "title": "manual date typing, reactive days derivation, and range validation work",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 261,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:04.693Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-72d2fe6242d60acbfbbe",
+              "file": "request-form.spec.cjs",
+              "line": 124,
+              "column": 3
+            },
+            {
+              "title": "enforces calendar date validity and range bounds (2026-2027) with auto-focus",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 534,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:04.974Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-a134c1634a152a55d138",
+              "file": "request-form.spec.cjs",
+              "line": 146,
+              "column": 3
+            },
+            {
+              "title": "enforces file type constraints, handles unsupported file with accessible inline error",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 321,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:05.516Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-84f498f33a716a30ea8c",
+              "file": "request-form.spec.cjs",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "touch file delivery, real byte transmission, error recovery, focus shift, and resubmission",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 381,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-15T06:04:05.846Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c090907417b6153caabb-652a4655756817669bf9",
+              "file": "request-form.spec.cjs",
+              "line": 232,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-15T06:03:51.143Z",
+    "duration": 15282.217,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        fixture: [order-dashboard, mobile-form]
+        fixture: [order-dashboard, mobile-form, comparison-table, request-form]
     defaults:
       run:
         working-directory: evals/fixtures/${{ matrix.fixture }}
@@ -36,3 +36,52 @@ jobs:
         run: npm ci
       - name: Build ${{ matrix.fixture }}
         run: npm run build
+
+  implementation-builds:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        implementation: [order-dashboard, comparison-table, request-form]
+    defaults:
+      run:
+        working-directory: evals/implementations/task-first/${{ matrix.implementation }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: evals/implementations/task-first/${{ matrix.implementation }}/package-lock.json
+      - name: Install ${{ matrix.implementation }} dependencies
+        run: npm ci
+      - name: Build ${{ matrix.implementation }}
+        run: npm run build
+
+  task-ux-browser:
+    runs-on: ubuntu-latest
+    needs: [fixture-builds, implementation-builds]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/task-ux/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies across all fixtures and implementations
+        run: |
+          for dir in evals/fixtures/order-dashboard evals/fixtures/comparison-table evals/fixtures/request-form evals/implementations/task-first/order-dashboard evals/implementations/task-first/comparison-table evals/implementations/task-first/request-form; do
+            npm --prefix "$dir" ci
+          done
+      - name: Install task-ux dependencies and Playwright Chromium
+        working-directory: tests/task-ux
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Run Playwright task UX suite
+        working-directory: tests/task-ux
+        run: npx playwright test
+      - name: Verify evidence completeness
+        run: python3 tests/task-ux/verify-evidence.py

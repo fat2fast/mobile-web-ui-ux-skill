@@ -1,4 +1,4 @@
-# Mobile UX decision record
+﻿# Mobile UX decision record
 
 Use one short record per consequential UX choice. Read the applicable [playbook](../SKILL.md) and distinguish the quality of a proposed decision from a verified implementation result.
 

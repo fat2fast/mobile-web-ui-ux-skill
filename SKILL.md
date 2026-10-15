@@ -72,11 +72,11 @@ Read [mobile principles](references/mobile-ux-principles.md), the [decision cont
 - Touch, gestures and hover fallbacks: [touch interactions](references/decisions/touch-interactions.md)
 - Semantics, focus, zoom and target size: [accessibility](references/decisions/accessibility.md)
 
-For each change, fill the decision contract with evidence, task, candidates, selected/rejected reasons, preservation and verification. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
+For each change, fill the decision contract with evidence, task, candidates, selected/rejected reasons, preservation and verification. Prioritize task acceptance over minimal CSS tweaks: verify that the primary user task (identifying records, checking status, triggering actions) succeeds on mobile viewports (320px and 390px) without horizontal scrolling or occlusion before adopting minimal CSS adjustments. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
 
 ### 4. Implement (only for Build/Improve)
 
-Change the smallest appropriate components and styles. Reuse existing abstractions. Preserve data access, permissions, semantics, and desktop layout. Prefer existing dependencies; don't add a UI library merely to implement a mobile pattern. Keep mobile behavior responsive to content length, language, orientation, zoom, and input method.
+Change the smallest appropriate components and styles that fulfill the task acceptance contract. Ensure primary actions, identity, and status remain in immediate view without sideways scroll on mobile, while secondary details remain reachable via progressive disclosure or detail routes. Reuse existing abstractions. Preserve data access, permissions, semantics, and desktop layout. Prefer existing dependencies; don't add a UI library merely to implement a mobile pattern. Keep mobile behavior responsive to content length, language, orientation, zoom, and input method.
 
 ### 5. Verify
 
@@ -89,6 +89,7 @@ Before sending, check the entire answer against the [decision contract](referenc
 
 ## Quick rules of judgment
 
+- Start from task acceptance: ensure primary actor goals succeed on phone viewports (320px/390px) without horizontal scrolling before falling back to minimal CSS styling.
 - A mobile-friendly layout is not necessarily a usable mobile workflow.
 - Place the primary action where it is discoverable and reachable, but avoid obstructing content or competing sticky elements.
 - Keep important information visible; reveal lower-priority detail progressively without hiding required data.

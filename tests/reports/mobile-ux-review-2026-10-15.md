@@ -1,8 +1,8 @@
 # Review: mobile-web-ui-ux-skill — Functional correctness vs actual mobile UX
 
 **Date:** 2026-10-15  
-**Sources:** user-provided `261015-improve.zip`, 5 NEXFUL UI screenshots, mobile UX design references.  
-**GitHub `main` last checked:** `ac6c6a6ca7d7` (PR #2); the ZIP contains newer test reports/artifacts, but not the complete source diff of the improved fixtures. No production NEXFUL source code was provided. Do not mistake the uploaded artifacts for validated changes on `main`.
+**Sources:** user-provided `261015-improve.zip`, 5 UI screenshots, mobile UX design references.  
+**GitHub `main` last checked:** `ac6c6a6ca7d7` (PR #2); the ZIP contains newer test reports/artifacts, but not the complete source diff of the improved fixtures. No production source code was provided. Do not mistake the uploaded artifacts for validated changes on `main`.
 
 ## Executive finding
 
@@ -25,7 +25,7 @@
 
 **Required split:** (A) business and accessibility invariants; (B) task-oriented UX acceptance; (C) optional implementation-specific checks for the chosen pattern. The agent should choose the pattern based on the task before the reviewer enforces any component structure.
 
-## NEXFUL screenshot observations (visual only; not verified code/runtime)
+## screenshot observations (visual only; not verified code/runtime)
 
 ### Documents / Profile list
 
@@ -102,7 +102,7 @@ This is not a prescription to alter business logic, add conditional rules or cha
 
 ### P0: Task-first UX acceptance, not only responsiveness
 
-- **UX-01**: Define top mobile task for each fixture and NEXFUL screenshot: actor, user goal, most-needed fields, task success, accessibility and business constraints. Include at least one deliberately wrong pattern for contrast.
+- **UX-01**: Define top mobile task for each fixture and screenshot: actor, user goal, most-needed fields, task success, accessibility and business constraints. Include at least one deliberately wrong pattern for contrast.
 - **UX-02**: Separate semantic functional assertions from table DOM selectors (`tbody`, `row.cells`, sticky table tests). Accept record list OR table when it passes the same user tasks. Retain table-only assertions solely for a selected comparison-table pattern.
 - **UX-03**: Extend `references/decisions/data-display.md` and `decision-contract.md` to require rationale: why list, compact card, table, detail page, or selection mode; prioritize task completion over minimum CSS changes. Do not universally enforce cards.
 

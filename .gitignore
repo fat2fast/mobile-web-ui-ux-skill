@@ -25,3 +25,6 @@ evals/results/*
 
 # Internal plans & journals
 plans/
+
+# Local visual screenshots (not tracked in repo)
+tests/reports/images/

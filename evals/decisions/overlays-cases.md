@@ -28,3 +28,13 @@ Proposals follow the [decision contract](../../references/decision-contract.md).
 - **Rejected:** bottom sheet because nested scrolling and keyboard shrink its working area for eight fields.
 - **Preserved:** all values, validation, server response, focus, Cancel/Back, zoom and desktop.
 - **Verify:** `NOT RUN` proposal; replay invalid/valid requests and physical keyboard, then Back and direct URL.
+
+## IMAGE-4 — Account popover overlay (Visual Reference 4)
+
+- **Evidence:** `INFERRED` visual observation from Case 4: account popover menu covering a significant part of the screen, obscuring background content without clear dismiss boundaries.
+- **Mobile task:** Inspect user profile details, switch organizations, access account preferences, or log out on mobile.
+- **Candidates:** Centered dialog or bottom sheet modal with explicit backdrop dismiss; unconstrained desktop-style popover (current visual state).
+- **Selected:** Bottom sheet or centered modal with clear close button, overlay dismiss, and return of focus to avatar button.
+- **Rejected:** Unconstrained anchored popover because it risks clipping off-screen on narrow viewports (320px) and lacks clear touch dismiss boundaries.
+- **Preserved:** Profile information, account actions, logout route/handler, and desktop header dropdown.
+- **Verify:** `NOT RUN`; requires authentication context. Test open, Tab trapping, Escape dismiss, and focus restoration at 320px/390px.
