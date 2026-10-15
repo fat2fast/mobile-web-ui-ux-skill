@@ -1,0 +1,19 @@
+Case: DATA-02
+Condition: with-skill
+Prompt SHA-256: 0e6e946cb2f5ae5ff430c2a8d9cb17278474288745a5c0637d69b2fd7fc6a7e9
+Fixture and skill snapshot: manifest.json
+Runtime and version: Codex API agent; runtime version unknown
+Model identifier and version: GPT-6 (exact version unknown)
+Conversation/session locator: /root/replay_data02
+Agent mode: worker subagent, decision-only recommendation
+Started at UTC: unknown
+Finished at UTC: 2026-10-15 02:30 UTC
+Workspace path: /home/user/work/with-skill (redacted)
+Tool access: exec_command through functions.exec, apply_patch, clock; browser not used
+Tools actually used: exec_command, apply_patch, clock__curr_time
+Files and ambient instructions read: AGENTS.md; data-02/prompt.txt; data-02/manifest.json; data-02/run-info.txt; .agents/skills/mobile-web-ui-ux-skill/SKILL.md; .agents/skills/mobile-web-ui-ux-skill/references/project-discovery.md; references/agent-workflow.md; references/mobile-ux-principles.md; references/decision-contract.md; references/decisions/data-display.md; references/verification-criteria.md; references/report-template.md; ambient developer and worker task instructions
+Skill file actually read and evidence: yes; .agents/skills/mobile-web-ui-ux-skill/SKILL.md printed by exec_command and used for recommendation mode and data-display decision
+Checks actually run and results: inspected case prompt/manifest and skill references; no implemented UI or browser checks run
+Time/token limits: unknown
+Raw transcript location or availability: unavailable
+Other limitations: order-dashboard fixture source was not present under the case folder or the checked fixture paths; this case's file ownership was limited to response.txt and run-info.txt, so transcript archiving was not run; ripgrep unavailable in WSL shell

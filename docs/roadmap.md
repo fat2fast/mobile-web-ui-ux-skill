@@ -7,8 +7,8 @@ Phases are sequential milestones, not fixed-duration sprints.
 | P00 Product scope & eval plan | Define user, constraints and three test scenarios | Product/MVP scope + scenario specs |
 | P01 Skill foundation | Agent Skills metadata, workflow, lightweight validator | Local validation passes |
 | P02 Decision intelligence | Eight task-based playbooks and decision comparison | Playbooks/cases exist; protocol-compliant comparison remains `NOT RUN` |
-| P03 Implementation guidance | Apply patterns with minimal codebase changes | One reproducible fixture modified successfully |
-| P04 Verification & evaluation | Before/after task tests, mobile widths, desktop regression | Recorded results, not hypothetical grades |
+| P03 Implementation guidance | Apply patterns with minimal codebase changes | Dashboard and form fixture retrofits recorded |
+| P04 Verification & evaluation | Before/after task tests, mobile widths, desktop regression | Two fixtures have browser evidence; third scenario and device checks remain |
 | P05 Browser/PWA specialization | Keyboard, visual viewport, standalone, offline/update | Browser-specific test matrix |
 | P06 Distribution & scaling | Rule search if needed, more stacks, packaging/CLI | Publishable, tested distribution |
 
@@ -22,13 +22,13 @@ Phases are sequential milestones, not fixed-duration sprints.
 - [ ] P02-01 Test navigation playbook decisions on multiple web app types
 - [ ] P02-02 Test data-display playbook against data integrity/accessibility
 - [ ] P02-03 Test forms playbook with keyboard and validation states
-- [ ] P03-01 Execute first mobile-UX improvement on a sample app
-- [ ] P04-01 Add Playwright tests & recorded before/after evidence
+- [x] P03-01 Execute first mobile-UX improvement on a sample app (local dashboard and form fixtures)
+- [x] P04-01 Add browser task checks and recorded before/after evidence for the two fixtures
 
 ## Release gates
 
 - **Scaffold ready:** P00/P01 docs and validator exist (current starter).
-- **Useful alpha:** P02/P03 validated on ≥1 actual fixture.
+- **Useful alpha:** P02/P03 validated on ≥1 actual fixture (met for the local fixtures).
 - **MVP 0.1 release:** P04 checks on all three scenarios, desktop regressions investigated.
 
-The order and form baselines now run; they remain intentionally awkward. Decision comparison is [recorded as `NOT RUN` under the strict protocol](../evals/results/decision-evaluation.md) despite one exploratory reviewed pair. Do not label this repository a tested UX MVP solely because structural validation or baseline tasks pass.
+The order and form fixtures have [before/after browser task evidence](../tests/reports/retrofit-261015-browser-evidence.md) at 320, 375, 390, 430 and 1280 CSS px. Targeted with-skill decision regressions are [recorded separately](../tests/reports/regression-261015-tier-a.md). Controlled Tier B comparison remains [recorded as `NOT RUN`](../evals/results/decision-evaluation.md). These results support a fixture-validated MVP for dashboard and form tasks, not a complete P04 gate across all three scenarios or a physical-device claim.

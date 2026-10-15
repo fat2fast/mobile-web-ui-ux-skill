@@ -1,0 +1,4 @@
+Implemented a mobile-friendly, single-column contact form with field-level accessible errors and an optional correction for addresses ending in @gmai.com. The suggestion changes the address only when accepted; a valid user@gmai.com can be submitted unchanged. Name, Email, and Message remain required, and validation preserves all entered values.
+
+PASS: Node syntax compilation, source markup assertions, and simulated form-handler checks for accepted/ignored suggestions, required fields, invalid email, focus, and value preservation (`node test-form.cjs`).
+NOT RUN: Rendered browser checks, mobile keyboard behavior, and real-device accessibility. No browser runner was available in this WSL environment. The form still reports “Message ready to send”; no network endpoint was supplied.

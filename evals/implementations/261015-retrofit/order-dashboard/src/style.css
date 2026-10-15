@@ -1,0 +1,32 @@
+@import "tailwindcss";
+body { font-family: Arial, sans-serif; color: #182333; margin: 0; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+table { border-collapse: collapse; min-width: 1080px; }
+th, td { padding: 12px; border-bottom: 1px solid #d7dce2; white-space: nowrap; text-align: left; }
+th { background: #e9eef3; }
+aside { width: 220px; flex-shrink: 0; background: #172638; color: white; min-height: 100vh; }
+aside a { display: block; color: white; padding: 14px; }
+.mobile-table-hint { display: none; }
+@media(max-width: 600px) {
+  .app-shell { flex-direction: column; }
+  aside { width: 100%; min-height: 0; display: flex; align-items: center; overflow-x: auto; }
+  aside strong { padding: 12px; }
+  aside a { padding: 12px 8px; min-height: 44px; white-space: nowrap; }
+  main { width: 100%; }
+  .order-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .order-controls label:first-child { grid-column: 1 / -1; }
+  .order-controls input, .order-controls select { display: block; width: 100%; min-width: 0; box-sizing: border-box; }
+  .order-controls button { min-height: 44px; }
+  .mobile-table-hint { display: block; margin-bottom: 8px; font-size: 14px; }
+  .order-table { --selection-width: 72px; border: 1px solid #d7dce2; }
+  .order-table:focus-visible { outline: 3px solid #1769aa; outline-offset: 2px; }
+  table { border-collapse: separate; border-spacing: 0; min-width: 860px; }
+  th, td { padding: 8px; }
+  th:nth-child(-n+2), td:nth-child(-n+2) { position: sticky; z-index: 1; background: white; }
+  th:nth-child(-n+2) { z-index: 2; background: #e9eef3; }
+  th:first-child, td:first-child { left: 0; width: var(--selection-width); min-width: var(--selection-width); }
+  th:nth-child(2), td:nth-child(2) { left: var(--selection-width); min-width: 105px; }
+  td:first-child input { width: 24px; height: 24px; }
+  td:last-child button { min-height: 44px; }
+}

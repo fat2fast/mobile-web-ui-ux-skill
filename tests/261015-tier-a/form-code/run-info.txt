@@ -1,0 +1,7 @@
+Task: FORM-01 code-request variant
+Session locator: /root/replay_form_code
+Runtime: Codex worker agent; WSL Ubuntu-24.04 via interactive bash; Node.js available. Model identifier not exposed.
+Prompt SHA-256: e847f733a1ff5d0569eae3a4bbf416007fcca27ba96d0bad2aef0b1f8193e0bb
+Files read: form-code/prompt.txt; form-code/index.html; with-skill/.agents/skills/mobile-web-ui-ux-skill/SKILL.md; with-skill/.agents/skills/mobile-web-ui-ux-skill/references/decisions/forms.md; with-skill/.agents/skills/mobile-web-ui-ux-skill/references/verification-criteria.md.
+Files changed: form-code/index.html; form-code/test-form.cjs; form-code/response.txt; form-code/run-info.txt.
+Checks: `node test-form.cjs` PASS (source markup assertions and simulated DOM handler execution, including JavaScript syntax compilation). Browser and physical device checks NOT RUN; no browser runner available in WSL.

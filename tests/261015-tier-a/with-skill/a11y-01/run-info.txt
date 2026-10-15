@@ -1,0 +1,19 @@
+Case: A11Y-01
+Condition: with-skill
+Prompt SHA-256: 0f074f51520362f7bbdd722f57a87148ec8a0fb47be8694fbac5122737f9a35f
+Fixture and skill snapshot: manifest.json
+Runtime and version: Codex API agent; version unknown
+Model identifier and version: unknown (exact runtime identifier/version not exposed)
+Conversation/session locator: /root/replay_a11y01
+Agent mode: worker subagent, Default collaboration mode
+Started at UTC: 2026-10-15T02:30:37Z
+Finished at UTC: 2026-10-15T02:32:10Z
+Workspace path: /home/user/work/with-skill (redacted)
+Tool access: exec_command via functions.exec; web__run via functions.exec
+Tools actually used: exec_command (WSL bash -ic, cat, find, ls, date; rg attempted but unavailable); web__run (W3C WCAG pages)
+Files and ambient instructions read: case AGENTS.md, a11y-01/prompt.txt, a11y-01/manifest.json, a11y-01/run-info.txt, src/main.jsx, src/style.css, .agents/skills/mobile-web-ui-ux-skill/SKILL.md, references/project-discovery.md, references/agent-workflow.md, references/mobile-ux-principles.md, references/decision-contract.md, references/decisions/accessibility.md, references/decisions/touch-interactions.md, references/verification-criteria.md, references/report-template.md, references/accessibility-checklist.md; assigned task and runtime instructions; W3C WCAG 2.2 SC 2.5.8 and W3C Understanding SC 2.5.8 web pages
+Skill file actually read and evidence: yes; cat .agents/skills/mobile-web-ui-ux-skill/SKILL.md through exec_command; read directed references listed above
+Checks actually run and results: source inspection of src/main.jsx and src/style.css; no rendered UI, browser, keyboard, touch, or automated tests run. W3C normative criterion and Understanding guidance checked by web__run. rg command failed because rg is unavailable.
+Time/token limits: unknown
+Raw transcript location or availability: unavailable (no accessible raw transcript locator exposed; archive helper not run because assigned write scope is response.txt and run-info.txt only)
+Other limitations: prompt describes a hypothetical 20 x 20 CSS px row; fixture source does not establish its rendered dimensions or spacing. No conformance finding made.

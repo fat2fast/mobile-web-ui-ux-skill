@@ -1,0 +1,19 @@
+Case: FORM-01
+Condition: with-skill
+Prompt SHA-256: b40fd843fb6fe45ee955805355b7a4ae43e394b01b6df89d92a506e73c05c455
+Fixture and skill snapshot: manifest.json
+Runtime and version: Codex API agent; runtime version unknown
+Model identifier and version: GPT-6 family per ambient instructions; exact model identifier and version unknown
+Conversation/session locator: /root/replay_form01
+Agent mode: worker subagent, decision-only recommendation
+Started at UTC: unknown (not captured at turn start)
+Finished at UTC: 2026-10-15T02:29:55Z (last observed UTC time during completion check)
+Workspace path: /home/user/work/with-skill (redacted)
+Tool access: functions.exec with exec_command, apply_patch, clock__curr_time; collaboration messaging; browser availability unknown
+Tools actually used: functions.exec, tools.exec_command, tools.apply_patch, tools.clock__curr_time
+Files and ambient instructions read: user-provided AGENTS.md instructions; project AGENTS.md; form-01/prompt.txt; form-01/manifest.json; form-01/run-info.txt; README.md; package.json; src/main.jsx; src/style.css; .agents/skills/mobile-web-ui-ux-skill/SKILL.md; its references/project-discovery.md, references/agent-workflow.md, references/mobile-ux-principles.md, references/decision-contract.md, references/decisions/forms.md, references/decisions/accessibility.md, references/verification-criteria.md, references/report-template.md; ambient system and developer instructions
+Skill file actually read and evidence: yes; read .agents/skills/mobile-web-ui-ux-skill/SKILL.md using exec_command through interactive WSL, followed by listed references
+Checks actually run and results: source inspection found an order dashboard and no contact form, email validation, or submit handler in src/main.jsx; test -f checks for response.txt and run-info.txt passed; no PENDING in run-info.txt; transcript.jsonl absent; wc -c reported 2611 bytes for response.txt; no browser, build, or form interaction checks run
+Time/token limits: unknown
+Raw transcript location or availability: unavailable; no raw transcript path exposed, and this case assignment permits writes only to response.txt and run-info.txt
+Other limitations: fixture does not implement the prompt scenario; recommendations are unimplemented and untested. Initial attempts to read fixture/README.md and fixture/src files failed because fixture source is at project root; subsequent reads used README.md and src files.

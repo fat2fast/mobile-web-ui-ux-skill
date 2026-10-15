@@ -1,0 +1,107 @@
+{
+  "phase": "baseline",
+  "browser": "agent-browser managed Chromium",
+  "viewportHeight": 844,
+  "checks": [
+    {
+      "name": "viewport 320 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 872,
+        "submitBottom": 832,
+        "submitPosition": "fixed",
+        "width": 320
+      }
+    },
+    {
+      "name": "viewport 375 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 848,
+        "submitBottom": 832,
+        "submitPosition": "fixed",
+        "width": 375
+      }
+    },
+    {
+      "name": "viewport 390 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 848,
+        "submitBottom": 832,
+        "submitPosition": "fixed",
+        "width": 390
+      }
+    },
+    {
+      "name": "viewport 430 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 848,
+        "submitBottom": 832,
+        "submitPosition": "fixed",
+        "width": 430
+      }
+    },
+    {
+      "name": "viewport 1280 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 848,
+        "submitBottom": 832,
+        "submitPosition": "fixed",
+        "width": 1280
+      }
+    },
+    {
+      "name": "server rejection shown",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "values retained after rejection",
+      "result": "PASS",
+      "actual": {
+        "name": "Test User",
+        "notes": "Please call first"
+      }
+    },
+    {
+      "name": "rejection HTTP status",
+      "result": "PASS",
+      "actual": [
+        422
+      ]
+    },
+    {
+      "name": "successful resubmission",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "resubmission HTTP statuses",
+      "result": "PASS",
+      "actual": [
+        422,
+        200
+      ]
+    },
+    {
+      "name": "empty required field rejected",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "missing field HTTP status",
+      "result": "PASS",
+      "actual": [
+        422
+      ]
+    }
+  ]
+}

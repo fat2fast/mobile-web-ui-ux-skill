@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px 16px; font: 16px/1.5 system-ui, sans-serif; color: #202124; }
+    main { max-width: 32rem; margin: 0 auto; }
+    h1 { margin: 0 0 24px; line-height: 1.2; }
+    .field { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    input, textarea { display: block; width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #686b70; border-radius: 6px; font: inherit; }
+    textarea { min-height: 120px; resize: vertical; }
+    input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 3px solid #1769aa; outline-offset: 2px; }
+    [aria-invalid="true"] { border-color: #b3261e; }
+    .error { margin: 6px 0 0; color: #a01c17; }
+    .suggestion { margin: 8px 0 0; }
+    .suggestion button { padding: 0; border: 0; background: none; color: #075eaa; font: inherit; text-decoration: underline; cursor: pointer; }
+    [hidden] { display: none !important; }
+    button[type="submit"] { min-height: 44px; padding: 10px 18px; border: 0; border-radius: 6px; background: #075eaa; color: white; font: inherit; font-weight: 600; cursor: pointer; }
+    #status { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Contact us</h1>
+    <form id="contact" novalidate>
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" autocomplete="name" required aria-describedby="name-error">
+        <p id="name-error" class="error" hidden></p>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error email-suggestion">
+        <p id="email-error" class="error" hidden></p>
+        <p id="email-suggestion" class="suggestion" hidden>Did you mean <button id="accept-suggestion" type="button"></button>? You can also keep your address.</p>
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" required aria-describedby="message-error"></textarea>
+        <p id="message-error" class="error" hidden></p>
+      </div>
+      <button type="submit">Send message</button>
+      <p id="status" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <script>
+    const form = document.getElementById('contact');
+    const fields = ['name', 'email', 'message'].map((id) => document.getElementById(id));
+    const emailInput = document.getElementById('email');
+    const suggestion = document.getElementById('email-suggestion');
+    const acceptSuggestion = document.getElementById('accept-suggestion');
+    const status = document.getElementById('status');
+
+    function suggestedEmail() {
+      const value = emailInput.value.trim();
+      const at = value.lastIndexOf('@');
+      return at > 0 && value.slice(at + 1).toLowerCase() === 'gmai.com'
+        ? value.slice(0, at + 1) + 'gmail.com'
+        : null;
+    }
+
+    function updateSuggestion() {
+      const replacement = suggestedEmail();
+      suggestion.hidden = !replacement;
+      if (replacement) acceptSuggestion.textContent = replacement;
+    }
+
+    function setError(field, message) {
+      const error = document.getElementById(field.id + '-error');
+      error.textContent = message;
+      error.hidden = !message;
+      if (message) field.setAttribute('aria-invalid', 'true');
+      else field.removeAttribute('aria-invalid');
+    }
+
+    fields.forEach((field) => field.addEventListener('input', () => {
+      setError(field, '');
+      status.textContent = '';
+      if (field === emailInput) updateSuggestion();
+    }));
+
+    acceptSuggestion.addEventListener('click', () => {
+      const replacement = suggestedEmail();
+      if (!replacement) return;
+      emailInput.value = replacement;
+      setError(emailInput, '');
+      updateSuggestion();
+      emailInput.focus();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = fields[0].value.trim();
+      const email = emailInput.value.trim();
+      const message = fields[2].value.trim();
+      setError(fields[0], name ? '' : 'Enter your name.');
+      setError(emailInput, !email ? 'Enter your email address.' :
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Enter a valid email address.');
+      setError(fields[2], message ? '' : 'Enter a message.');
+      const firstInvalid = fields.find((field) => field.hasAttribute('aria-invalid'));
+      if (firstInvalid) {
+        status.textContent = 'Please correct the highlighted fields.';
+        firstInvalid.focus();
+        return;
+      }
+      status.textContent = 'Message ready to send.';
+    });
+  </script>
+</body>
+</html>

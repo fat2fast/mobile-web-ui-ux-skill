@@ -1,0 +1,11 @@
+## Recommendation
+
+Use a horizontally scrollable comparison table at phone width. Keep feature names visible in a pinned first column, with one product column (or as much of the next as fits) beside it. Keep product names at the top of their columns. A short "Scroll to compare more products" cue and a visible hint of the next column make additional products discoverable. Customers can then compare the same feature across products without losing row context.
+
+Keep every product and every row available, including price, limits, and warranty. Group related rows, retain units and price terms, and label unavailable values explicitly rather than leaving blank cells. A compact product summary may help scanning, but it must link back to the complete comparison. Preserve any existing sorting, selection, purchase actions, and desktop presentation if the actual page has them.
+
+Stacked product cards are a viable alternative for reading one product at a time, but they make cross-product comparison of a price or warranty row harder and invite repeated scrolling. The aligned table better matches this task. This is a design recommendation based on the prompt; the supplied order-dashboard fixture does not establish an existing price-comparison screen or its business rules.
+
+## Check before release
+
+**NOT RUN:** No price-comparison UI was implemented or browser-tested here. On the real page, inspect 320, 375, and 430 CSS px widths and desktop. Confirm every feature and product is reachable; row labels and product identity remain clear while scrolling; values stay aligned and correctly labeled; horizontal scrolling works by touch and keyboard; focus remains visible; text zoom and long names do not cover content; and desktop behavior remains intact.

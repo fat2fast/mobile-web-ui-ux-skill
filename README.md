@@ -73,7 +73,7 @@ make with-skill DEST=~/work/mobile-ux-test
 
 Both commands use `order-dashboard` by default. Add `FIXTURE=mobile-form` to use the form fixture. Note that `DEST` must be an existing parent directory (create it beforehand if needed with `mkdir -p <DEST>`). The second project includes the skill at `.agents/skills/mobile-web-ui-ux-skill/`, with its runtime references. Reviewer cases and rubrics stay in this repository. The first has no project skill. Generated projects omit `node_modules` and `dist`; run `npm ci` inside each project before starting it. Existing destination projects are never overwritten. Use a new `DEST` for another trial, and keep reviewer cases and results outside both generated projects.
 
-Each copy has identical `AGENTS.md` recording instructions and all case folders from `evals/comparison-prompts.md`. This generator is useful for exploratory runs, but its shared workspace does **not** isolate cases: a fresh conversation can still read another case's files. For a protocol-compliant v0.1.1 replay, first update the generator to expose only one case per clean condition/trial workspace, then follow the [comparison protocol](evals/comparison-protocol.md). Keep the historical outputs under [`tests/v.0.1.0/`](tests/v.0.1.0/) and place new raw outputs in a separate `tests/v.0.1.1/` archive after both conditions are frozen. Check that both output and run-info files exist and no `PENDING` fields remain; agent-written metadata is not an independent transcript, and unknown runtime fields must stay `unknown`. A fixture may not implement every scenario, so record unrun checks honestly.
+Each copy has identical `AGENTS.md` recording instructions and all case folders from `evals/comparison-prompts.md`. For a targeted **Tier A** with-skill regression, use a separate conversation per case, keep prior answers and reviewer materials out of that conversation, and record possible file exposure. A shared fixture workspace is allowed; it does not by itself prove case isolation or contamination. For a **Tier B** skill versus no-skill superiority claim, use matched controls and a demonstrated boundary against sibling answers as specified by the [comparison protocol](evals/comparison-protocol.md). Keep historical outputs under [`tests/v.0.1.0/`](tests/v.0.1.0/) and [`tests/v0.1.1/`](tests/v0.1.1/); [targeted Tier A results](tests/261015-tier-a/) are separate. Record prompt hash, source snapshot, session locator where exposed, and checks actually run. Agent-written metadata is not an independent transcript; unavailable runtime fields remain `unknown`.
 
 ## Example requests
 
@@ -97,13 +97,14 @@ README.md / README.vi.md     Project documentation
 docs/                        Product scope, MVP boundaries, roadmap
 references/                  Runtime guidance, verification criteria and evidence record
 references/decisions/        Eight task-based mobile UX playbooks
-evals/fixtures/              Runnable order dashboard and form baselines
+evals/fixtures/              Runnable order dashboard and form retrofits
 evals/scenarios/             Mobile UX evaluation scenarios
 evals/decisions/             Decision cases and counterexamples
 evals/evaluation-criteria.md Reviewer entry point to shared verification criteria
 examples/                    Sample UX report
 scripts/validate_skill.py    Structure and Markdown-link validator
 .github/workflows/           CI validation
+tests/261015-retrofit/        Before/after browser checks and screenshots
 ```
 
 ## Validation
@@ -114,13 +115,13 @@ Requires Python 3.9+ (standard library only):
 python3 scripts/validate_skill.py
 ```
 
-This validates the skill's structure, metadata, and local documentation links. **It does not measure usability or prove that mobile UX has improved.** Actual UX verification requires runnable examples, interaction tests, and/or device testing.
+This validates the skill's structure, metadata, and local documentation links. It does not measure usability. CI also runs unit tests and builds both fixtures; the [local browser checks](tests/261015-retrofit/) provide narrower task and viewport evidence. Physical-device behavior remains untested.
 
 ## Project status
 
-**Decision guidance in progress.** The repository includes eight focused playbooks, a decision record contract, runnable order dashboard and form baselines, evaluation cases, and structural validation. The baselines intentionally retain mobile friction. Six exploratory answer pairs were [reviewed](tests/reports/261014-mobile-ux-skill-comparison-review.md) and archived as v0.1.0; strict comparison remains `NOT RUN` because not all controls were documented. The guidance changes from that review have not been rerun with a fresh consumer. The [independent audit](tests/reports/audit-261014-1849-mobile-ux-codebase-review.md) records the blocking work for a v0.1.1 replay. This is **not yet a tested mobile UX improvement system**.
+**Fixture-validated MVP for dashboard and form tasks.** The repository includes eight focused playbooks and two runnable mobile retrofits. Fresh [Tier A with-skill regressions](tests/reports/regression-261015-tier-a.md) passed four targeted advice cases and two counterexamples; a separate form code variant also passed its focused check. [Before/after Chromium browser checks](tests/reports/retrofit-261015-browser-evidence.md) cover dashboard and form tasks at phone widths and desktop, with screenshots and limits recorded. The six older exploratory pairs remain [archived](tests/reports/261014-mobile-ux-skill-comparison-review.md). A controlled Tier B skill comparison is still `NOT RUN`; these fixture results do not establish a general usability gain or physical-phone behavior.
 
-Next milestones are a protocol-compliant decision comparison, an improved fixture with before/after task checks, real phone keyboard/accessibility tests, and browser/PWA-specific guidance. See [MVP scope](docs/mvp-scope.md), [decision evaluation](evals/results/decision-evaluation.md), and [roadmap](docs/roadmap.md).
+Next milestones are a controlled Tier B comparison, the remaining scenario, real-phone keyboard and screen-reader checks, and browser/PWA-specific guidance. See [MVP scope](docs/mvp-scope.md), [decision evaluation](evals/results/decision-evaluation.md), and [roadmap](docs/roadmap.md).
 
 ## Contributing
 

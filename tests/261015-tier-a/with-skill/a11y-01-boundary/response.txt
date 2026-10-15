@@ -1,0 +1,14 @@
+## Target-size spacing advice
+
+**INFERRED from the stated dimensions:** Both buttons have 20 x 20 CSS px pointer hit areas, so neither meets the direct 24 x 24 CSS px size route in [WCAG 2.2 SC 2.5.8 (Level AA)](https://www.w3.org/TR/WCAG22/#target-size-minimum). Its spacing exception uses a 24 CSS px diameter circle centered on each undersized target's bounding box. These are independent buttons, so check both circles.
+
+| Edge-to-edge gap | Center distance | Circle test for both buttons | Pairwise result |
+| --- | ---: | --- | --- |
+| 3 CSS px | 20 + 3 = 23 CSS px | Each circle has radius 12 CSS px; 12 + 12 = 24, so the circles overlap by 1 CSS px along the center line. | Spacing exception fails for this pair, assuming the stated rendered hit areas and alignment. |
+| 4 CSS px | 20 + 4 = 24 CSS px | The two radius-12 circles just touch; neither extends into the other button. | This pair meets the spacing geometry, assuming the stated rendered hit areas and alignment. |
+
+This matches the [W3C explanation and its 20 px target / 4 px gap example](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html#spacing). If a 3 px gap is required visually, enlarge each *actual pointer hit area* to contain a 24 x 24 CSS px square, or establish another applicable SC 2.5.8 exception; a larger icon alone does not enlarge the target.
+
+**NOT RUN - rendered-page check:** No page was supplied. Measure the actual clickable bounds, not just the visible button or CSS declaration, in every relevant responsive and interactive state. Confirm the 20 x 20 dimensions, the true horizontal gap, vertical alignment, transforms, overlap, and whether padding or another element changes the hit regions. For **each** undersized button, center its 24 px circle on the rendered target bounding box and check that it intersects neither any other target nor another undersized target's circle. Include controls above, below, diagonally nearby, and controls revealed in menus or overlays; the gap between these two buttons alone cannot establish the exception across the page.
+
+The 4 px case supports only this pairwise geometric conclusion. A WCAG 2.2 **AA conformance claim** needs rendered checks of all relevant targets and applicable exceptions across the complete page or process, plus the other Level A and AA success criteria. Keyboard, focus, zoom, and other accessibility behavior were **NOT RUN**.

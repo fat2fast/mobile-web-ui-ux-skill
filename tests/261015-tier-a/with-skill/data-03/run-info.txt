@@ -1,0 +1,19 @@
+Case: DATA-03
+Condition: with-skill
+Prompt SHA-256: 9439ab85a542d32049c7c55cd6c0d4fcb4e556bf16fd36a562be292eda91ac5e
+Fixture and skill snapshot: manifest.json
+Runtime and version: Codex subagent; version unknown
+Model identifier and version: unknown (not exposed to this subagent)
+Conversation/session locator: /root/replay_data03
+Agent mode: worker subagent; decision-only advice
+Started at UTC: unknown (start time was not observed)
+Finished at UTC: 2026-10-15 02:30:00 UTC (observed while finalizing)
+Workspace path: /home/user/work/with-skill (redacted)
+Tool access: functions.exec with exec_command, apply_patch, clock__curr_time; collaboration tools available but unused
+Tools actually used: exec_command via functions.exec; apply_patch via functions.exec; clock__curr_time via functions.exec
+Files and ambient instructions read: task instructions; AGENTS.md; data-03/prompt.txt; data-03/manifest.json; data-03/run-info.txt; README.md; src/main.jsx; src/style.css; .agents/skills/mobile-web-ui-ux-skill/SKILL.md; .agents/skills/mobile-web-ui-ux-skill/references/project-discovery.md, agent-workflow.md, mobile-ux-principles.md, decision-contract.md, decisions/data-display.md, decisions/actions.md, decisions/accessibility.md, verification-criteria.md, report-template.md, accessibility-checklist.md
+Skill file actually read and evidence: yes; SKILL.md read with exec_command (cat), including its advice-mode and required-workflow instructions
+Checks actually run and results: sha256sum for README.md, index.html, package.json, src/main.jsx, src/style.css matched manifest.json fixture hashes; response.txt and run-info.txt exist; no PENDING or actual home path in saved files; transcript.jsonl absent because no source was supplied; no build, browser, interaction, or accessibility checks run
+Time/token limits: unknown
+Raw transcript location or availability: unavailable
+Other limitations: fixture source review only; no rendered UI or real authorization policy; raw runtime transcript path not exposed

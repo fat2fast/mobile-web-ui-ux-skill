@@ -1,0 +1,17 @@
+# Run information
+
+- Case: a11y-01-boundary
+- Prompt SHA-256: `896ca36044edceff15915ca98e5ea412f1be70060b68d6fea5c19077f4eff06f`
+- Runtime: Codex subagent in WSL Ubuntu-24.04, invoked through `wsl.exe -d Ubuntu-24.04 -- bash -ic`; exact model identifier not exposed to this subagent.
+- Session locator: `/root/replay_a11y_boundary`
+- Files read:
+  - `a11y-01-boundary/prompt.txt`
+  - `.agents/skills/mobile-web-ui-ux-skill/SKILL.md`
+  - `.agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md`
+  - `.agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md`
+  - `.agents/skills/mobile-web-ui-ux-skill/references/verification-criteria.md`
+  - `.agents/skills/mobile-web-ui-ux-skill/references/report-template.md`
+- External sources read: W3C WCAG 2.2 SC 2.5.8 and W3C Understanding SC 2.5.8, via web tool.
+- Checks actually run: `sha256sum` on the original prompt before and after writing; manual arithmetic for 20 + 3 = 23, 20 + 4 = 24, and two radius-12 circles. No browser, implementation, rendered hit-area, keyboard, or full WCAG checks ran.
+- Transcript availability: this subagent conversation is available through the session locator; no separate transcript file was written.
+- Unknowns: actual rendered page, other neighboring targets, interaction states, hit-region geometry, applicable exceptions, and complete WCAG AA status.

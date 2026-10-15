@@ -1,0 +1,11 @@
+@import "tailwindcss";
+body { margin: 0; font-family: Arial, sans-serif; color: #162536; }
+label { display: block; margin-bottom: 6px; font-weight: 600; }
+input, textarea { border: 1px solid #8895a2; padding: 12px; width: 100%; min-height: 48px; box-sizing: border-box; font: inherit; }
+textarea { min-height: 112px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 3px solid #1769aa; outline-offset: 2px; }
+input[aria-invalid="true"] { border-color: #a01c17; }
+.field-error { color: #a01c17; margin-top: 6px; }
+button { cursor: pointer; }
+.submit-area { margin-top: 24px; }
+.submit-area button { min-height: 48px; }
