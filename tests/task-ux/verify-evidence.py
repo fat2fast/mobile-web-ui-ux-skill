@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-EVIDENCE_FILE = ROOT / "plans/261015-1137-mobile-ux-task-first-improvement/reports/task-ux-evidence.md"
+EVIDENCE_FILE = ROOT / "tests/reports/task-ux-evidence.md"
 TEST_RESULTS_FILE = ROOT / "tests/task-ux/artifacts/test-results.json"
 BUILD_RESULTS_FILE = ROOT / "tests/task-ux/artifacts/build-results.json"
 VALIDATE_SKILL_SCRIPT = ROOT / "scripts/validate_skill.py"
