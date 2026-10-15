@@ -9,17 +9,17 @@
 - Small, reversible modifications, desktop and functionality preservation guidance.
 - Manual verification checklist and audit report template.
 - Scenario **specifications** for three representative mobile UX failures.
-- Standard-library-only repository validator and CI smoke check.
+- Standard-library-only repository validator, unit tests, fixture builds in CI, and local browser checks for the dashboard and form fixtures.
 
 ## Explicitly not included yet
 
-- Automated screenshot capture or comparison runner.
+- Automated, controlled skill A/B comparison runner. Local before/after browser scripts capture screenshots for two fixtures.
 - Prebuilt React/Next.js/Tailwind UI component library.
 - Search engine, CSV rule catalog or CLI installer.
 - Native iOS/Android design or application building.
 - Full PWA installation/offline/service-worker diagnostics.
 - Guaranteed compatibility with every browser/framework.
-- Claims that scenarios have already been tested in a real project.
+- Claims of physical-device validation, broad real-project coverage, or skill superiority over a no-skill condition.
 
 ## Acceptance criteria
 
@@ -31,4 +31,4 @@
 
 ## Next release
 
-Expand evidence-backed playbooks, add runnable fixtures and tool-driven responsive/interaction verification, then browser/PWA-specific heuristics.
+Complete the third scenario, physical-device keyboard and screen-reader checks, and a controlled Tier B comparison before broad release claims. Browser/PWA-specific heuristics remain later work.

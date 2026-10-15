@@ -73,7 +73,7 @@ make with-skill DEST=~/work/mobile-ux-test
 
 Mặc định dùng `order-dashboard`; thêm `FIXTURE=mobile-form` nếu muốn thử form. Lưu ý: Thư mục cha `DEST` phải tồn tại trước (nếu chưa có, tạo bằng `mkdir -p <DEST>`). Project thứ hai có skill tại `.agents/skills/mobile-web-ui-ux-skill/`, gồm các tài liệu runtime cần thiết. Project thứ nhất không có skill cấp project. Hai project không chứa `node_modules` và `dist`; chạy `npm ci` trong từng project trước khi khởi động. Lệnh không ghi đè project đã có; dùng `DEST` mới cho lượt khác, và giữ case đáp án cùng kết quả đánh giá bên ngoài hai project.
 
-Mỗi bản sao có `AGENTS.md` ghi nhận giống nhau và các thư mục case theo `evals/comparison-prompts.md`. Generator hiện phù hợp cho lượt chạy thăm dò, nhưng workspace dùng chung **chưa cách ly từng case**: conversation mới vẫn có thể đọc file của case khác. Để replay v0.1.1 đúng [protocol](evals/comparison-protocol.md), trước tiên cần cập nhật generator để mỗi case, điều kiện và lượt chạy có workspace sạch chỉ chứa case đó. Giữ output lịch sử ở [`tests/v.0.1.0/`](tests/v.0.1.0/) và lưu output mới vào `tests/v.0.1.1/` riêng sau khi cả hai điều kiện đã đóng băng. Kiểm tra các file kết quả và run-info đã có, không còn `PENDING`; metadata agent tự ghi không thay thế transcript độc lập, và trường runtime không quan sát được phải ghi `unknown`. Fixture có thể chưa triển khai mọi tình huống; ghi rõ các phép kiểm chưa chạy.
+Mỗi bản sao có `AGENTS.md` ghi nhận giống nhau và các thư mục case theo `evals/comparison-prompts.md`. Với hồi quy **Tier A** chỉ dùng skill, hãy mở conversation riêng cho mỗi case, không đưa đáp án cũ hoặc tài liệu reviewer vào ngữ cảnh, và ghi nhận khả năng agent đã đọc file case khác. Có thể dùng chung workspace fixture; điều đó tự nó không chứng minh cách ly hay nhiễm ngữ cảnh. Muốn công bố skill tốt hơn điều kiện không dùng skill theo **Tier B**, cần kiểm soát hai điều kiện tương ứng và chứng minh ranh giới truy cập theo [protocol](evals/comparison-protocol.md). Giữ output lịch sử trong [`tests/v.0.1.0/`](tests/v.0.1.0/) và [`tests/v0.1.1/`](tests/v0.1.1/); [kết quả Tier A mới](tests/261015-tier-a/) được lưu riêng. Ghi hash prompt, snapshot nguồn, mã định vị session nếu có và phép kiểm thực sự chạy. Metadata agent tự ghi không thay thế transcript độc lập; trường runtime không quan sát được ghi `unknown`.
 
 ## Ví dụ yêu cầu
 
@@ -97,13 +97,14 @@ README.md / README.vi.md     Tài liệu dự án
 docs/                        Product scope, MVP scope, roadmap
 references/                  Hướng dẫn runtime, tiêu chí kiểm chứng và mẫu bằng chứng
 references/decisions/        Tám playbook chọn UX theo tác vụ
-evals/fixtures/              Baseline dashboard và form chạy được
+evals/fixtures/              Dashboard và form đã cải thiện, chạy được
 evals/scenarios/             Các kịch bản đánh giá mobile UX
 evals/decisions/             Decision cases và phản ví dụ
 evals/evaluation-criteria.md Điểm vào cho reviewer đến tiêu chí kiểm chứng chung
 examples/                    Báo cáo UX mẫu
 scripts/validate_skill.py    Kiểm tra cấu trúc và liên kết Markdown
 .github/workflows/           Kiểm tra tự động bằng CI
+tests/261015-retrofit/        Kiểm tra browser trước/sau và ảnh chụp
 ```
 
 ## Kiểm tra cấu trúc
@@ -114,13 +115,13 @@ Yêu cầu Python 3.9+ (chỉ sử dụng thư viện chuẩn):
 python3 scripts/validate_skill.py
 ```
 
-Lệnh này kiểm tra cấu trúc skill, metadata và các liên kết nội bộ. **Nó không đánh giá chất lượng sử dụng và cũng không chứng minh UX đã được cải thiện.** Việc kiểm chứng thực tế cần ứng dụng mẫu có thể chạy, interaction tests và/hoặc kiểm thử trên thiết bị.
+Lệnh này kiểm tra cấu trúc skill, metadata và liên kết nội bộ; nó không đánh giá chất lượng sử dụng. CI còn chạy unit test và build hai fixture. [Kiểm tra browser tại máy](tests/261015-retrofit/) cung cấp bằng chứng hẹp hơn về tác vụ và kích thước màn hình. Hành vi trên thiết bị thật chưa được kiểm chứng.
 
 ## Trạng thái phát triển
 
-**Hướng dẫn quyết định đang hoàn thiện.** Repository có tám playbook, decision contract, baseline dashboard và form chạy được, các decision cases và validator cấu trúc. Baseline cố ý giữ trở ngại mobile. Sáu cặp output thăm dò đã được [review](tests/reports/261014-mobile-ux-skill-comparison-review.md) và lưu ở v0.1.0; đối chứng nghiêm ngặt vẫn `NOT RUN` vì chưa ghi nhận đủ các điều kiện kiểm soát. Bản hướng dẫn sửa từ review này chưa được chạy lại với agent mới. [Báo cáo kiểm toán độc lập](tests/reports/audit-261014-1849-mobile-ux-codebase-review.md) ghi các việc chặn replay v0.1.1. Đây **chưa phải hệ thống cải thiện mobile UX đã được kiểm thử đầy đủ**.
+**MVP đã kiểm chứng trên fixture dashboard và form.** Repository có tám playbook và hai fixture đã cải thiện cho mobile. [Hồi quy Tier A mới với skill](tests/reports/regression-261015-tier-a.md) đạt bốn case tư vấn và hai phản ví dụ; biến thể yêu cầu code form có phép kiểm riêng. [Kiểm tra Chromium trước/sau](tests/reports/retrofit-261015-browser-evidence.md) chạy các tác vụ dashboard và form ở kích thước điện thoại và desktop, có ảnh chụp và giới hạn rõ ràng. Sáu cặp output thăm dò cũ vẫn [được lưu](tests/reports/261014-mobile-ux-skill-comparison-review.md). Đối chứng skill Tier B vẫn `NOT RUN`; các kết quả trên fixture chưa chứng minh mức tăng khả năng sử dụng nói chung hay hành vi trên điện thoại thật.
 
-Các bước tiếp theo gồm đối chứng decision đúng protocol, triển khai cải thiện fixture với kiểm tra before/after, thử bàn phím và accessibility trên điện thoại thật, rồi mở rộng browser/PWA. Xem [MVP scope](docs/mvp-scope.md), [kết quả decision](evals/results/decision-evaluation.md) và [roadmap](docs/roadmap.md).
+Các bước tiếp theo gồm đối chứng Tier B, kịch bản còn lại, thử bàn phím và screen reader trên điện thoại thật, rồi mở rộng hướng dẫn browser/PWA. Xem [MVP scope](docs/mvp-scope.md), [kết quả decision](evals/results/decision-evaluation.md) và [roadmap](docs/roadmap.md).
 
 ## Đóng góp
 

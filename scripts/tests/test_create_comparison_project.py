@@ -41,6 +41,10 @@ class ComparisonProjectTest(unittest.TestCase):
                 instructions = (project / "AGENTS.md").read_text(encoding="utf-8")
                 self.assertIn("--source <absolute-raw-transcript-path>", instructions)
                 self.assertTrue((project / recorder).is_file())
+                manifest = json.loads((project / "data-03/manifest.json").read_text(encoding="utf-8"))
+                run_info = (project / "data-03/run-info.txt").read_text(encoding="utf-8")
+                self.assertIn(f"Prompt SHA-256: {manifest['prompt_sha256']}", run_info)
+                self.assertIn("Conversation/session locator: PENDING", run_info)
                 self.assertIn(
                     f"Workspace path: /home/user/work/{project.name} (redacted)",
                     (project / "data-03/run-info.txt").read_text(encoding="utf-8"),
@@ -136,6 +140,153 @@ class ComparisonProjectTest(unittest.TestCase):
 
             self.assertFalse((case / "transcript.jsonl").exists())
             self.assertIn("Raw transcript location or availability: unavailable", run_info.read_text())
+
+    def test_recorder_without_source_rejects_unresolved_transcript_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            subprocess.run(
+                [sys.executable, str(CREATOR), "--dest", temporary, "--condition", "no-skill"],
+                check=True, capture_output=True, text=True,
+            )
+            project = Path(temporary) / "no-skill"
+            case = project / "form-01"
+            response = case / "response.txt"
+            response.write_text(f"See {project}/src/main.jsx\n", encoding="utf-8")
+            before_response = response.read_bytes()
+            run_info = case / "run-info.txt"
+            original = run_info.read_text(encoding="utf-8")
+            for field in (
+                "Raw transcript location or availability: PENDING",
+                "",
+                "Raw transcript location or availability: unavailable\nRaw transcript location or availability: unavailable",
+                "Raw transcript location or availability: ",
+                "Raw transcript location or availability: /home/user/logs/transcript.jsonl",
+            ):
+                with self.subTest(field=field):
+                    run_info.write_text(
+                        original.replace("Raw transcript location or availability: PENDING", field),
+                        encoding="utf-8",
+                    )
+                    before_run_info = run_info.read_bytes()
+                    result = subprocess.run(
+                        [sys.executable, str(project / "scripts/archive-comparison-case.py"),
+                         "--case", "form-01"],
+                        capture_output=True, text=True,
+                    )
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("run-info.txt", result.stderr)
+                    self.assertEqual(response.read_bytes(), before_response)
+                    self.assertEqual(run_info.read_bytes(), before_run_info)
+                    self.assertFalse((case / "transcript.jsonl").exists())
+
+    def test_recorder_without_source_rejects_existing_archive(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            subprocess.run(
+                [sys.executable, str(CREATOR), "--dest", temporary, "--condition", "no-skill"],
+                check=True, capture_output=True, text=True,
+            )
+            project = Path(temporary) / "no-skill"
+            case = project / "form-01"
+            response = case / "response.txt"
+            response.write_text(f"See {project}/src/main.jsx\n", encoding="utf-8")
+            before_response = response.read_bytes()
+            run_info = case / "run-info.txt"
+            run_info.write_text(
+                run_info.read_text(encoding="utf-8").replace(
+                    "Raw transcript location or availability: PENDING",
+                    "Raw transcript location or availability: unavailable",
+                ),
+                encoding="utf-8",
+            )
+            before_run_info = run_info.read_bytes()
+            archive = case / "transcript.jsonl"
+            archive.write_text("{}\n", encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(project / "scripts/archive-comparison-case.py"),
+                 "--case", "form-01"],
+                capture_output=True, text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("transcript.jsonl already exists", result.stderr)
+            self.assertEqual(response.read_bytes(), before_response)
+            self.assertEqual(run_info.read_bytes(), before_run_info)
+            self.assertEqual(archive.read_text(encoding="utf-8"), "{}\n")
+
+    def test_recorder_rejects_wrong_prompt_hash_and_duplicate_case_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            subprocess.run(
+                [sys.executable, str(CREATOR), "--dest", temporary, "--condition", "with-skill"],
+                check=True, capture_output=True, text=True,
+            )
+            project = Path(temporary) / "with-skill"
+            case = project / "data-03"
+            (case / "response.txt").write_text("Advice.\n", encoding="utf-8")
+            run_info = case / "run-info.txt"
+            before = run_info.read_bytes()
+            prompt = case / "prompt.txt"
+            original_prompt = prompt.read_bytes()
+            prompt.write_bytes(original_prompt + b"changed\n")
+            recorder = project / "scripts/archive-comparison-case.py"
+            result = subprocess.run(
+                [sys.executable, str(recorder), "--case", "data-03"],
+                capture_output=True, text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("prompt.txt SHA-256 does not match", result.stderr)
+            self.assertEqual(run_info.read_bytes(), before)
+
+            prompt.write_bytes(original_prompt)
+            other = json.loads((project / "data-02/manifest.json").read_text(encoding="utf-8"))
+            (case / "manifest.json").write_text(json.dumps(other), encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(recorder), "--case", "data-03"],
+                capture_output=True, text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("manifest case does not match", result.stderr)
+            self.assertEqual(run_info.read_bytes(), before)
+
+    def test_recorder_rejects_missing_transcript_source(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            subprocess.run(
+                [sys.executable, str(CREATOR), "--dest", temporary, "--condition", "with-skill"],
+                check=True, capture_output=True, text=True,
+            )
+            project = Path(temporary) / "with-skill"
+            case = project / "data-03"
+            (case / "response.txt").write_text("Advice.\n", encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(project / "scripts/archive-comparison-case.py"),
+                 "--case", "data-03", "--source", str(Path(temporary) / "missing" / "transcript.jsonl")],
+                capture_output=True, text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("--source must be an existing transcript.jsonl file", result.stderr)
+            self.assertFalse((case / "transcript.jsonl").exists())
+
+    def test_recorder_does_not_rewrite_response_when_run_info_is_invalid(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            subprocess.run(
+                [sys.executable, str(CREATOR), "--dest", temporary, "--condition", "with-skill"],
+                check=True, capture_output=True, text=True,
+            )
+            project = Path(temporary) / "with-skill"
+            case = project / "data-03"
+            response = case / "response.txt"
+            response.write_text(f"See {project}/src/main.jsx\n", encoding="utf-8")
+            before = response.read_bytes()
+            (case / "run-info.txt").write_text("missing location field\n", encoding="utf-8")
+            raw = Path(temporary) / "runtime" / "transcript.jsonl"
+            raw.parent.mkdir()
+            raw.write_text("{}\n", encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(project / "scripts/archive-comparison-case.py"),
+                 "--case", "data-03", "--source", str(raw)],
+                capture_output=True, text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("run-info.txt needs one raw transcript location field", result.stderr)
+            self.assertEqual(response.read_bytes(), before)
+            self.assertFalse((case / "transcript.jsonl").exists())
 
 
 if __name__ == "__main__":

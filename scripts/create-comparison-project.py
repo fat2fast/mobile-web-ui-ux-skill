@@ -36,7 +36,7 @@ When the user sends one frozen task, match it to the corresponding `*/prompt.txt
 
 1. Read only this project and the instructions normally available to you. Do not open another comparison project, the source skill repository, or reviewer cases and rubrics. Do not edit the fixture application. The selected fixture may not implement the task's scenario; do not invent screens or claim checks ran when they did not.
 2. Answer the task completely in the selected case's `response.txt`. Keep the answer unchanged except for path redaction by the recording script; your final chat answer should reproduce the archived answer.
-3. Fill every `PENDING` field in the selected case's `run-info.txt` with the actual UTC start/end times if observable, runtime and model identifier if exposed, agent mode, tool access and tools used, files and instructions read, whether a skill file was actually read (with file/tool evidence), checks actually run, and any limits. The workspace field already uses a `/home/user/work/<condition>` alias; record other files relative to it. Never write the actual home directory or absolute workspace path into `response.txt` or `run-info.txt`. Use `unknown` for information you cannot observe. Do not infer a model version or claim a test ran without evidence.
+3. Fill every `PENDING` field in the selected case's `run-info.txt` with the actual UTC start/end times if observable, runtime and model identifier if exposed, agent mode, tool access and tools used, files and instructions read, whether a skill file was actually read (with file/tool evidence), checks actually run, session locator if exposed, and any limits. The prompt, fixture, and skill hashes are frozen in `manifest.json`; do not change them. The workspace field already uses a `/home/user/work/<condition>` alias; record other files relative to it. Never write the actual home directory or absolute workspace path into `response.txt` or `run-info.txt`. Use `unknown` for information you cannot observe. Do not infer a model version or claim a test ran without evidence.
 4. After finishing the answer and run-info, locate the runtime's raw `transcript.jsonl` if it is accessible. Run `python3 scripts/archive-comparison-case.py --case <case> --source <absolute-raw-transcript-path>` to copy a path-redacted JSONL transcript into the selected case folder and scrub local paths from the answer and run-info. Supply the actual source path only to this command, not in any saved file. If the transcript is unavailable, run the same command without `--source` and record `unavailable` in the raw transcript field; do not invent a transcript. The archived copy is path-redacted and may be a snapshot if the runtime writes more events after this command.
 5. Confirm `response.txt` and `run-info.txt` exist, and `transcript.jsonl` exists only when copied. Do not grade or revise your answer against any case answer or rubric. The reviewer will do that after both runs finish.
 
@@ -116,13 +116,17 @@ def main() -> None:
             case.mkdir()
             prompt_file = case / "prompt.txt"
             prompt_file.write_text(prompt_for(prompt_number) + "\n", encoding="utf-8")
+            prompt_hash = hashlib.sha256(prompt_file.read_bytes()).hexdigest()
             (case / "run-info.txt").write_text(
                 "\n".join(
                     (
                         f"Case: {case_dir.upper()}",
                         f"Condition: {args.condition}",
+                        f"Prompt SHA-256: {prompt_hash}",
+                        "Fixture and skill snapshot: manifest.json",
                         "Runtime and version: PENDING",
                         "Model identifier and version: PENDING",
+                        "Conversation/session locator: PENDING",
                         "Agent mode: PENDING",
                         "Started at UTC: PENDING",
                         "Finished at UTC: PENDING",
@@ -146,7 +150,7 @@ def main() -> None:
                 "fixture": args.fixture,
                 "fixture_files_sha256": fixture_hashes,
                 "prompt_number": prompt_number,
-                "prompt_sha256": hashlib.sha256(prompt_file.read_bytes()).hexdigest(),
+                "prompt_sha256": prompt_hash,
                 "prepared_at_utc": prepared_at,
                 "recording_instructions_sha256": instructions_hash,
                 "recording_helper_sha256": recorder_hash,

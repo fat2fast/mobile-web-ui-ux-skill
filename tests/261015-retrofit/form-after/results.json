@@ -1,0 +1,147 @@
+{
+  "phase": "after",
+  "browser": "agent-browser managed Chromium",
+  "viewportHeight": 844,
+  "checks": [
+    {
+      "name": "viewport 320 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 1006,
+        "submitBottom": 1085,
+        "submitPosition": "static",
+        "width": 320
+      }
+    },
+    {
+      "name": "viewport 375 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 982,
+        "submitBottom": 1061,
+        "submitPosition": "static",
+        "width": 375
+      }
+    },
+    {
+      "name": "viewport 390 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 982,
+        "submitBottom": 1061,
+        "submitPosition": "static",
+        "width": 390
+      }
+    },
+    {
+      "name": "viewport 430 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 982,
+        "submitBottom": 1061,
+        "submitPosition": "static",
+        "width": 430
+      }
+    },
+    {
+      "name": "viewport 1280 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "documentOverflow": false,
+        "notesBottom": 982,
+        "submitBottom": 1061,
+        "submitPosition": "static",
+        "width": 1280
+      }
+    },
+    {
+      "name": "server rejection shown",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "values retained after rejection",
+      "result": "PASS",
+      "actual": {
+        "name": "Test User",
+        "notes": "Please call first"
+      }
+    },
+    {
+      "name": "rejection HTTP status",
+      "result": "PASS",
+      "actual": [
+        422
+      ]
+    },
+    {
+      "name": "successful resubmission",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "resubmission HTTP statuses",
+      "result": "PASS",
+      "actual": [
+        422,
+        200
+      ]
+    },
+    {
+      "name": "empty required field rejected",
+      "result": "PASS",
+      "actual": "Full name is required"
+    },
+    {
+      "name": "missing field HTTP status",
+      "result": "PASS",
+      "actual": [
+        422
+      ]
+    },
+    {
+      "name": "focus reaches missing field",
+      "result": "PASS",
+      "actual": "fullName"
+    },
+    {
+      "name": "submit stays in document flow",
+      "result": "PASS",
+      "actual": "static"
+    },
+    {
+      "name": "invalid email inline error",
+      "result": "PASS",
+      "actual": "Email is invalid"
+    },
+    {
+      "name": "invalid email focus",
+      "result": "PASS",
+      "actual": "email"
+    },
+    {
+      "name": "other values retained after email error",
+      "result": "PASS",
+      "actual": "Test User"
+    },
+    {
+      "name": "invalid email HTTP status",
+      "result": "PASS",
+      "actual": [
+        422
+      ]
+    },
+    {
+      "name": "corrected email resubmits",
+      "result": "PASS",
+      "actual": [
+        422,
+        200
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Staff select many orders, compare status and totals, filter the list, then apply a permitted bulk action. Recommend a phone presentation and safety checks.

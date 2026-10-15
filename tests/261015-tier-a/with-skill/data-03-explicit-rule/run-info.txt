@@ -1,0 +1,29 @@
+Case: data-03-explicit-rule
+Session locator: /root/replay_data03_rule
+Model/runtime: Codex GPT-6 subagent; exact model variant and runtime version were not exposed. Commands ran through WSL Ubuntu-24.04 via `wsl.exe -d Ubuntu-24.04 -- bash -ic`; output files were written through the shared Windows/WSL filesystem.
+Prompt SHA-256: f1f3dfad0322b96ee7f2348fba5aedc43a9dee2897cb945b52b6dd296a9971f4
+
+Files read:
+- data-03-explicit-rule/prompt.txt
+- src/main.jsx
+- src/style.css
+- .agents/skills/mobile-web-ui-ux-skill/SKILL.md
+- .agents/skills/mobile-web-ui-ux-skill/references/project-discovery.md
+- .agents/skills/mobile-web-ui-ux-skill/references/agent-workflow.md
+- .agents/skills/mobile-web-ui-ux-skill/references/mobile-ux-principles.md
+- .agents/skills/mobile-web-ui-ux-skill/references/decision-contract.md
+- .agents/skills/mobile-web-ui-ux-skill/references/decisions/actions.md
+- .agents/skills/mobile-web-ui-ux-skill/references/decisions/data-display.md
+- .agents/skills/mobile-web-ui-ux-skill/references/decisions/accessibility.md
+- .agents/skills/mobile-web-ui-ux-skill/references/verification-criteria.md
+- .agents/skills/mobile-web-ui-ux-skill/references/report-template.md
+- data-03-explicit-rule/response.txt (post-write inspection)
+
+Checks actually run:
+- SHA-256 of prompt before and after writing response matched the value above. This checks prompt file integrity, not UX behavior.
+- Read the written response back from disk. This checks file presence/content, not the proposed interaction.
+- SHA-256 computed after writing: src/main.jsx 5c92bf9befa72c07b686741328428c17af9ea404be8f2b32a959951d0877c10c; src/style.css 7edba43aa754853e9ee086ac602cbf8904c5bcde1733acbc152da742f2a3aea1. Neither fixture file was edited in this session; no baseline fixture hashes were recorded.
+- No browser, automated test, build, or rendered interaction check was run.
+
+Transcript availability: Conversation messages are available in the parent/session runtime; no standalone transcript artifact was exported into this case folder.
+Unknowns: Whether a backend action exists beyond the fixture; intended target mobile browsers/devices; real data volumes and whether selection across filters is expected in production. Recommendations use the explicit eligibility rule in the prompt and the inspected fixture only.

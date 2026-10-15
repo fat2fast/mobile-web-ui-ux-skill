@@ -1,0 +1,141 @@
+{
+  "phase": "baseline",
+  "browser": "agent-browser managed Chromium",
+  "viewportHeight": 844,
+  "checks": [
+    {
+      "name": "viewport 320 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "horizontalOverflow": true,
+        "main": 220,
+        "sidebar": 100,
+        "table": 1080,
+        "width": 320
+      }
+    },
+    {
+      "name": "viewport 375 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "horizontalOverflow": false,
+        "main": 275,
+        "sidebar": 100,
+        "table": 1080,
+        "width": 375
+      }
+    },
+    {
+      "name": "viewport 390 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "horizontalOverflow": false,
+        "main": 290,
+        "sidebar": 100,
+        "table": 1080,
+        "width": 390
+      }
+    },
+    {
+      "name": "viewport 430 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "horizontalOverflow": false,
+        "main": 330,
+        "sidebar": 100,
+        "table": 1080,
+        "width": 430
+      }
+    },
+    {
+      "name": "viewport 1280 geometry",
+      "result": "OBSERVED",
+      "actual": {
+        "horizontalOverflow": false,
+        "main": 1060,
+        "sidebar": 220,
+        "table": 1080,
+        "width": 1280
+      }
+    },
+    {
+      "name": "search order",
+      "result": "PASS",
+      "actual": [
+        "ORD-1001"
+      ]
+    },
+    {
+      "name": "detail route",
+      "result": "PASS",
+      "actual": "/orders/ORD-1001"
+    },
+    {
+      "name": "detail status",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "detail follow-up",
+      "result": "PASS",
+      "actual": "Follow-up recorded for ORD-1001"
+    },
+    {
+      "name": "browser Back",
+      "result": "PASS",
+      "actual": "/orders"
+    },
+    {
+      "name": "status filter",
+      "result": "PASS",
+      "actual": [
+        "ORD-1002"
+      ]
+    },
+    {
+      "name": "CSV visible rows",
+      "result": "PASS",
+      "actual": "id,customer,status,total\nORD-1002,Minh Tran,Shipped,$89.50"
+    },
+    {
+      "name": "reset filters",
+      "result": "PASS",
+      "actual": [
+        "ORD-1001",
+        "ORD-1002",
+        "ORD-1003",
+        "ORD-1004"
+      ]
+    },
+    {
+      "name": "row follow-up ORD-1001",
+      "result": "PASS",
+      "actual": "Follow-up recorded for ORD-1001"
+    },
+    {
+      "name": "row follow-up ORD-1002",
+      "result": "PASS",
+      "actual": "Follow-up recorded for ORD-1002"
+    },
+    {
+      "name": "row follow-up ORD-1004",
+      "result": "PASS",
+      "actual": "Follow-up recorded for ORD-1004"
+    },
+    {
+      "name": "selection retained through filter",
+      "result": "PASS",
+      "actual": true
+    },
+    {
+      "name": "mixed status bulk follow-up",
+      "result": "PASS",
+      "actual": "Follow-up recorded for ORD-1001, ORD-1002, ORD-1004"
+    },
+    {
+      "name": "direct detail Back fallback",
+      "result": "PASS",
+      "actual": "/orders"
+    }
+  ]
+}
