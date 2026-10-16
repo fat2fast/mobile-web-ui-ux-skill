@@ -2,7 +2,7 @@
 
 > Đo những thay đổi UX bằng tác vụ và bằng chứng trước/sau; kiểm tra cả tác động phụ lên desktop.
 
-**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source/evidence đã đọc, gồm [review và lượt kiểm tra gần nhất](../../plans/reports/review-261017-0428-skill-codebase.md). Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
+**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source và bằng chứng được dẫn trực tiếp tại từng task. Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
 
 ## Kết quả cần đạt
 
@@ -15,7 +15,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P04-01 — Tạo Playwright test harness
 
 - **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD headless harness · **Phụ thuộc:** P02-00.
-- **Bằng chứng / còn thiếu:** [Playwright config](../../tests/task-ux/playwright.config.cjs), [package](../../tests/task-ux/package.json), [CI](../../.github/workflows/validate.yml) và [executed review](../../plans/reports/review-261017-0428-skill-codebase.md). Harness thực tế nằm ở tests/task-ux, không phải các path evals dự kiến.
+- **Bằng chứng / còn thiếu:** [Playwright config](../../tests/task-ux/playwright.config.cjs), [package](../../tests/task-ux/package.json), [CI](../../.github/workflows/validate.yml) và [executed task evidence](../../tests/reports/task-ux-evidence.md). Harness thực tế nằm ở tests/task-ux, không phải các path evals dự kiến.
 - **Các bước thực hiện:**
   1. Cài test dependencies chỉ trong fixture/evals workspace, tránh bắt user cài cho skill runtime.
   2. Cấu hình browser/device emulation, base URL, mock data ổn định và artifacts directory.
@@ -32,7 +32,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P04-02 — Chụp baseline và ghi bằng chứng reproducible
 
 - **Ưu tiên:** `P0` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P04-01.
-- **Bằng chứng / còn thiếu:** [Baseline commit/hash và screenshots](../../tests/reports/retrofit-261015-browser-evidence.md) đã có cho dashboard/form; navigation baseline chưa có. [Review](../../plans/reports/review-261017-0428-skill-codebase.md) còn phát hiện redaction Windows/WSL chưa đủ, nên chưa đóng privacy/retention DoD toàn task.
+- **Bằng chứng / còn thiếu:** [Baseline commit/hash và screenshots](../../tests/reports/retrofit-261015-browser-evidence.md) đã có cho dashboard/form; navigation baseline chưa có. [Archive redactor](../../scripts/archive-comparison-case.py) mới bao phủ dạng home Linux và exact project/source paths, chưa đủ các dạng Windows/WSL, nên chưa đóng privacy/retention DoD toàn task.
 - **Các bước thực hiện:**
   1. Chốt baseline commit/hash của fixture cho từng scenario.
   2. Lưu screenshots cùng viewport/device/browser info, trạng thái mock data, test steps.
@@ -63,7 +63,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P04-04 — End-to-end task: Dashboard
 
 - **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD trên dashboard fixture · **Phụ thuộc:** P03-01, P04-01.
-- **Bằng chứng / còn thiếu:** [Order suite](../../tests/task-ux/order.spec.cjs) kiểm tra task, actions including Delivered, hidden selection và desktop. [Review run](../../plans/reports/review-261017-0428-skill-codebase.md) xác nhận suite pass; không thay task bằng việc ẩn action.
+- **Bằng chứng / còn thiếu:** [Order suite](../../tests/task-ux/order.spec.cjs) kiểm tra task, actions including Delivered, hidden selection và desktop. [Task evidence](../../tests/reports/task-ux-evidence.md) ghi kết quả suite; không thay task bằng việc ẩn action.
 - **Các bước thực hiện:**
   1. Test tìm order → xem status → mở details → action → Back.
   2. Đảm bảo mock permissions/actions giữ nguyên.

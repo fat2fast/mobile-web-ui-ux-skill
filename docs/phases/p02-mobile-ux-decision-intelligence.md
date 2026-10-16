@@ -2,7 +2,7 @@
 
 > Dạy AI tự chọn pattern UX mobile web dựa vào tác vụ và bối cảnh, không bắt vibe coder phải là designer.
 
-**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source/evidence đã đọc, gồm [review và lượt kiểm tra gần nhất](../../plans/reports/review-261017-0428-skill-codebase.md). Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
+**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source và bằng chứng được dẫn trực tiếp tại từng task. Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
 
 ## Kết quả cần đạt
 
@@ -15,7 +15,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P02-00 — Dựng runnable baseline đầu tiên — Order Dashboard
 
 - **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD trên fixture · **Phụ thuộc:** P00-03, P00-04.
-- **Bằng chứng / còn thiếu:** [Baseline](../../evals/fixtures/order-dashboard/README.md), [baseline evidence](../../evals/results/order-dashboard-baseline.md) và [order suite](../../tests/task-ux/order.spec.cjs) chứng minh runnable app, lỗi sideways-scroll và desktop invariants. Build/browser đã chạy trong [review](../../plans/reports/review-261017-0428-skill-codebase.md); không gọi đó là skill benchmark.
+- **Bằng chứng / còn thiếu:** [Baseline](../../evals/fixtures/order-dashboard/README.md), [baseline evidence](../../evals/results/order-dashboard-baseline.md) và [order suite](../../tests/task-ux/order.spec.cjs) chứng minh runnable app, lỗi sideways-scroll và desktop invariants. Kết quả build/browser được ghi tại [task evidence](../../tests/reports/task-ux-evidence.md); không gọi đó là skill benchmark.
 - **Các bước thực hiện:**
   1. Tạo fixture React + Tailwind độc lập dưới `evals/fixtures/order-dashboard/` (không phụ thuộc runtime skill).
   2. Mô phỏng bảng đơn hàng ~8 cột, sidebar, search/filter, details, row action, dữ liệu mock ổn định; cố tình để UX mobile bất tiện nhưng responsive không vỡ nghiêm trọng.
@@ -50,7 +50,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P02-02 — Data display & table decision playbook
 
 - **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD trên order/comparison fixtures · **Phụ thuộc:** P02-00.
-- **Bằng chứng / còn thiếu:** [Data playbook](../../references/decisions/data-display.md), [order suite](../../tests/task-ux/order.spec.cjs) và [comparison suite](../../tests/task-ux/comparison.spec.cjs) giữ comparison alignment và order handlers. Câu status/action khái quát quá rộng còn là finding trong [review](../../plans/reports/review-261017-0428-skill-codebase.md).
+- **Bằng chứng / còn thiếu:** [Data playbook](../../references/decisions/data-display.md), [order suite](../../tests/task-ux/order.spec.cjs) và [comparison suite](../../tests/task-ux/comparison.spec.cjs) giữ comparison alignment và order handlers. Câu status/action trong [SKILL](../../SKILL.md) còn áp quá rộng cho individual-record tasks; cần giới hạn vào các trường/action có trong sản phẩm.
 - **Các bước thực hiện:**
   1. Mở rộng `data-display.md` cho mục tiêu scan, compare, filter, bulk-edit, dense data.
   2. Đưa rule chuyển table → cards/list chỉ khi phù hợp, giữ horizontal table khi cần so sánh; đảm bảo tất cả field/actions vẫn tới được.
@@ -145,7 +145,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P02-08 — Mobile accessibility rules
 
 - **Ưu tiên:** `P0` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P02-01, P02-02, P02-03.
-- **Bằng chứng / còn thiếu:** [Accessibility rules](../../references/decisions/accessibility.md) và [checklist](../../references/accessibility-checklist.md) gắn nguồn/mức tiêu chuẩn. Automated fixture checks không đủ xác nhận toàn bộ zoom/screen-reader accessibility; A11Y-03 còn thiếu viable alternative theo [review](../../plans/reports/review-261017-0428-skill-codebase.md).
+- **Bằng chứng / còn thiếu:** [Accessibility rules](../../references/decisions/accessibility.md) và [checklist](../../references/accessibility-checklist.md) gắn nguồn/mức tiêu chuẩn. Automated fixture checks không đủ xác nhận toàn bộ zoom/screen-reader accessibility; [A11Y-03](../../evals/decisions/accessibility-cases.md) còn so modal hợp lệ với overlay thiếu focus management, chưa có hai phương án khả thi.
 - **Các bước thực hiện:**
   1. Ghi checklist WCAG web cho controls/labels/focus/contrast/zoom/text reflow phù hợp mobile.
   2. Kiểm tra semantic HTML và cách công bố trạng thái loading, error, expanded.
