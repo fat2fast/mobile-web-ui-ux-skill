@@ -2,6 +2,7 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 
 async function capture(page, name) {
   if (!process.env.TASK_UX_SCREENSHOTS) return;
@@ -11,6 +12,29 @@ async function capture(page, name) {
 
 const BASELINE_URL = 'http://127.0.0.1:4179';
 const IMPL_URL = 'http://127.0.0.1:4181';
+
+
+for (const [label, url] of [['baseline', BASELINE_URL], ['implementation', IMPL_URL]]) {
+  test(label + ' rejects JSON attachment metadata without multipart file bytes', async ({ request }) => {
+    for (const attachment of [
+      { fileName: 'receipt.pdf', fileSize: 68 },
+      { fileName: 'receipt.pdf', fileContent: 'not a multipart file' },
+    ]) {
+      const response = await request.post(url + '/api/request', { data: {
+        requestType: 'Annual Leave', startDate: '2026-11-01',
+        endDate: '2026-11-03', reason: 'Valid need', ...attachment,
+      } });
+      expect(response.status()).toBe(422);
+      expect(await response.json()).toMatchObject({ field: 'file' });
+    }
+    const noFile = await request.post(url + '/api/request', { data: {
+      requestType: 'Annual Leave', startDate: '2026-11-01',
+      endDate: '2026-11-03', reason: 'Valid need',
+    } });
+    expect(noFile.status()).toBe(200);
+    expect(await noFile.json()).toMatchObject({ fileReceived: false, bytesReceived: 0 });
+  });
+}
 
 test.describe('Contextual Request Form - Baseline Observations', () => {
   test('baseline submit button uses fixed positioning that risks viewport occlusion at reduced height', async ({ page }) => {
@@ -80,6 +104,9 @@ test.describe('Contextual Request Form - Baseline Observations', () => {
     const body = await response.json();
     expect(body.requestId).toBe('REQ-2026-001');
     expect(body.fileReceived).toBe(true);
+    expect(body.bytesReceived).toBe(Buffer.byteLength('Mock baseline receipt data'));
+    expect(response.request().headers()['content-type']).toMatch(/^multipart\/form-data; boundary=/);
+    expect(body.fileSha256).toBe(createHash('sha256').update('Mock baseline receipt data').digest('hex'));
     await expect(page.getByRole('status')).toContainText('Submitted: REQ-2026-001');
   });
 });
@@ -380,6 +407,9 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
     expect(successData.fileReceived).toBe(true);
     expect(successData.fileName).toBe('medical_certificate.pdf');
     expect(successData.bytesReceived).toBe(fileBuffer.byteLength);
+    const submitted = res200.request();
+    expect(submitted.headers()['content-type']).toMatch(/^multipart\/form-data; boundary=/);
+    expect(successData.fileSha256).toBe(createHash('sha256').update(fileBuffer).digest('hex'));
 
     await expect(page.getByRole('status').filter({ hasText: 'Submitted' })).toContainText('Submitted: REQ-2026-001');
   });

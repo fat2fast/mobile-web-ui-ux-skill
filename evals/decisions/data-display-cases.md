@@ -52,3 +52,13 @@ Records follow the [decision contract](../../references/decision-contract.md). C
 - **Rejected:** a selectable list with tall per-record cards is viable for individual triage, but may increase vertical scanning and selection effort across 20 records. A list without selection or invented status gates is invalid regardless of layout.
 - **Preserved:** selection across filters, count, Delivered follow-up, desktop table and CSV.
 - **Verify:** `PASS` four-record cross-filter invariant in the local run above; `NOT RUN` the 20-record table choice, task timing, occlusion during scroll and human discovery.
+
+## DATA-05 — Read-only reference records without status or actions
+
+- **Evidence:** INFERRED input scenario: a reference directory supplies only a name and description per record, with no lifecycle status, detail route or row handler. No executable fixture or agent replay.
+- **Mobile task:** find a named entry and read its description at 320px/390px.
+- **Candidates:** compact labeled list; semantic two-column table with wrapped text.
+- **Selected:** list because users inspect one entry at a time and need no cross-column comparison.
+- **Rejected:** wrapped table remains feasible, but repeated column structure adds little for individual lookup.
+- **Preserved:** names, descriptions, any existing search, semantics and desktop behavior. Do not add status badges, selection, buttons or routes absent from source.
+- **Verify:** NOT RUN agent/browser; source/rubric review must reject invented status/actions. Counterexample: DATA-01 still requires existing order status and Follow-up, and DATA-02 preserves aligned comparison.

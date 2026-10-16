@@ -43,10 +43,10 @@ This scenario specifies a contextual mobile request form featuring structured in
    - Multi-line textarea. Required.
    - Simulated rejection trigger: If text equals `REJECT`, the server responds with 422: `{"error": "Request reason rejected by business policy", "field": "reason"}`.
 4. **Attachment & File Delivery:**
-   - Transmitted via `multipart/form-data` (or JSON payload with binary content).
+   - Attachments are transmitted via `multipart/form-data` in the baseline and task-first fixture APIs. JSON without an attachment remains supported; JSON attachment metadata/content fields return 422 on `file`.
    - Maximum file size: 5 MB (5,242,880 bytes).
    - Allowed formats: `.pdf`, `.png`, `.jpg`, `.jpeg`. If unsupported format is uploaded, server returns 422 with `field: "file"` and `error: "Unsupported file type. Allowed formats: PDF, PNG, JPG"`.
-   - Server verifies actual receipt of the file payload (checking byte length and extension).
+   - Server verifies actual receipt of the multipart file payload (checking byte length and extension); receipt byte counts and the additive `fileSha256` field come only from content read by the server. Browser tests compare that digest with the selected file as well as requiring multipart transport. Metadata-only JSON must never produce a positive file receipt.
 5. **Server API Contract (`POST /api/request`):**
    - 422 Unprocessable Entity if required fields missing, invalid date order, out of bounds date, invalid file type/size, or `reason === 'REJECT'`. Response format: `{"error": "<message>", "field": "<fieldId>"}`.
    - 200 OK on valid submission returning: `{"status": "ok", "requestId": "REQ-2026-001"}`.

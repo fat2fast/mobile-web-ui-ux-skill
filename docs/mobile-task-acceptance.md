@@ -77,6 +77,15 @@ Every `record(...)` assertion from both historical test scripts is cataloged bel
 
 ---
 
+## Current evidence gate policy
+
+Full task-suite evidence must have zero skipped tests, including baseline and desktop
+checks. The verifier also requires named task outcomes, including comparison desktop
+preservation and metadata-only attachment rejection in both request-form APIs.
+This policy does not pin a test count. A focused test run is diagnostic evidence,
+not a complete suite result. See [verifier](../tests/task-ux/verify-evidence.py)
+and [rejection probes](../tests/task-ux/check-evidence-rejections.py).
+
 ## 3. Task Acceptance Metrics: Before & After
 
 To evaluate mobile UX improvements objectively without distorting automation runtime as human speed:

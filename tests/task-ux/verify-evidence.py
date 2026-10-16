@@ -31,6 +31,9 @@ REQUIRED_TESTS = {
     "comparison semantics": r"all metrics, units, and plan selection actions are preserved",
     "comparison scroll 320": r"comparison table at 320px preserves alignment",
     "comparison scroll 390": r"comparison table at 390px preserves alignment",
+    "comparison desktop": r"desktop layout at 1280px displays full comparison matrix",
+    "form baseline metadata rejection": r"baseline rejects JSON attachment metadata",
+    "form implementation metadata rejection": r"implementation rejects JSON attachment metadata",
     "comparison keyboard": r"keyboard traversal navigates cells and triggers plan selection",
     "form manual date": r"manual date typing, reactive days derivation",
     "form native date": r"native date controls synchronize with manual ISO inputs",
@@ -60,13 +63,15 @@ def passed_titles(suites):
     return titles
 
 
-def has_interruption(suites):
+def has_result_status(suites, status):
     for suite in suites:
         for spec in suite.get("specs", []):
             for test in spec.get("tests", []):
-                if any(result.get("status") == "interrupted" for result in test.get("results", [])):
+                if test.get("status") == status or any(
+                    result.get("status") == status for result in test.get("results", [])
+                ):
                     return True
-        if has_interruption(suite.get("suites", [])):
+        if has_result_status(suite.get("suites", []), status):
             return True
     return False
 
@@ -99,8 +104,10 @@ def verify(build, browser, manifest, sha, run_id, results_path):
             errors.append(f"Build failed: {name}")
 
     stats = browser.get("stats", {})
-    if stats.get("unexpected") != 0 or browser.get("errors") or has_interruption(browser.get("suites", [])):
+    if stats.get("unexpected") != 0 or browser.get("errors") or has_result_status(browser.get("suites", []), "interrupted"):
         errors.append("Playwright has unexpected failures, runner errors or interruptions")
+    if stats.get("skipped") != 0 or has_result_status(browser.get("suites", []), "skipped"):
+        errors.append("Full task suite must not contain skipped tests")
     titles = passed_titles(browser.get("suites", []))
     for item, pattern in REQUIRED_TESTS.items():
         if not any(re.search(pattern, title) for title in titles):

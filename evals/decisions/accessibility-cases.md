@@ -23,8 +23,9 @@ Records follow the [decision contract](../../references/decision-contract.md); s
 ## A11Y-03 — Modal focus
 - **Evidence:** `INFERRED` [OVER-01](./overlays-cases.md) scenario.
 - **Mobile task:** confirm/cancel and return to the invoking control.
-- **Candidates:** native dialog/modal with managed focus; custom visual overlay without focus management.
-- **Selected:** accessible modal with initial focus, contained tab sequence, Escape and focus return.
-- **Rejected:** visual overlay that leaves keyboard focus behind it; it cannot preserve the task.
+- **Candidates:** accessible modal with initial focus, contained Tab sequence, Escape/Cancel and focus return; full-page confirmation with a named heading, managed entry focus, keyboard-operable Confirm/Cancel and Back/return focus to the invoking control.
+- **Selected:** modal for this brief decision on one named order; preserve initial focus, contained Tab sequence, Escape/Cancel and focus return while background interaction is locked.
+- **Rejected:** accessible full-page confirmation remains feasible and keeps the background task inactive, but adds route/history overhead for two choices. Prefer it when more review context is required.
+- **Anti-pattern:** a visual overlay without focus management leaves keyboard focus behind it and fails the accessibility constraint; it is not a feasible candidate.
 - **Preserved:** keyboard access, visible focus, status, background state, Close/Cancel and zoom.
 - **Verify:** `NOT RUN`; keyboard and screen-reader replay on actual implementation, including 390px and zoom.
