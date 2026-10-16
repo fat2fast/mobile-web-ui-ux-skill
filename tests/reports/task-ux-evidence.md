@@ -17,7 +17,7 @@ The browser run used WSL Ubuntu 24.04 and wrote JSON plus screenshots under `/tm
 
 ## Clean-commit CI check
 
-[Push run 38845489783](https://github.com/fat2fast/mobile-web-ui-ux-skill/actions/runs/38845489783) completed successfully for commit `67fc5d500beaf86d3e2b751d3ed4b5d2f8c73fab`. All seven build jobs, structural validation and the task browser job passed. Its downloaded `task-ux-evidence` artifact contains build and browser results stamped with `67fc5d5` and run ID `38845489783-1`, a matching run manifest, and six screenshots. The browser JSON reports zero unexpected failures; the CI verifier and rejection checks passed in the browser job. The [PR run 38845519072](https://github.com/fat2fast/mobile-web-ui-ux-skill/actions/runs/38845519072) also passed, using GitHub's PR merge SHA `3d71924bffd77c5a68f7b1762623d7a061cc69f2` in its artifact. These runs validate the implementation commit; later documentation commits need their own CI result.
+[Push run 38846344490](https://github.com/fat2fast/mobile-web-ui-ux-skill/actions/runs/38846344490) completed successfully for implementation and test commit `089d01a75cee3ab84b32d8a8646bf63ca7e8839e`. All seven build jobs, structural validation and the task browser job passed. The downloaded `task-ux-evidence` artifact contains seven build results, 39 expected browser passes with zero unexpected failures, a matching run manifest and screenshots. Build and browser evidence both carry SHA `089d01a` and run ID `38846344490-1`; CI verification and rejection checks passed. A separate PR run also executes on GitHub's merge revision. A later documentation commit requires its own CI check.
 
 ## Observed browser outcomes
 
