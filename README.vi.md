@@ -109,6 +109,8 @@ tests/261015-retrofit/        Kiểm tra browser trước/sau và ảnh chụp
 
 ## Kiểm tra cấu trúc
 
+CI ghi manifest build, kết quả Playwright và ảnh vào thư mục tạm của cùng lượt chạy; verifier kiểm tra SHA/run ID và các test bắt buộc. Artifact `task-ux-evidence` chứa bằng chứng của lượt CI đó. Các file JSON cũ trong `tests/task-ux/artifacts/` chỉ là lịch sử; xem [bằng chứng task UX](tests/reports/task-ux-evidence.md) để biết phạm vi đã kiểm tra.
+
 Yêu cầu Python 3.9+ (chỉ sử dụng thư viện chuẩn):
 
 ```

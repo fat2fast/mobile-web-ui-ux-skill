@@ -10,4 +10,6 @@ Choose by route structure and switching frequency; retain existing URLs and perm
 | Focused flow or nested detail | Contextual action plus explicit Back/breadcrumb | It conceals a required global destination or replaces browser history |
 | Access-controlled routes | Filter entries using existing authorization result | UI-only hiding is mistaken for access control |
 
+A narrow persistent sidebar that squeezes a record list is a symptom, not a fixed breakpoint rule. Compare a compact header with an accessible drawer, a retained sidebar with adequate content width, and other project navigation. When using a drawer, preserve every permitted route, close by button/Escape/outside click, contain background interaction, return focus, and close it if a viewport change restores desktop navigation. Keep a persistent sidebar when it leaves the primary task comfortably usable. Test at both sides of the project's actual breakpoint.
+
 For each choice, record [evidence, task, candidates, selected, rejected, preserved, verify](../decision-contract.md). Keep direct URLs and browser Back, active/current state, focus on route changes, and all permitted destinations. Test direct deep link, Back after details, keyboard traversal and restricted roles when the actual auth system is available. Do not invent auth for a fixture.

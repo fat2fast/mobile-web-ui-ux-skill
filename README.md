@@ -109,6 +109,8 @@ tests/261015-retrofit/        Before/after browser checks and screenshots
 
 ## Validation
 
+The current-run task UX verifier takes explicit build, browser and run-manifest paths, plus SHA and run ID. CI creates these in its runner temp directory, runs the browser suite and uploads `task-ux-evidence` after verification. Checked-in `tests/task-ux/artifacts/` records are historical; see [task UX evidence](tests/reports/task-ux-evidence.md) for the exact scope and device limits.
+
 Requires Python 3.9+ (standard library only):
 
 ```

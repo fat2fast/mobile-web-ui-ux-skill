@@ -1,195 +1,132 @@
 #!/usr/bin/env python3
-"""Verify automated evidence completeness for Task-First Mobile UX Improvement.
-
-Checks that every mandatory automated acceptance item has an executed PASS result,
-verifies test execution against artifacts/test-results.json, checks fixture builds
-against artifacts/build-results.json, validates that all cited files exist on disk,
-and verifies structural integrity via scripts/validate_skill.py.
-"""
-from __future__ import annotations
-
+"""Verify current-run build and browser evidence for mandatory task outcomes."""
+import argparse
 import json
 import re
-import subprocess
-import sys
+from datetime import datetime, timedelta
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-EVIDENCE_FILE = ROOT / "tests/reports/task-ux-evidence.md"
-TEST_RESULTS_FILE = ROOT / "tests/task-ux/artifacts/test-results.json"
-BUILD_RESULTS_FILE = ROOT / "tests/task-ux/artifacts/build-results.json"
-VALIDATE_SKILL_SCRIPT = ROOT / "scripts/validate_skill.py"
+PROJECTS = {
+    'evals/fixtures/order-dashboard', 'evals/fixtures/mobile-form',
+    'evals/fixtures/comparison-table', 'evals/fixtures/request-form',
+    'evals/implementations/task-first/order-dashboard',
+    'evals/implementations/task-first/comparison-table',
+    'evals/implementations/task-first/request-form',
+}
 
-MANDATORY_AUTOMATED = [
-    "ORDER-MOBILE-FIT",
-    "ORDER-INVARIANTS",
-    "ORDER-DESKTOP",
-    "COMPARISON-SEMANTICS",
-    "COMPARISON-SCROLL-STICKY",
-    "COMPARISON-SELECTION",
-    "REQUEST-DATE-INPUT",
-    "REQUEST-VALIDATION",
-    "REQUEST-ERROR-RECOVERY",
-    "REQUEST-RESUBMIT",
-    "REQUEST-CTA-CLEARANCE",
-    "FIXTURE-BUILDS",
-    "STRUCTURAL-VALIDATION",
-]
-
-OPTIONAL_MANUAL = [
-    "PHYSICAL-KEYBOARD-TEST",
-    "HUMAN-TASK-WALKTHROUGH",
-]
-
-# Map mandatory item to required test title patterns in test-results.json
-ITEM_TEST_PATTERNS = {
-    "ORDER-MOBILE-FIT": [
-        r"primary task at 320px requires 0px horizontal scrolling",
-        r"primary task at 390px requires 0px horizontal scrolling",
-    ],
-    "ORDER-INVARIANTS": [
-        r"mobile search, detail, filter, sort, export, selection invariants succeed",
-        r"baseline preserves search, detail, filter, sort, export, selection invariants",
-    ],
-    "ORDER-DESKTOP": [
-        r"desktop table layout is preserved at 1280px",
-    ],
-    "COMPARISON-SEMANTICS": [
-        r"all metrics, units, and plan selection actions are preserved",
-    ],
-    "COMPARISON-SCROLL-STICKY": [
-        r"comparison table at 320px preserves alignment, sticky labels and scroll cues",
-        r"comparison table at 390px preserves alignment, sticky labels and scroll cues",
-    ],
-    "COMPARISON-SELECTION": [
-        r"keyboard traversal navigates cells and triggers plan selection",
-        r"baseline handles plan selection action",
-    ],
-    "REQUEST-DATE-INPUT": [
-        r"manual date typing, reactive days derivation, and range validation work",
-    ],
-    "REQUEST-VALIDATION": [
-        r"enforces calendar date validity and range bounds \(2026-2027\) with auto-focus",
-        r"enforces file type constraints, handles unsupported file with accessible inline error",
-    ],
-    "REQUEST-ERROR-RECOVERY": [
-        r"touch file delivery, real byte transmission, error recovery, focus shift, and resubmission",
-    ],
-    "REQUEST-RESUBMIT": [
-        r"touch file delivery, real byte transmission, error recovery, focus shift, and resubmission",
-    ],
-    "REQUEST-CTA-CLEARANCE": [
-        r"zero horizontal overflow and clear geometric CTA clearance at reduced height",
-        r"baseline submit button uses fixed positioning that risks viewport occlusion at reduced height",
-    ],
+REQUIRED_TESTS = {
+    "order navigation": r"mobile navigation is reachable and dismisses",
+    "order selection": r"selection, details, empty recovery and hidden selected orders",
+    "order long list": r"bulk selection remains reachable with a 20-record test data variant",
+    "order alternate markup": r"task journey accepts a semantic section",
+    "order lost action probe": r"task assertions expose a seeded lost action",
+    "order drawer probe": r"task assertions expose a seeded inaccessible drawer",
+    "order checkbox probe": r"task assertions expose a seeded checkbox detail misfire",
+    "order long label and boundary": r"long customer labels stay within the record",
+    "order touch targets": r"mobile record controls have 44px hit regions",
+    "order desktop": r"desktop table layout is preserved at 1280px",
+    "order action reachability 320": r"primary task at 320px requires 0px horizontal scrolling",
+    "order action reachability 390": r"primary task at 390px requires 0px horizontal scrolling",
+    "order invariants": r"mobile search, detail, filter, sort, export, selection invariants",
+    "comparison semantics": r"all metrics, units, and plan selection actions are preserved",
+    "comparison scroll 320": r"comparison table at 320px preserves alignment",
+    "comparison scroll 390": r"comparison table at 390px preserves alignment",
+    "comparison keyboard": r"keyboard traversal navigates cells and triggers plan selection",
+    "form manual date": r"manual date typing, reactive days derivation",
+    "form native date": r"native date controls synchronize with manual ISO inputs",
+    "form calendar validation": r"enforces calendar date validity and range bounds",
+    "form reversed date": r"reversed dates are rejected by the server",
+    "form network error": r"network error receives logical focus",
+    "form file validation": r"enforces file type constraints, handles unsupported file",
+    "form oversized file": r"oversized attachment remains server validated",
+    "form recovery and bytes": r"touch file delivery, real byte transmission, error recovery",
+    "form clearance 320": r"viewport 320px has zero horizontal overflow",
+    "form clearance 375": r"viewport 375px has zero horizontal overflow",
+    "form clearance 390": r"viewport 390px has zero horizontal overflow",
+    "form clearance 430": r"viewport 430px has zero horizontal overflow",
 }
 
 
-def main() -> int:
-    errors: list[str] = []
+def passed_titles(suites):
+    titles = []
+    for suite in suites:
+        for spec in suite.get("specs", []):
+            for test in spec.get("tests", []):
+                if test.get("status") == "expected" and any(
+                    result.get("status") == "passed" for result in test.get("results", [])
+                ):
+                    titles.append(spec.get("title", ""))
+        titles.extend(passed_titles(suite.get("suites", [])))
+    return titles
 
-    # 1. Evidence file existence and markdown checks
-    if not EVIDENCE_FILE.is_file():
-        print(f"FAIL: Evidence file missing: {EVIDENCE_FILE}")
-        return 1
 
-    content = EVIDENCE_FILE.read_text(encoding="utf-8")
+def has_interruption(suites):
+    for suite in suites:
+        for spec in suite.get("specs", []):
+            for test in spec.get("tests", []):
+                if any(result.get("status") == "interrupted" for result in test.get("results", [])):
+                    return True
+        if has_interruption(suite.get("suites", [])):
+            return True
+    return False
 
-    for item in MANDATORY_AUTOMATED:
-        pattern = rf"`{item}\s*\|\s*PASS`"
-        if not re.search(pattern, content):
-            errors.append(f"Mandatory automated item {item} is not marked PASS in evidence table")
 
-    for item in OPTIONAL_MANUAL:
-        pattern = rf"`{item}\s*\|\s*(PASS|NOT RUN)`"
-        if not re.search(pattern, content):
-            errors.append(f"Manual item {item} is missing or has invalid status")
-
-    for line in content.splitlines():
-        if "| FAIL" in line:
-            errors.append(f"Found failing item in evidence: {line.strip()}")
-
-    # 2. Verify all cited artifact paths exist on disk
-    cited_paths = set(re.findall(r"`((?:tests|evals|plans|scripts)/[^`]+)`", content))
-    for rel_path in cited_paths:
-        p = ROOT / rel_path
-        if not p.exists():
-            errors.append(f"Cited evidence artifact missing on disk: {rel_path}")
-        elif p.is_file() and p.stat().st_size == 0:
-            errors.append(f"Cited evidence artifact is empty (0 bytes): {rel_path}")
-
-    # 3. Verify Playwright test results
-    if not TEST_RESULTS_FILE.is_file():
-        errors.append(f"Playwright test-results.json missing at {TEST_RESULTS_FILE}")
-    else:
-        try:
-            results_data = json.loads(TEST_RESULTS_FILE.read_text(encoding="utf-8"))
-            stats = results_data.get("stats", {})
-            unexpected = stats.get("unexpected", 0)
-            expected = stats.get("expected", 0)
-
-            if unexpected > 0:
-                errors.append(f"Playwright test run has {unexpected} unexpected failures")
-            if expected < 24:
-                errors.append(f"Playwright test run has only {expected} passed tests (expected >= 24)")
-
-            passed_titles: list[str] = []
-
-            def collect_specs(suite_obj):
-                for spec in suite_obj.get("specs", []):
-                    for t in spec.get("tests", []):
-                        for res in t.get("results", []):
-                            if res.get("status") == "passed":
-                                passed_titles.append(spec.get("title", ""))
-                for child_suite in suite_obj.get("suites", []):
-                    collect_specs(child_suite)
-
-            for top_suite in results_data.get("suites", []):
-                collect_specs(top_suite)
-
-            for item, patterns in ITEM_TEST_PATTERNS.items():
-                for pat in patterns:
-                    matched = any(re.search(pat, title) for title in passed_titles)
-                    if not matched:
-                        errors.append(f"No passed test found in test-results.json for {item} (pattern: {pat})")
-
-        except Exception as e:
-            errors.append(f"Failed to parse test-results.json: {e}")
-
-    # 4. Verify Fixture and Implementation builds
-    if not BUILD_RESULTS_FILE.is_file():
-        errors.append(f"Build results missing at {BUILD_RESULTS_FILE}")
-    else:
-        try:
-            build_data = json.loads(BUILD_RESULTS_FILE.read_text(encoding="utf-8"))
-            if build_data.get("status") != "ok":
-                errors.append(f"Build results status is not ok: {build_data.get('status')}")
-            projects = build_data.get("projects", {})
-            if len(projects) < 6:
-                errors.append(f"Expected 6 projects in build-results.json, found {len(projects)}")
-            for proj, pinfo in projects.items():
-                if not pinfo.get("success") or pinfo.get("exit_code") != 0:
-                    errors.append(f"Project build failed: {proj}")
-        except Exception as e:
-            errors.append(f"Failed to parse build-results.json: {e}")
-
-    # 5. Verify structural validation
+def verify(build, browser, manifest, sha, run_id, results_path):
+    errors = []
+    for name, metadata in (("build", build), ("browser", browser.get("provenance", {}))):
+        if metadata.get("sha") != sha or metadata.get("run_id") != run_id:
+            errors.append(f"{name} SHA/run mismatch")
+        if not metadata.get("generated_at"):
+            errors.append(f"{name} timestamp missing")
+    if (manifest.get("sha") != sha or manifest.get("run_id") != run_id
+            or manifest.get("results") != str(results_path.resolve())
+            or browser.get("provenance", {}).get("started_at") != manifest.get("started_at")):
+        errors.append("Browser invocation manifest mismatch")
     try:
-        proc = subprocess.run([sys.executable, str(VALIDATE_SKILL_SCRIPT)], capture_output=True, text=True)
-        if proc.returncode != 0:
-            errors.append(f"validate_skill.py failed with exit code {proc.returncode}:\n{proc.stderr or proc.stdout}")
-    except Exception as e:
-        errors.append(f"Failed to run validate_skill.py: {e}")
+        started = datetime.fromisoformat(manifest["started_at"])
+        test_started = datetime.fromisoformat(browser["stats"]["startTime"].replace("Z", "+00:00"))
+        stamped = datetime.fromisoformat(browser["provenance"]["generated_at"])
+        if not started - timedelta(seconds=2) <= test_started <= stamped:
+            errors.append("Browser execution time is outside this run")
+    except (KeyError, ValueError, TypeError):
+        errors.append("Browser execution timestamps missing or invalid")
 
+    projects = build.get("projects", {})
+    if set(projects) != set(PROJECTS):
+        errors.append("Current-run build project set is incomplete or unexpected")
+    for name, result in projects.items():
+        if result.get("success") is not True or result.get("exit_code") != 0:
+            errors.append(f"Build failed: {name}")
+
+    stats = browser.get("stats", {})
+    if stats.get("unexpected") != 0 or browser.get("errors") or has_interruption(browser.get("suites", [])):
+        errors.append("Playwright has unexpected failures, runner errors or interruptions")
+    titles = passed_titles(browser.get("suites", []))
+    for item, pattern in REQUIRED_TESTS.items():
+        if not any(re.search(pattern, title) for title in titles):
+            errors.append(f"Missing passed browser test for {item}")
+    return errors
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--build-results", type=Path, required=True)
+    parser.add_argument("--test-results", type=Path, required=True)
+    parser.add_argument("--run-manifest", type=Path, required=True)
+    parser.add_argument("--sha", required=True)
+    parser.add_argument("--run-id", required=True)
+    args = parser.parse_args()
+    try:
+        build = json.loads(args.build_results.read_text(encoding="utf-8"))
+        browser = json.loads(args.test_results.read_text(encoding="utf-8"))
+        manifest = json.loads(args.run_manifest.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise SystemExit(f"Evidence file missing or invalid: {exc}") from exc
+    errors = verify(build, browser, manifest, args.sha, args.run_id, args.test_results)
     if errors:
-        print("FAIL: Verification evidence incomplete or invalid:")
-        for err in errors:
-            print(" -", err)
-        return 1
-
-    print("evidence complete")
-    return 0
+        raise SystemExit("Evidence verification failed:\n - " + "\n - ".join(errors))
+    print(f"evidence complete for {args.sha} / {args.run_id}: {len(passed_titles(browser['suites']))} passed specs")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

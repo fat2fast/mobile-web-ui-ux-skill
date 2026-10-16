@@ -22,7 +22,7 @@ The earlier retrofit assertions under `tests/261015-retrofit/` represent histori
 
 ### Provenance Rules
 - **No relabeling:** Historical JSON outputs (`results.json`, `orders-shipped.csv`, `dashboard-a11y.json`, `form-a11y.json`) and PNG screenshots in `tests/261015-retrofit/` remain immutable archives. They will **not** be relabeled or claimed as evidence for new tasks.
-- **Dedicated runner & output paths:** All new task journeys run in isolated test directories (`tests/task-ux/`) with distinct output paths (`tests/task-ux/artifacts/`).
+- **Dedicated runner & output paths:** Current task journeys run from `tests/task-ux/`. CI writes build manifests, Playwright JSON and screenshots to a fresh runner-temp directory, then uploads them as the `task-ux-evidence` artifact. Checked-in `tests/task-ux/artifacts/` files are historical and are not accepted by the current verifier.
 - **Timing distinction:** Execution duration measured in headless automation (`agent-browser` or Playwright) measures automation latency, **never** human task time. Human usability claims require human evaluation or physical device checks, which remain `NOT RUN` until performed.
 
 ---
@@ -87,7 +87,7 @@ To evaluate mobile UX improvements objectively without distorting automation run
 | **Action Reachability** | Primary action and record status visible within first viewport or natural vertical scroll. | Check bounding box intersection with viewport. |
 | **Desktop Preservation** | Full multi-column table layout and functionality preserved at >= 1024px. | Viewport 1280px checks for `table` element and multi-column headers. |
 | **Form Error Recovery** | All valid entries preserved; focus placed on first error; clear inline feedback. | Form state evaluation post-validation failure. |
-| **Virtual Keyboard Clearance** | Interactive inputs and Submit button not obscured during keyboard simulation. | Overlap calculation between active input, submit control, and viewport bottom margin. |
+| **Headless Viewport Clearance** | Focused input and Submit have no geometric overlap in reduced-height Chromium simulation. | Bounding boxes and hit testing at 320–430px. Physical virtual keyboard remains `NOT RUN`. |
 | **Automation Duration** | Reported as test environment latency only, **not** human completion time. | Playwright step timer (labeled as automation script execution duration). |
 
 ---

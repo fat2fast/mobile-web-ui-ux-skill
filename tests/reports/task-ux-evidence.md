@@ -1,45 +1,34 @@
-# Task-First Mobile UX Improvement — Verification Evidence Report
+# Task UX evidence — 2026-10-16 local working tree
 
-**Date:** 2026-10-15  
-**Harness:** Playwright Test 1.50+ on Managed Chromium (headless, Linux / WSL Ubuntu 24.04, Node v26.10.0)  
-**Historical Provenance:** Retrofit tests under `tests/261015-retrofit/` remain immutable baseline archives; new results are saved strictly under `tests/task-ux/artifacts/`.
+This report describes the current implementation check. Earlier reports and checked-in `tests/task-ux/artifacts/*.json` are historical records.
 
----
+## Executed checks
 
-## 1. Acceptance Criteria Verification Matrix
+| Check | Result | Scope |
+| --- | --- | --- |
+| `python3 scripts/validate_skill.py` | PASS | 22 required files, 355 local links |
+| `python3 -m unittest discover -s scripts/tests -p 'test_*.py' -v` | PASS | 8 tooling tests |
+| `collect-build-results.py --build-local` | PASS | 4 fixtures and 3 task-first implementations |
+| `npx playwright test` | PASS | 39 headless Chromium specs across order, comparison and request form |
+| `verify-evidence.py` | PASS | Same local run ID, base SHA, fresh browser manifest, required passed specs and 7 builds |
+| `check-evidence-rejections.py` | PASS | Rejects stale/mismatched identity, failed build, missing specs, runner error, interruption and bad manifest |
 
-| Acceptance Item ID | Scope & Requirement | Executed Check & Viewport | Result | Evidence Artifact |
-|---|---|---|---|---|
-| `ORDER-MOBILE-FIT` | Order ID, status, and follow-up action visible with 0px horizontal scroll on mobile | `tests/task-ux/order.spec.cjs` at 320px & 390px | `ORDER-MOBILE-FIT | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `ORDER-INVARIANTS` | Search, detail route, Back, filter, sort, CSV export, Delivered action, and bulk selection | `tests/task-ux/order.spec.cjs` at 390px & 1280px | `ORDER-INVARIANTS | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `ORDER-DESKTOP` | Multi-column table layout and 10 headers preserved at desktop | `tests/task-ux/order.spec.cjs` at 1280px | `ORDER-DESKTOP | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `COMPARISON-SEMANTICS` | Semantic table structure (`<th scope="col">`, `<th scope="row">`), 4 plans, 7 metrics, all units intact | `tests/task-ux/comparison.spec.cjs` at 390px | `COMPARISON-SEMANTICS | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `COMPARISON-SCROLL-STICKY` | Horizontal scroll enabled, visual scroll cue shown, sticky attribute labels pinned during scroll | `tests/task-ux/comparison.spec.cjs` at 320px & 390px | `COMPARISON-SCROLL-STICKY | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `COMPARISON-SELECTION` | Plan selection action works and announces confirmation; accessible keyboard navigation | `tests/task-ux/comparison.spec.cjs` at 390px | `COMPARISON-SELECTION | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `REQUEST-DATE-INPUT` | Manual date typing (`YYYY-MM-DD`) and real-time reactive inclusive duration derivation | `tests/task-ux/request-form.spec.cjs` at 390px | `REQUEST-DATE-INPUT | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `REQUEST-VALIDATION` | Date range inversion blocked; `reason = 'REJECT'` triggers server 422 | `tests/task-ux/request-form.spec.cjs` at 390px | `REQUEST-VALIDATION | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `REQUEST-ERROR-RECOVERY` | Valid field values preserved on error; focus shifts to invalid field; inline error linked via `aria-describedby` | `tests/task-ux/request-form.spec.cjs` at 390px | `REQUEST-ERROR-RECOVERY | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `REQUEST-RESUBMIT` | Resubmission with corrected reason succeeds with HTTP 200 and receipt `REQ-2026-001` | `tests/task-ux/request-form.spec.cjs` at 390px | `REQUEST-RESUBMIT | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `REQUEST-CTA-CLEARANCE` | Zero horizontal overflow across 320, 375, 390, 430px; in-flow submit CTA does not occlude inputs | `tests/task-ux/request-form.spec.cjs` (320-430px) | `REQUEST-CTA-CLEARANCE | PASS` | `tests/task-ux/artifacts/test-results.json` |
-| `FIXTURE-BUILDS` | All 3 fixtures and 3 task-first implementations build cleanly with `npm run build` | `npm run build` across 6 projects | `FIXTURE-BUILDS | PASS` | `tests/task-ux/artifacts/build-results.json` |
-| `STRUCTURAL-VALIDATION` | Skill metadata, required files, and 331 internal markdown links valid | `python3 scripts/validate_skill.py` | `STRUCTURAL-VALIDATION | PASS` | `scripts/validate_skill.py` |
-| `PHYSICAL-KEYBOARD-TEST` | Virtual keyboard emergence and touch viewport resizing on physical mobile devices | Physical device testing (iPhone / Android) | `PHYSICAL-KEYBOARD-TEST | NOT RUN` | Replay: Open `http://<ip>:4181` on phone, focus `#reason`, verify submit visibility |
-| `HUMAN-TASK-WALKTHROUGH` | Human completion time and cognitive load benchmarking | Human evaluation protocol | `HUMAN-TASK-WALKTHROUGH | NOT RUN` | Replay: Provide user task prompt, record completion steps and qualitative friction |
+The browser run used WSL Ubuntu 24.04 and wrote JSON plus screenshots under `/tmp/mobile-ux-cook-20261016-complete/`. The base commit is `764bd9b83195aa7c62eb91711a593727b9bddbde`; this was a **dirty working-tree run**, so that SHA does not identify the changed source. The local result is not clean-commit evidence. A separate GitHub Actions run on committed source is recorded below.
 
----
+## Clean-commit CI check
 
-## 2. Before vs After Task Comparison
+[Push run 38846344490](https://github.com/fat2fast/mobile-web-ui-ux-skill/actions/runs/38846344490) completed successfully for implementation and test commit `089d01a75cee3ab84b32d8a8646bf63ca7e8839e`. All seven build jobs, structural validation and the task browser job passed. The downloaded `task-ux-evidence` artifact contains seven build results, 39 expected browser passes with zero unexpected failures, a matching run manifest and screenshots. Build and browser evidence both carry SHA `089d01a` and run ID `38846344490-1`; CI verification and rejection checks passed. A separate PR run also executes on GitHub's merge revision. A later documentation commit requires its own CI check.
 
-| Surface / Task | Baseline Experience | Task-First Implementation | Usability Outcome |
-|---|---|---|---|
-| **Order Dashboard (320px/390px)** | 1080px table forced continuous horizontal scrolling (**measured 438px scroll distance**) to find status and follow-up action. | Mobile card list presents Order ID, Customer, Status, Total, and Follow-up action in immediate view with **0px sideways scroll**. Full details reachable via detail route with Back. Desktop keeps 10-column table. | Primary task friction eliminated; zero horizontal scroll required. |
-| **Comparison Table (320px/390px)** | Table required horizontal scrolling, but row headers scrolled off-screen, disconnecting metrics from labels; no scroll affordance. | Semantic table preserved with **sticky pinned attribute headers** (`left: 0`) and explicit swipe scroll cue (`↔ Swipe horizontally`). Units and alignment preserved across 4 plans; keyboard traversal and plan selection verified. | Two-dimensional comparison task preserved without losing attribute context. |
-| **Request Form (320px/390px)** | Fixed bottom submit bar (`bottom: 0`, top < 480px at 480px height) risked occluding active inputs or virtual keyboard; no derived day feedback; error focus lost. | Clean single-column layout with in-flow submit CTA with verified geometric clearance (`submitRect.top >= fileRect.bottom`), manual keyboard date typing, reactive duration calculation (`5 days (inclusive)`), strict calendar validation (`2026-02-31` and `2028-01-01` rejected), multipart binary file delivery (`fileReceived: true`), and automatic focus shift to invalid fields. | Form recovery and keyboard clearance verified; valid inputs retained. |
+## Observed browser outcomes
 
----
+- Orders: zero horizontal scroll to the first record action at 320/390px; routes, Escape/backdrop dismissal, focus return, independent selection/detail, cross-filter bulk action including Delivered, empty recovery, CSV, 1280px table and breakpoint resize and a 20-extra-record test variant passed. Screenshots: `orders-320.png`, `orders-390.png`, `orders-1280.png`.
+- Comparison: the semantic table retained aligned metrics, sticky labels, scroll cues, keyboard traversal and selection at 320/390px. Horizontal scroll remains inside the comparison container by design.
+- Request form: manual ISO and native date-input values synchronized; inclusive days, 422 field focus and correction, network error focus, file remove and server-confirmed multipart bytes passed. Reduced-height Chromium checks passed at 320/375/390/430px. Screenshots: `request-form-320.png`, `request-form-390.png`, `request-form-error-390.png`.
 
-## 3. Evidence Provenance & Limitations
+## Limits and follow-up
 
-- **Automation Speed vs Human Time:** Headless Playwright test execution duration reflects automated command latency, **not** human completion time. Usability claims are strictly limited to observable UI mechanics and accessibility invariants.
-- **Physical Device Boundary:** On-screen virtual keyboard behavior, native date pickers, and touch momentum on hardware devices are cataloged as `NOT RUN` with documented manual replay steps.
-- **Comparative Superiority Claim Boundary:** A controlled scientific claim of skill superiority versus a baseline without skill requires the multi-case protocol defined in [evals/comparison-protocol.md](../../evals/comparison-protocol.md) (Tier B).
+- **NOT RUN:** actual selection inside the platform calendar popup, an unsupported-picker browser, physical iOS/Android virtual keyboard, touch handling, screen reader and human task walkthrough. The native date test clicks the control and fills its value; it proves synchronization, not popup use.
+- **NOT RUN:** human discoverability of bulk action in a 20-record list and long-label translation/zoom review. The automated 24-record variant verified selection, last-record action reachability and bulk action; it did not measure human use. Three seeded UI faults exposed broken action, drawer naming and checkbox behavior; a semantic section variant completed the same order task.
+- Headless test duration is automation time, not human task time. These fixture outcomes do not establish general skill superiority.
+
+The skill decisions behind the list, comparison table and paired date controls are recorded in `evals/decisions/`.
