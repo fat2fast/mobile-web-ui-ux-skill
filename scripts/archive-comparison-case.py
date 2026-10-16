@@ -8,7 +8,13 @@ from pathlib import Path
 
 
 PROJECT = Path(__file__).resolve().parent.parent
-HOME_PATH = re.compile(rb"/home/[^/\s\"'\\]+")
+# Match home prefixes without rewriting path separators or JSON escaping.
+HOME_PATH = re.compile(
+    rb"/home/[^/\s\"'\\]+|/root(?=/|[\s\"'\\]|$)"
+    rb"|/mnt/[a-z]/users/[^/\\\r\n\"']+"
+    rb"|[a-z]:(?:\\+|/)users(?:\\+|/)[^/\\\r\n\"']+",
+    re.IGNORECASE,
+)
 
 
 def redact(data: bytes, source: Path | None) -> bytes:

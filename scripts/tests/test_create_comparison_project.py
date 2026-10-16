@@ -83,7 +83,10 @@ class ComparisonProjectTest(unittest.TestCase):
             raw = parent / "runtime" / "transcript.jsonl"
             raw.parent.mkdir()
             raw.write_text(
-                json.dumps({"content": f"file://{project}/data-03/prompt.txt /home/private-user/log"}) + "\n",
+                json.dumps({"content": f"file://{project}/data-03/prompt.txt /home/private-user/log",
+                            "windows": r"C:\Users\PrivateAccount\private",
+                            "wsl": "/mnt/c/Users/PrivateAccount/private",
+                            "root": "/root/.agent/log"}) + "\n",
                 encoding="utf-8",
             )
             (case / "response.txt").write_text(f"See {project}/src/main.jsx\n", encoding="utf-8")
@@ -105,6 +108,8 @@ class ComparisonProjectTest(unittest.TestCase):
             record = json.loads(archived.read_text(encoding="utf-8"))
             self.assertIn("/home/user/work/with-skill/data-03/prompt.txt", record["content"])
             self.assertIn("/home/user/log", record["content"])
+            self.assertEqual(record["root"], "/home/user/.agent/log")
+            self.assertNotIn("PrivateAccount", archived.read_text())
             self.assertIn("/home/private-user/log", raw.read_text(encoding="utf-8"))
             self.assertIn("/home/user/work/with-skill/src/main.jsx", (case / "response.txt").read_text())
             self.assertIn("data-03/transcript.jsonl (path-redacted copy)", run_info.read_text())

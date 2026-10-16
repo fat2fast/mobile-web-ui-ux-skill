@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { createHash } from 'node:crypto';
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 4182;
 
@@ -42,23 +43,19 @@ createServer(async (request, response) => {
 
       const uploaded = formData.get('file');
       if (uploaded && typeof uploaded === 'object' && uploaded.name && uploaded.size > 0) {
+        const content = Buffer.from(await uploaded.arrayBuffer());
         fileObj = {
           name: uploaded.name,
           size: uploaded.size,
           type: uploaded.type,
-          bytes: (await uploaded.arrayBuffer()).byteLength,
+          bytes: content.byteLength,
+          sha256: createHash('sha256').update(content).digest('hex'),
         };
       }
     } else {
       let raw = '';
       for await (const chunk of request) raw += chunk;
       data = JSON.parse(raw);
-      if (data.fileName && (data.fileSize || data.fileContent)) {
-        fileObj = {
-          name: data.fileName,
-          size: data.fileSize || 0,
-        };
-      }
     }
 
     const sendError = (field, error) => {
@@ -97,6 +94,10 @@ createServer(async (request, response) => {
       return sendError('reason', 'Request reason rejected by business policy');
     }
 
+    if (data.fileName || data.fileSize || data.fileContent) {
+      return sendError('file', 'Attachments require multipart file content');
+    }
+
     if (fileObj) {
       const ext = (fileObj.name.substring(fileObj.name.lastIndexOf('.')) || '').toLowerCase();
       if (!ALLOWED_EXTS.includes(ext)) {
@@ -114,7 +115,8 @@ createServer(async (request, response) => {
       receipt: 'REQ-2026-001',
       fileReceived: Boolean(fileObj),
       fileName: fileObj?.name || null,
-      bytesReceived: fileObj?.bytes || fileObj?.size || 0,
+      bytesReceived: fileObj?.bytes || 0,
+      fileSha256: fileObj?.sha256 || null,
     }));
   } catch (err) {
     response.writeHead(400, { 'Content-Type': 'application/json' });

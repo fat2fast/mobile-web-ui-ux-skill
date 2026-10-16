@@ -41,10 +41,10 @@ Records follow the [decision contract](../../references/decision-contract.md). P
 - **Evidence:** `INFERRED` visual observation from Case 5: single-column request form with date inputs, computed days (`Số ngày`), drag-and-drop file upload zone, and submit CTA far below the fold. Backend rules and file size limits are unknown.
 - **Mobile task:** Select request type, choose valid date range, verify calculated duration, attach file, and submit on phone without keyboard occlusion.
 - **Candidates:** Coherent single-column form with manual+picker dates, mobile file browse button, and verified-clearance submit; multi-step wizard with drag-and-drop.
-- **Selected:** Coherent single-column form with accessible date controls, manual date typing (`YYYY-MM-DD`), reactive day calculation, mobile touch file picker, and reachable submit CTA.
+- **Selected:** Provisionally keep one column, accessible date entry, a mobile browse affordance and reachable submit. Confirm accepted date formats and locale from source before choosing a format hint; display duration from the existing calculation once its semantics are known.
 - **Rejected:** Multi-step wizard because splitting a short form adds navigation friction; drag-and-drop upload cue because it is non-standard for phone touch interactions.
-- **Preserved:** All request parameters, calculated days logic, file attachment handlers, error recovery, and desktop layout. Validation specifics remain inferred.
-- **Verify:** `NOT RUN`; requires full request endpoint. Verify manual typing, derived day calculation, file selection, and keyboard clearance at 320px/390px.
+- **Preservation requirements (unverified):** Read source before changing request parameters, duration calculation, attachment handlers, error recovery or desktop layout. A screenshot cannot prove these are preserved. Duration semantics (inclusive/business days), accepted formats/locale, validation and upload rules remain open questions; synthetic FORM-04 fixture rules do not answer them.
+- **Verify:** `NOT RUN`; inspect source and endpoint first, then check accepted manual/picker entry, source-defined duration, attachment receipt, retained values and keyboard clearance at 320px/390px. No handler or business-logic preservation claim from the image alone.
 ## FORM-04 — Request with exact dates and optional calendar choice
 
 - **Evidence:** `PASS` task-first Chromium checks in `tests/task-ux/request-form.spec.cjs` for manual ISO text, native date input value synchronization, inclusive days, server 422/200 and actual multipart bytes. Calendar-popup selection and physical keyboard are `NOT RUN`.
