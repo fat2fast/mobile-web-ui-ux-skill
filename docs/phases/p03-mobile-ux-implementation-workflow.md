@@ -2,7 +2,7 @@
 
 > Biến quyết định UX thành patch an toàn trên website có sẵn, không tự thay business logic hay desktop UI.
 
-**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source/evidence đã đọc, gồm [review và lượt kiểm tra gần nhất](../../plans/reports/review-261017-0428-skill-codebase.md). Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
+**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source và bằng chứng được dẫn trực tiếp tại từng task. Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
 
 ## Kết quả cần đạt
 
@@ -138,7 +138,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P03-09 — Kiểm thử build và thay đổi có kiểm soát
 
 - **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD bằng chứng trên fixtures · **Phụ thuộc:** P03-01, P03-03.
-- **Bằng chứng / còn thiếu:** [Task evidence](../../tests/reports/task-ux-evidence.md), [review run](../../plans/reports/review-261017-0428-skill-codebase.md) và [workflow](../../.github/workflows/validate.yml) có build/test, giới hạn và NOT RUN. Change-checklist/implementation-verification filename dự kiến chưa có; owners hiện là workflow/report template và evidence reports.
+- **Bằng chứng / còn thiếu:** [Task evidence](../../tests/reports/task-ux-evidence.md) và [workflow](../../.github/workflows/validate.yml) có build/test, giới hạn và NOT RUN. Change-checklist/implementation-verification filename dự kiến chưa có; owners hiện là workflow/report template và evidence reports.
 - **Các bước thực hiện:**
   1. Chạy lint/typecheck/build/test sẵn có trong fixture hoặc target project khi môi trường cho phép.
   2. Ghi rõ tests PASS/FAIL/NOT RUN và tác động dependencies.

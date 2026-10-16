@@ -2,7 +2,7 @@
 
 > Phân phối skill tin cậy, dễ tìm, dễ cài và mở rộng dữ liệu chỉ khi đã chứng minh giá trị UX.
 
-**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source/evidence đã đọc, gồm [review và lượt kiểm tra gần nhất](../../plans/reports/review-261017-0428-skill-codebase.md). Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
+**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source và bằng chứng được dẫn trực tiếp tại từng task. Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
 
 ## Kết quả cần đạt
 
@@ -77,7 +77,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P06-05 — CI gồm metadata, content, lint và eval smoke
 
 - **Ưu tiên:** `P1` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P04-10, P06-01.
-- **Bằng chứng / còn thiếu:** [CI](../../.github/workflows/validate.yml) có structure/unit/build/browser và artifacts, không deploy/publish. Chưa có negative tests metadata/rule consistency, branch-required-check evidence hoặc tách browser/device schedule như kế hoạch. [Verifier gaps](../../plans/reports/review-261017-0428-skill-codebase.md) vẫn mở.
+- **Bằng chứng / còn thiếu:** [CI](../../.github/workflows/validate.yml) có structure/unit/build/browser và artifacts, không deploy/publish. Chưa có negative tests metadata/rule consistency, branch-required-check evidence hoặc tách browser/device schedule như kế hoạch. [Verifier](../../tests/task-ux/verify-evidence.py) chỉ buộc tập title đã định nghĩa; skip ở acceptance ngoài tập đó chưa bị từ chối.
 - **Các bước thực hiện:**
   1. Gắn required checks: skill metadata, links, rules consistency, fixture build và test smoke.
   2. Tách quick checks trên PR khỏi browser matrix/test device chạy theo lịch hoặc release.
