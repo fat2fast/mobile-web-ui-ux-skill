@@ -8,7 +8,7 @@ Phases are sequential milestones, not fixed-duration sprints.
 | P01 Skill foundation | Agent Skills metadata, workflow, lightweight validator | Local validation passes |
 | P02 Decision intelligence | Eight task-based playbooks and decision comparison | Playbooks/cases exist; protocol-compliant comparison remains `NOT RUN` |
 | P03 Implementation guidance | Apply patterns with minimal codebase changes | Dashboard and form fixture retrofits recorded |
-| P04 Verification & evaluation | Before/after task tests, mobile widths, desktop regression | Three task-first scenarios have local headless browser checks; current-commit CI and physical device checks remain |
+| P04 Verification & evaluation | Before/after task tests, mobile widths, desktop regression | Three task-first scenarios have local headless browser checks and clean-commit CI; physical device checks remain |
 | P05 Browser/PWA specialization | Keyboard, visual viewport, standalone, offline/update | Browser-specific test matrix |
 | P06 Distribution & scaling | Rule search if needed, more stacks, packaging/CLI | Publishable, tested distribution |
 
@@ -31,4 +31,4 @@ Phases are sequential milestones, not fixed-duration sprints.
 - **Useful alpha:** P02/P03 validated on ≥1 actual fixture (met for the local fixtures).
 - **MVP 0.1 release:** P04 checks on all three scenarios, desktop regressions investigated.
 
-The order and form fixtures have [before/after browser task evidence](../tests/reports/retrofit-261015-browser-evidence.md) at 320, 375, 390, 430 and 1280 CSS px. Targeted with-skill decision regressions are [recorded separately](../tests/reports/regression-261015-tier-a.md). Controlled Tier B comparison remains [recorded as `NOT RUN`](../evals/results/decision-evaluation.md). The task-first orders, comparison and request-form implementations now have local headless task checks; CI on the changed commit and physical-device behavior are still unverified. Fixture results do not establish general skill superiority.
+The order and form fixtures have [before/after browser task evidence](../tests/reports/retrofit-261015-browser-evidence.md) at 320, 375, 390, 430 and 1280 CSS px. Targeted with-skill decision regressions are [recorded separately](../tests/reports/regression-261015-tier-a.md). Controlled Tier B comparison remains [recorded as `NOT RUN`](../evals/results/decision-evaluation.md). The task-first orders, comparison and request-form implementations now have local headless task checks; CI passed on implementation commit `67fc5d5`; physical-device behavior remains unverified. See [current task evidence](../tests/reports/task-ux-evidence.md). Fixture results do not establish general skill superiority.
