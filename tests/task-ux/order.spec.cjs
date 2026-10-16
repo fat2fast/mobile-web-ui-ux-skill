@@ -12,6 +12,16 @@ async function capture(page, name) {
 const BASELINE_URL = 'http://127.0.0.1:4173/orders';
 const IMPL_URL = 'http://127.0.0.1:4178/orders';
 
+async function loadOrderSourceVariant(page, original, replacement) {
+  await page.route('**/src/main.jsx*', async (route) => {
+    const response = await route.fetch();
+    const source = await response.text();
+    expect(source).toContain(original);
+    await route.fulfill({ response, body: source.replace(original, replacement) });
+  });
+  await page.goto(IMPL_URL);
+}
+
 test.describe('Dense Order Dashboard - Baseline Observations', () => {
   test('baseline table causes horizontal overflow and measures scroll distance to action', async ({ page }) => {
     for (const width of [320, 390]) {
@@ -269,6 +279,77 @@ test.describe('Dense Order Dashboard - Task-First Mobile Implementation', () => 
     await expect(page.getByRole('region', { name: 'Orders list' }).getByRole('checkbox', { name: 'Select ORD-1004' })).toBeChecked();
     await page.getByRole('button', { name: 'Follow-up selected (2)' }).click();
     await expect(page.getByRole('status').filter({ hasText: /^Follow-up recorded for / })).toHaveText('Follow-up recorded for ORD-1001, ORD-1004');
+  });
+
+  test('bulk selection remains reachable with a 20-record test data variant', async ({ page }) => {
+    const extraOrders = Array.from({ length: 20 }, (_, index) => ({
+      id: `ORD-${2001 + index}`,
+      customer: `Customer ${index + 1}`,
+      status: index % 2 ? 'Shipped' : 'Pending',
+      total: '$10.00',
+      date: '2026-10-14',
+      items: 1,
+      channel: 'Web',
+      city: 'Hanoi',
+    }));
+    await page.route('**/src/main.jsx*', async (route) => {
+      const response = await route.fetch();
+      const source = await response.text();
+      const marker = 'const orders = [';
+      expect(source).toContain(marker);
+      await route.fulfill({ response, body: source.replace(marker, `${marker}\n  ${extraOrders.map((order) => JSON.stringify(order)).join(',\n  ')},`) });
+    });
+    await page.setViewportSize({ width: 320, height: 640 });
+    await page.goto(IMPL_URL);
+    await expect(page.getByRole('region', { name: 'Orders list' }).getByRole('article')).toHaveCount(24);
+
+    await page.getByRole('checkbox', { name: 'Select ORD-1001' }).check();
+    const bulkAction = page.getByRole('button', { name: 'Follow-up selected (1)' });
+    const bar = await bulkAction.boundingBox();
+    expect(bar.y + bar.height).toBeLessThanOrEqual(640);
+    await page.getByRole('region', { name: 'Orders list' }).getByRole('article').last().getByRole('button', { name: 'Follow-up' }).click();
+    await expect(page.getByRole('status').filter({ hasText: /^Follow-up recorded for / })).toHaveText('Follow-up recorded for ORD-2020');
+    await page.getByRole('checkbox', { name: 'Select ORD-2020' }).check();
+    await page.getByLabel('Status').selectOption('Pending');
+    await expect(page.getByRole('button', { name: 'Follow-up selected (2)' })).toBeVisible();
+    await page.getByRole('button', { name: 'Follow-up selected (2)' }).click();
+    await expect(page.getByRole('status').filter({ hasText: /^Follow-up recorded for / })).toHaveText('Follow-up recorded for ORD-1001, ORD-2020');
+  });
+
+  test('task journey accepts a semantic section instead of an article wrapper', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 });
+    await loadOrderSourceVariant(page,
+      'React.createElement("article", { key: order.id, className: "order-card',
+      'React.createElement("section", { key: order.id, className: "order-card');
+    await expect(page.locator('section.order-card')).toHaveCount(4);
+    await page.getByRole('checkbox', { name: 'Select ORD-1001' }).check();
+    await expect(page.getByRole('button', { name: 'Follow-up selected (1)' })).toBeEnabled();
+    await page.getByRole('button', { name: 'Follow-up' }).first().click();
+    await expect(page.getByRole('status').filter({ hasText: /^Follow-up recorded for / })).toHaveText('Follow-up recorded for ORD-1001');
+    await page.getByRole('button', { name: 'Open details for ORD-1001' }).click();
+    await expect(page).toHaveURL(/\/orders\/ORD-1001$/);
+  });
+
+  test('task assertions expose a seeded lost action', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 });
+    await loadOrderSourceVariant(page, 'onClick: () => act(order)', 'onClick: () => {}');
+    await page.getByRole('button', { name: 'Follow-up' }).first().click();
+    await expect(page.getByRole('status').filter({ hasText: /^Follow-up recorded for / })).toHaveCount(0);
+  });
+
+  test('task assertions expose a seeded inaccessible drawer', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 });
+    await loadOrderSourceVariant(page, '"aria-label": "Navigation"', '"aria-label": ""');
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await expect(page.locator('dialog[open]')).toBeVisible();
+    await expect(page.getByRole('dialog', { name: 'Navigation' })).toHaveCount(0);
+  });
+
+  test('task assertions expose a seeded checkbox detail misfire', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 });
+    await loadOrderSourceVariant(page, 'onChange: () => toggleSelect(order.id)', 'onChange: () => go("/orders/" + order.id)');
+    await page.getByRole('checkbox', { name: 'Select ORD-1001' }).click();
+    await expect(page).toHaveURL(/\/orders\/ORD-1001$/);
   });
 
   test('mobile record controls have 44px hit regions and a visible focus indicator', async ({ page }) => {

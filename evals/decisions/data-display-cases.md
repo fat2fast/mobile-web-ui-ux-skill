@@ -2,7 +2,7 @@
 
 Records follow the [decision contract](../../references/decision-contract.md). Chosen patterns are proposals unless an executed check is cited.
 
-**Task-first local run provenance:** `local-20261016-release`, base SHA `b70877d54ba895d1864d284fb3a3affb34e63a2a`, dirty working tree. The executed 34-spec JSON remains in the local, ignored plan report directory. The durable [task UX evidence](../../tests/reports/task-ux-evidence.md) links the clean-commit CI run and records scope and limits; the local SHA alone is not clean-commit evidence.
+**Task-first local run provenance:** `local-20261016-complete`, base SHA `764bd9b83195aa7c62eb91711a593727b9bddbde`, dirty working tree. The executed 39-spec JSON remains in the local, ignored plan report directory. The durable [task UX evidence](../../tests/reports/task-ux-evidence.md) links the clean-commit CI run and records scope and limits; the local SHA alone is not clean-commit evidence.
 
 ## DATA-01 — Find one order
 

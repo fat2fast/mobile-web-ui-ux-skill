@@ -17,6 +17,11 @@ PROJECTS = {
 REQUIRED_TESTS = {
     "order navigation": r"mobile navigation is reachable and dismisses",
     "order selection": r"selection, details, empty recovery and hidden selected orders",
+    "order long list": r"bulk selection remains reachable with a 20-record test data variant",
+    "order alternate markup": r"task journey accepts a semantic section",
+    "order lost action probe": r"task assertions expose a seeded lost action",
+    "order drawer probe": r"task assertions expose a seeded inaccessible drawer",
+    "order checkbox probe": r"task assertions expose a seeded checkbox detail misfire",
     "order long label and boundary": r"long customer labels stay within the record",
     "order touch targets": r"mobile record controls have 44px hit regions",
     "order desktop": r"desktop table layout is preserved at 1280px",
