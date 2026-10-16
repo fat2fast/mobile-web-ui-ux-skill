@@ -2,6 +2,8 @@
 
 Records follow the [decision contract](../../references/decision-contract.md). These are decision reviews (`INFERRED`) unless an explicit browser observation is cited; they do not claim a redesigned UI passed.
 
+**Task-first local run provenance:** `local-20261016-release`, base SHA `b70877d54ba895d1864d284fb3a3affb34e63a2a`, dirty working tree. The executed 34-spec JSON is at `plans/mobile-web-ui-ux-next-implementation-2026-10-16/reports/local-task-ux-release-run/test-results.json`; scope and limits are in [task UX evidence](../../tests/reports/task-ux-evidence.md). This is not clean-commit CI evidence.
+
 ## NAV-01 — Dense admin dashboard
 
 - **Evidence:** `FAIL` baseline 390px sidebar uses 100px and table is hard to scan ([observation](../results/order-dashboard-baseline.md)); task switching frequency is `INFERRED`.
@@ -10,7 +12,7 @@ Records follow the [decision contract](../../references/decision-contract.md). T
 - **Selected:** compact menu plus visible Orders entry, because report/settings are secondary and sidebar consumes scarce width.
 - **Rejected:** bottom navigation because three visible fixture routes do not establish three equally frequent peer tasks; it would compete with form-like bottom actions in a larger admin app.
 - **Preserved:** `/orders`, `/orders/:id`, browser Back, deep link, all existing destinations, desktop sidebar, real app permissions if present.
-- **Verify:** `PASS` baseline detail and Back in Chromium at 390px; `NOT RUN` candidate implementation, active state and real permission roles. Open detail directly and replay Back before release.
+- **Verify:** `PASS` task-first Chromium checks in `tests/task-ux/order.spec.cjs` at 320–1023px cover route access, Escape, backdrop, focus return, resizing and Back. Physical touch, real permission roles and human discoverability remain `NOT RUN`.
 
 ## NAV-02 — Ecommerce browsing
 
@@ -41,3 +43,12 @@ Records follow the [decision contract](../../references/decision-contract.md). T
 - **Rejected:** Bottom navigation bar because 8+ multi-level enterprise sections cannot fit in 4-5 bottom tabs without omitting essential routes.
 - **Preserved:** All navigation destinations, route hierarchy, escape/close handlers, and desktop sidebar.
 - **Verify:** `NOT RUN`; requires full routing application. Test drawer open, dismiss, keyboard focus trap, and touch scrolling at 320px/390px.
+## NAV-04 — Tablet boundary and preserved desktop sidebar
+
+- **Evidence:** `PASS` local task-first order checks exercise menu routes at 600/601/767/768/1023px, resize from 390 to 1280px and desktop navigation. Choosing 1024px as the best breakpoint is `INFERRED`; retained-sidebar usability near the boundary was not compared.
+- **Mobile task:** keep the order list wide enough for actions while retaining route access through tablet widths.
+- **Candidates:** keep a persistent sidebar; use a compact header and dismissible menu below the width where content becomes cramped.
+- **Selected:** header/menu below 1024px in this fixture as a reversible choice; measure the real content/task at the boundary before transferring that cutoff.
+- **Rejected:** retaining the 80px sidebar at 320px because it reduced card space. A spacious tablet or desktop product may keep a sidebar.
+- **Preserved:** Orders/Reports/Settings URLs, direct detail and Back, ten-column desktop table.
+- **Verify:** `PASS` local automated menu/overflow and resize checks in the run above; `NOT RUN` comparative sidebar usability near 1024px, physical tablet, zoom and translated labels.

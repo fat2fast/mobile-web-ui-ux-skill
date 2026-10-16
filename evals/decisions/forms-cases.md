@@ -2,6 +2,8 @@
 
 Records follow the [decision contract](../../references/decision-contract.md). Phone keyboard observations require a real device.
 
+**Task-first local run provenance:** `local-20261016-release`, base SHA `b70877d54ba895d1864d284fb3a3affb34e63a2a`, dirty working tree. The executed 34-spec JSON is at `plans/mobile-web-ui-ux-next-implementation-2026-10-16/reports/local-task-ux-release-run/test-results.json`; scope and limits are in [task UX evidence](../../tests/reports/task-ux-evidence.md). This is not clean-commit CI evidence.
+
 ## FORM-01 — Short contact form
 
 - **Evidence:** `INFERRED` scenario: name, email and message are one coherent task; no fixture.
@@ -43,3 +45,22 @@ Records follow the [decision contract](../../references/decision-contract.md). P
 - **Rejected:** Multi-step wizard because splitting a short form adds navigation friction; drag-and-drop upload cue because it is non-standard for phone touch interactions.
 - **Preserved:** All request parameters, calculated days logic, file attachment handlers, error recovery, and desktop layout. Validation specifics remain inferred.
 - **Verify:** `NOT RUN`; requires full request endpoint. Verify manual typing, derived day calculation, file selection, and keyboard clearance at 320px/390px.
+## FORM-04 — Request with exact dates and optional calendar choice
+
+- **Evidence:** `PASS` task-first Chromium checks in `tests/task-ux/request-form.spec.cjs` for manual ISO text, native date input value synchronization, inclusive days, server 422/200 and actual multipart bytes. Calendar-popup selection and physical keyboard are `NOT RUN`.
+- **Mobile task:** enter known dates or choose from a calendar, correct a rejected reason and retain an attachment.
+- **Candidates:** manual-only date fields; native date input only; paired text and native date controls sharing one value.
+- **Selected:** paired controls for this fixture's explicit dual-entry requirement, with field errors associated to both.
+- **Rejected:** picker-only loses required manual typing; manual-only loses the fixture's explicit picker invocation path. A custom modal adds complexity without evidence.
+- **Preserved:** 2026–2027 and 5 MB fixture rules, server authority, request ID, binary upload, retained values/file after rejection, error focus/association and desktop form behavior.
+- **Verify:** `PASS` local headless state and server checks in the run above; `NOT RUN` native calendar-popup choice, unsupported-picker platform and physical keyboard.
+
+## FORM-05 — Exact-date entry where a picker slows the task
+
+- **Evidence:** `INFERRED` scenario: operators paste known ISO dates from a work order; no runnable fixture or human timing.
+- **Mobile task:** enter an exact date quickly and correct a typo.
+- **Candidates:** text entry with format hint; native picker; paired controls.
+- **Selected:** manual entry when source validation accepts it and observation shows copy/paste dominates.
+- **Rejected:** a required picker that forces month-by-month navigation to a known date; paired controls are optional if evidence later supports them.
+- **Preserved:** paste, partial typing, existing date validation and server feedback.
+- **Verify:** `NOT RUN`; test paste, malformed/partial input, screen-reader name, keyboard and server correction with representative users.

@@ -72,15 +72,15 @@ Read [mobile principles](references/mobile-ux-principles.md), the [decision cont
 - Touch, gestures and hover fallbacks: [touch interactions](references/decisions/touch-interactions.md)
 - Semantics, focus, zoom and target size: [accessibility](references/decisions/accessibility.md)
 
-For each change, fill the decision contract with evidence, task, candidates, selected/rejected reasons, preservation and verification. Prioritize task acceptance over minimal CSS tweaks: verify that the primary user task (identifying records, checking status, triggering actions) succeeds on mobile viewports (320px and 390px) without horizontal scrolling or occlusion before adopting minimal CSS adjustments. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
+For each change, fill the decision contract with evidence, task, candidates, selected/rejected reasons, preservation and verification. Prioritize task acceptance over minimal CSS tweaks. For record triage, verify identity, status and action reachability at representative phone widths without sideways scrolling. A true comparison matrix may scroll inside its container when row context, alignment and controls stay usable. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
 
 ### 4. Implement (only for Build/Improve)
 
-Change the smallest appropriate components and styles that fulfill the task acceptance contract. Ensure primary actions, identity, and status remain in immediate view without sideways scroll on mobile, while secondary details remain reachable via progressive disclosure or detail routes. Reuse existing abstractions. Preserve data access, permissions, semantics, and desktop layout. Prefer existing dependencies; don't add a UI library merely to implement a mobile pattern. Keep mobile behavior responsive to content length, language, orientation, zoom, and input method.
+Change the smallest appropriate components and styles that fulfill the task acceptance contract. For individual-record tasks, keep identity, status and primary action reachable without sideways scrolling, while secondary details remain reachable through disclosure or detail routes. Preserve aligned tables when cross-column comparison is the task. Reuse existing abstractions. Preserve data access, permissions, semantics, and desktop layout. Prefer existing dependencies; don't add a UI library merely to implement a mobile pattern. Keep mobile behavior responsive to content length, language, orientation, zoom, and input method.
 
 ### 5. Verify
 
-Follow [verification criteria](references/verification-criteria.md). When tools are available, run relevant tests, inspect representative small/mobile widths, verify key touch flows, keyboard focus, text scaling, and desktop regressions. For PWA, distinguish browser tab vs installed/standalone behavior. When runtime testing isn't possible, provide manual verification steps and mark those checks **NOT RUN**. Check the whole response for claims such as "verified", "passes" or "conforms" that lack a corresponding executed check.
+Follow [verification criteria](references/verification-criteria.md). When tools are available, run relevant tests, inspect representative small/mobile widths, verify key touch flows, keyboard focus, text scaling, and desktop regressions. Distinguish native control state synchronization in headless browsers from a person selecting inside a platform picker. For PWA, distinguish browser tab vs installed/standalone behavior. When runtime testing isn't possible, provide manual verification steps and mark those checks **NOT RUN**. Check the whole response for claims such as "verified", "passes" or "conforms" that lack a corresponding executed check.
 
 ### 6. Report
 
@@ -101,4 +101,4 @@ Before sending, check the entire answer against the [decision contract](referenc
 
 ## Scope / maturity
 
-This is a decision-guidance skill with eight focused playbooks. Case records in the source repository are mostly reasoned reviews, not proof that proposed improvements were built or browser-verified. PWA-specialized rules and automated visual verification remain future work.
+This is a decision-guidance skill with eight focused playbooks. Case records have mixed evidence: some are reasoned reviews; the task-first order, comparison and request-form fixtures have runnable browser checks. Those fixtures establish only their tested interactions, not overall usability or skill superiority. Physical keyboard and PWA-specific behavior need separate evidence.

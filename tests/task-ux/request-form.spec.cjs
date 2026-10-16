@@ -1,5 +1,13 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const fs = require('node:fs');
+const path = require('node:path');
+
+async function capture(page, name) {
+  if (!process.env.TASK_UX_SCREENSHOTS) return;
+  fs.mkdirSync(process.env.TASK_UX_SCREENSHOTS, { recursive: true });
+  await page.screenshot({ path: path.join(process.env.TASK_UX_SCREENSHOTS, name), fullPage: true });
+}
 
 const BASELINE_URL = 'http://127.0.0.1:4179';
 const IMPL_URL = 'http://127.0.0.1:4181';
@@ -91,6 +99,8 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
       });
       expect(overflow.hasHorizontalOverflow).toBe(false);
 
+      await page.locator('#file').focus();
+      await expect(page.locator('#file')).toBeFocused();
       await page.locator('#file').scrollIntoViewIfNeeded();
 
       const clearance = await page.evaluate(() => {
@@ -118,6 +128,7 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
 
       expect(clearance?.isStrictlyBelow).toBe(true);
       expect(clearance?.notOccluded).toBe(true);
+      if (width === 320 || width === 390) await capture(page, `request-form-${width}.png`);
     });
   }
 
@@ -143,6 +154,27 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
     await expect(durationBadge).toContainText('7 days (inclusive)');
   });
 
+
+  test('native date controls synchronize with manual ISO inputs and duration', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 640 });
+    await page.goto(IMPL_URL);
+    const startPicker = page.getByLabel('Choose start date');
+    const endPicker = page.getByLabel('Choose end date');
+    await expect(startPicker).toHaveAttribute('type', 'date');
+    await startPicker.click();
+    await startPicker.fill('2026-11-01');
+    await endPicker.click();
+    await endPicker.fill('2026-11-05');
+    await expect(page.locator('#startDate')).toHaveValue('2026-11-01');
+    await expect(page.locator('#endDate')).toHaveValue('2026-11-05');
+    await expect(page.locator('.derived-days')).toContainText('5 days (inclusive)');
+    await page.locator('#endDate').fill('2026-11-07');
+    await expect(endPicker).toHaveValue('2026-11-07');
+    await expect(page.locator('.derived-days')).toContainText('7 days (inclusive)');
+    await page.locator('#startDate').fill('2026-11-');
+    await expect(startPicker).toHaveValue('');
+  });
+
   test('enforces calendar date validity and range bounds (2026-2027) with auto-focus', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(IMPL_URL);
@@ -163,6 +195,8 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
     await expect(page.locator('#startDate-error')).toContainText('not a valid calendar date');
     await expect(page.locator('#startDate')).toBeFocused();
     await expect(page.locator('#startDate')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByLabel('Choose start date')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByLabel('Choose start date')).toHaveAttribute('aria-describedby', 'startDate-error');
 
     // Test 2: Out of bounds date (2028-01-01 beyond 2027-12-31)
     await page.locator('#startDate').fill('2028-01-01');
@@ -194,6 +228,39 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
     await expect(page.locator('#endDate-error')).toContainText('End date is required');
     await expect(page.locator('#endDate')).toBeFocused();
     await expect(page.locator('#endDate')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+
+  test('reversed dates are rejected by the server and unrelated edits retain field errors', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 640 });
+    await page.goto(IMPL_URL);
+    await page.locator('#startDate').fill('2026-11-05');
+    await page.locator('#endDate').fill('2026-11-01');
+    await page.locator('#reason').fill('Valid reason');
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => res.url().includes('/api/request') && res.request().method() === 'POST'),
+      page.getByRole('button', { name: 'Submit request' }).click(),
+    ]);
+    expect(response.status()).toBe(422);
+    await expect(page.locator('#endDate-error')).toBeVisible();
+    await page.locator('#reason').fill('Updated valid reason');
+    await expect(page.locator('#endDate-error')).toBeVisible();
+    await expect(page.getByLabel('Choose end date')).toHaveAttribute('aria-describedby', 'endDate-error');
+    await page.locator('#endDate').fill('2026-11-07');
+    await expect(page.locator('#endDate-error')).toBeHidden();
+    await expect(page.locator('.submit-container')).toContainText('checked again when you submit');
+  });
+
+  test('network error receives logical focus', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 640 });
+    await page.goto(IMPL_URL);
+    await page.locator('#startDate').fill('2026-11-01');
+    await page.locator('#endDate').fill('2026-11-03');
+    await page.locator('#reason').fill('Valid reason');
+    await page.route('**/api/request', (route) => route.abort());
+    await page.getByRole('button', { name: 'Submit request' }).click();
+    await expect(page.locator('.server-alert')).toContainText('Network connection failed');
+    await expect(page.locator('.server-alert')).toBeFocused();
   });
 
   test('enforces file type constraints, handles unsupported file with accessible inline error', async ({ page }) => {
@@ -229,6 +296,30 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
     await expect(fileInput).toBeFocused();
   });
 
+
+  test('oversized attachment remains server validated and can be removed', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 480 });
+    await page.goto(IMPL_URL);
+    await page.locator('#startDate').fill('2026-11-01');
+    await page.locator('#endDate').fill('2026-11-03');
+    await page.locator('#reason').fill('Valid business reason');
+    await page.locator('#file').setInputFiles({
+      name: 'oversize.pdf',
+      mimeType: 'application/pdf',
+      buffer: Buffer.alloc(5 * 1024 * 1024 + 1, 65),
+    });
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => res.url().includes('/api/request') && res.request().method() === 'POST'),
+      page.getByRole('button', { name: 'Submit request' }).click(),
+    ]);
+    expect(response.status()).toBe(422);
+    await expect(page.locator('#file-error')).toBeVisible();
+    await expect(page.locator('#file')).toBeFocused();
+    await page.getByRole('button', { name: 'Remove file' }).click();
+    await expect(page.locator('#file-error')).toBeHidden();
+    expect(await page.locator('#file').evaluate((el) => el.files.length)).toBe(0);
+  });
+
   test('touch file delivery, real byte transmission, error recovery, focus shift, and resubmission', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(IMPL_URL);
@@ -257,6 +348,7 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
     const reasonInput = page.locator('#reason');
     await expect(page.locator('#reason-error')).toBeVisible();
     await expect(page.locator('#reason-error')).toContainText('Request reason rejected');
+    await capture(page, 'request-form-error-390.png');
     await expect(reasonInput).toHaveAttribute('aria-invalid', 'true');
     await expect(reasonInput).toHaveAttribute('aria-describedby', 'reason-error');
 
@@ -270,6 +362,9 @@ test.describe('Contextual Request Form - Task-First Implementation', () => {
 
     // Correct reason and resubmit
     await reasonInput.fill('Scheduled annual personal leave');
+    await expect(page.locator('#reason-error')).toBeHidden();
+    await expect(reasonInput).toHaveAttribute('aria-invalid', 'false');
+    await expect(page.getByText('Selected: medical_certificate.pdf')).toBeVisible();
 
     const [res200] = await Promise.all([
       page.waitForResponse((res) => res.url().includes('/api/request') && res.request().method() === 'POST'),

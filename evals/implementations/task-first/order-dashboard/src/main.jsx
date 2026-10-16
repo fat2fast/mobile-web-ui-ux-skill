@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 
@@ -16,6 +16,8 @@ function App() {
   const [sort, setSort] = useState('id');
   const [selection, setSelection] = useState([]);
   const [message, setMessage] = useState('');
+  const menuRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
   useEffect(() => {
     const onPop = () => setPath(location.pathname);
@@ -23,7 +25,19 @@ function App() {
     return () => removeEventListener('popstate', onPop);
   }, []);
 
+  const closeMenu = () => {
+    if (menuRef.current?.open) menuRef.current.close();
+  };
+
+  useEffect(() => {
+    const desktop = matchMedia('(min-width: 1024px)');
+    const onDesktop = () => { if (desktop.matches && menuRef.current?.open) menuRef.current.close(); };
+    desktop.addEventListener('change', onDesktop);
+    return () => desktop.removeEventListener('change', onDesktop);
+  }, []);
+
   const go = (next) => {
+    closeMenu();
     history.pushState({ fromApp: true }, '', next);
     setPath(next);
   };
@@ -49,14 +63,26 @@ function App() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <aside>
+    <div className="app-shell min-h-screen">
+      <header className="mobile-header">
+        <strong>Ops</strong>
+        <button ref={menuButtonRef} type="button" onClick={() => menuRef.current?.showModal()} aria-label="Open navigation">Menu</button>
+      </header>
+      <dialog ref={menuRef} className="mobile-menu" aria-label="Navigation" onClose={() => menuButtonRef.current?.focus()} onClick={(event) => { if (event.target === menuRef.current) closeMenu(); }}>
+        <nav aria-label="Mobile navigation">
+          <button type="button" onClick={closeMenu} aria-label="Close navigation">Close</button>
+          <a href="/orders" onClick={(e) => { e.preventDefault(); go('/orders'); }}>Orders</a>
+          <a href="/reports" onClick={(e) => { e.preventDefault(); go('/reports'); }}>Reports</a>
+          <a href="/settings" onClick={(e) => { e.preventDefault(); go('/settings'); }}>Settings</a>
+        </nav>
+      </dialog>
+      <aside className="desktop-nav">
         <strong className="block p-4">Ops</strong>
         <a href="/orders" onClick={(e) => { e.preventDefault(); go('/orders'); }}>Orders</a>
         <a href="/reports" onClick={(e) => { e.preventDefault(); go('/reports'); }}>Reports</a>
         <a href="/settings" onClick={(e) => { e.preventDefault(); go('/settings'); }}>Settings</a>
       </aside>
-      <main className="min-w-0 flex-1 p-3 md:p-8">
+      <main className="min-w-0 flex-1 p-3 lg:p-8">
         <h1 className="mb-4 text-2xl font-bold">{detail ? detail.id : 'Orders'}</h1>
         {detail ? (
           <div>
@@ -120,22 +146,22 @@ function App() {
               </button>
             </div>
 
-            {/* Mobile task-first list (visible on screens < 768px) */}
-            <div className="block md:hidden space-y-3" role="region" aria-label="Orders list">
+            <p className="result-count" role="status">{visible.length} {visible.length === 1 ? 'order' : 'orders'} shown</p>
+            {visible.length === 0 && <div className="empty-results" role="status">No orders match your search and status filter. <button type="button" onClick={() => { setQuery(''); setFilter('All'); }}>Clear filters</button></div>}
+
+            <div className="mobile-list space-y-3" role="region" aria-label="Orders list">
               {visible.map((order) => (
                 <article key={order.id} className="order-card border p-3 rounded bg-white shadow-sm flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <label className="flex items-center gap-2 font-bold cursor-pointer">
-                      <input
-                        aria-label={`Select ${order.id}`}
-                        type="checkbox"
-                        checked={selection.includes(order.id)}
-                        onChange={() => toggleSelect(order.id)}
-                      />
-                      <button className="underline text-blue-600 font-bold" onClick={() => go(`/orders/${order.id}`)}>
-                        {order.id}
-                      </button>
-                    </label>
+                  <div className="card-heading">
+                    <input
+                      aria-label={`Select ${order.id}`}
+                      type="checkbox"
+                      checked={selection.includes(order.id)}
+                      onChange={() => toggleSelect(order.id)}
+                    />
+                    <button className="order-detail underline text-blue-600 font-bold" aria-label={`Open details for ${order.id}`} onClick={() => go(`/orders/${order.id}`)}>
+                      {order.id}
+                    </button>
                     <span className="px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 border">
                       {order.status}
                     </span>
@@ -146,7 +172,7 @@ function App() {
                   </div>
                   <div className="flex justify-end pt-1 border-t">
                     <button
-                      className="border p-1 px-3 text-sm rounded bg-gray-50 hover:bg-gray-100"
+                      className="row-action border px-3 text-sm rounded bg-gray-50 hover:bg-gray-100"
                       onClick={() => act(order)}
                     >
                       Follow-up
@@ -156,8 +182,7 @@ function App() {
               ))}
             </div>
 
-            {/* Desktop multi-column table (visible on screens >= 768px) */}
-            <div className="hidden md:block overflow-x-auto desktop-table">
+            <div className="desktop-table overflow-x-auto">
               <table>
                 <thead>
                   <tr>
@@ -207,16 +232,19 @@ function App() {
               </table>
             </div>
 
-            <button
-              className="mt-4 border p-2 rounded disabled:opacity-50 text-sm font-medium"
-              disabled={!selection.length}
-              onClick={() => {
-                setMessage(`Follow-up recorded for ${selection.join(', ')}`);
-                setSelection([]);
-              }}
-            >
-              Follow-up selected ({selection.length})
-            </button>
+            <div className={`bulk-actions ${selection.length ? 'has-selection' : ''}`}>
+              {selection.length > 0 && <button type="button" onClick={() => setSelection([])}>Clear selection</button>}
+              <button
+                className="border rounded disabled:opacity-50 text-sm font-medium"
+                disabled={!selection.length}
+                onClick={() => {
+                  setMessage(`Follow-up recorded for ${selection.join(', ')}`);
+                  setSelection([]);
+                }}
+              >
+                Follow-up selected ({selection.length})
+              </button>
+            </div>
           </>
         )}
         {message && <p role="status" className="mt-4 font-semibold text-green-700">{message}</p>}

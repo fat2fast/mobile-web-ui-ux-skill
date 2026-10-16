@@ -7,5 +7,35 @@ button { cursor: pointer; }
 .desktop-table th { background: #e9eef3; }
 aside { width: 220px; flex-shrink: 0; background: #172638; color: white; min-height: 100vh; }
 aside a { display: block; color: white; padding: 14px; }
-@media(max-width: 600px) { aside { width: 80px; } aside a { padding: 8px 4px; font-size: 13px; overflow-wrap: anywhere; } }
+
 .order-card { max-width: 100%; box-sizing: border-box; }
+.app-shell { display: flex; }
+.mobile-header, .mobile-menu { display: none; }
+.mobile-list { display: none; }
+.order-card { overflow-wrap: anywhere; }
+.card-heading { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.card-heading .order-detail { flex: 1; min-width: 0; text-align: left; }
+.card-heading input[type="checkbox"], .desktop-table input[type="checkbox"] { width: 24px; height: 24px; flex: none; cursor: pointer; }
+.order-detail, .row-action, .bulk-actions button, .empty-results button { min-height: 44px; }
+.order-detail { padding: 8px 4px; }
+.row-action { padding-block: 8px; }
+.result-count { margin: 0 0 12px; color: #475569; font-size: 14px; }
+.empty-results { padding: 18px; border: 1px solid #d7dce2; border-radius: 8px; }
+.empty-results button { display: block; color: #1d4ed8; text-decoration: underline; }
+.bulk-actions { margin-top: 16px; display: flex; gap: 8px; align-items: center; }
+.bulk-actions button { padding: 8px 12px; }
+:where(button, a, input, select):focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+@media (max-width: 1023px) {
+  .app-shell { display: block; }
+  .desktop-nav, .desktop-table { display: none; }
+  .mobile-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; min-height: 56px; background: #172638; color: white; }
+  .mobile-header button, .mobile-menu button { min-width: 44px; min-height: 44px; padding: 8px; }
+  .mobile-menu { position: fixed; margin: 0 0 0 auto; inset: 0; width: min(280px, 85vw); max-width: none; height: 100dvh; max-height: none; padding: 16px; border: 0; background: #172638; color: white; }
+  .mobile-menu[open] { display: block; }
+  .mobile-menu::backdrop { background: rgb(0 0 0 / 0.55); }
+  .mobile-menu nav { display: flex; flex-direction: column; }
+  .mobile-menu a { color: white; min-height: 44px; padding: 12px; }
+  .mobile-list { display: block; }
+  .card-heading input[type="checkbox"] { width: 44px; height: 44px; }
+  .bulk-actions.has-selection { position: sticky; bottom: 0; z-index: 2; background: white; padding: 8px; box-shadow: 0 -2px 8px #0002; }
+}

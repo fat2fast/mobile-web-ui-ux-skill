@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 
@@ -24,6 +24,40 @@ function App() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [receipt, setReceipt] = useState('');
+  const [pendingFocus, setPendingFocus] = useState(null);
+  const fileInputRef = useRef(null);
+  const alertRef = useRef(null);
+
+  useEffect(() => {
+    if (!pendingFocus) return;
+    const target = pendingFocus === 'global' ? alertRef.current : document.getElementById(pendingFocus);
+    target?.focus();
+    setPendingFocus(null);
+  }, [pendingFocus, fieldErrors, serverError]);
+
+  const updateField = (name, value) => {
+    setForm((previous) => ({ ...previous, [name]: value }));
+    setFieldErrors((previous) => {
+      if (!previous[name]) return previous;
+      const next = { ...previous };
+      delete next[name];
+      return next;
+    });
+    setServerError('');
+    setReceipt('');
+  };
+
+  const updateFile = (nextFile) => {
+    setFile(nextFile);
+    setFieldErrors((previous) => {
+      if (!previous.file) return previous;
+      const next = { ...previous };
+      delete next.file;
+      return next;
+    });
+    setServerError('');
+    setReceipt('');
+  };
 
   // Calculate inclusive duration
   const computeDuration = (start, end) => {
@@ -59,12 +93,12 @@ function App() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setServerError(data.error || 'Submission failed');
         if (data.field) {
-          setFieldErrors({ [data.field]: data.error });
-          setTimeout(() => {
-            document.getElementById(data.field)?.focus();
-          }, 30);
+          setFieldErrors({ [data.field]: data.error || 'Check this field' });
+          setPendingFocus(data.field);
+        } else {
+          setServerError(data.error || 'Submission failed');
+          setPendingFocus('global');
         }
       } else {
         const id = data.requestId || data.receipt;
@@ -72,6 +106,7 @@ function App() {
       }
     } catch {
       setServerError('Network connection failed');
+      setPendingFocus('global');
     }
   };
 
@@ -85,7 +120,7 @@ function App() {
       </header>
 
       {serverError && (
-        <div role="alert" className="server-alert mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded text-sm font-medium">
+        <div ref={alertRef} tabIndex={-1} role="alert" className="server-alert mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded text-sm font-medium">
           {serverError}
         </div>
       )}
@@ -107,7 +142,7 @@ function App() {
             value={form.requestType}
             aria-describedby={fieldErrors.requestType ? 'requestType-error' : undefined}
             aria-invalid={!!fieldErrors.requestType}
-            onChange={(e) => setForm({ ...form, requestType: e.target.value })}
+            onChange={(e) => updateField('requestType', e.target.value)}
             className="w-full border border-gray-300 p-2.5 rounded text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
             <option>Annual Leave</option>
@@ -125,6 +160,7 @@ function App() {
             <label htmlFor="startDate" className="block text-sm font-semibold text-gray-700 mb-1">
               Start Date <span className="text-red-500">*</span>
             </label>
+            <div className="date-entry">
             <input
               id="startDate"
               type="text"
@@ -132,9 +168,21 @@ function App() {
               value={form.startDate}
               aria-describedby={fieldErrors.startDate ? 'startDate-error' : 'startDate-hint'}
               aria-invalid={!!fieldErrors.startDate}
-              onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+              onChange={(e) => updateField('startDate', e.target.value)}
               className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.startDate ? 'border-red-500 bg-red-50/20' : 'border-gray-300'}`}
             />
+            <input
+              type="date"
+              aria-label="Choose start date"
+              aria-describedby={fieldErrors.startDate ? 'startDate-error' : 'startDate-hint'}
+              aria-invalid={!!fieldErrors.startDate}
+              min="2026-01-01"
+              max="2027-12-31"
+              value={isValidCalendarDate(form.startDate) ? form.startDate : ''}
+              onChange={(e) => updateField('startDate', e.target.value)}
+              className="date-picker border border-gray-300 rounded"
+            />
+            </div>
             <span id="startDate-hint" className="block text-xs text-gray-500 mt-0.5">Format: YYYY-MM-DD (2026-01-01 to 2027-12-31)</span>
             {fieldErrors.startDate && (
               <p id="startDate-error" role="alert" className="text-xs text-red-600 mt-1 font-medium">{fieldErrors.startDate}</p>
@@ -145,6 +193,7 @@ function App() {
             <label htmlFor="endDate" className="block text-sm font-semibold text-gray-700 mb-1">
               End Date <span className="text-red-500">*</span>
             </label>
+            <div className="date-entry">
             <input
               id="endDate"
               type="text"
@@ -152,9 +201,21 @@ function App() {
               value={form.endDate}
               aria-describedby={fieldErrors.endDate ? 'endDate-error' : 'endDate-hint'}
               aria-invalid={!!fieldErrors.endDate}
-              onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+              onChange={(e) => updateField('endDate', e.target.value)}
               className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.endDate ? 'border-red-500 bg-red-50/20' : 'border-gray-300'}`}
             />
+            <input
+              type="date"
+              aria-label="Choose end date"
+              aria-describedby={fieldErrors.endDate ? 'endDate-error' : 'endDate-hint'}
+              aria-invalid={!!fieldErrors.endDate}
+              min="2026-01-01"
+              max="2027-12-31"
+              value={isValidCalendarDate(form.endDate) ? form.endDate : ''}
+              onChange={(e) => updateField('endDate', e.target.value)}
+              className="date-picker border border-gray-300 rounded"
+            />
+            </div>
             <span id="endDate-hint" className="block text-xs text-gray-500 mt-0.5">Format: YYYY-MM-DD (2026-01-01 to 2027-12-31)</span>
             {fieldErrors.endDate && (
               <p id="endDate-error" role="alert" className="text-xs text-red-600 mt-1 font-medium">{fieldErrors.endDate}</p>
@@ -189,7 +250,7 @@ function App() {
             value={form.reason}
             aria-describedby={fieldErrors.reason ? 'reason-error' : undefined}
             aria-invalid={!!fieldErrors.reason}
-            onChange={(e) => setForm({ ...form, reason: e.target.value })}
+            onChange={(e) => updateField('reason', e.target.value)}
             placeholder="Explain the purpose of your request..."
             className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.reason ? 'border-red-500 bg-red-50/20' : 'border-gray-300'}`}
           />
@@ -206,17 +267,19 @@ function App() {
           <div className="mobile-upload-container border border-gray-300 rounded p-3 bg-gray-50 flex flex-col gap-2">
             <input
               id="file"
+              ref={fileInputRef}
               type="file"
               accept=".pdf,.png,.jpg,.jpeg"
               aria-describedby={fieldErrors.file ? 'file-error' : 'file-hint'}
               aria-invalid={!!fieldErrors.file}
-              onChange={(e) => setFile(e.target.files[0] || null)}
+              onChange={(e) => updateFile(e.target.files[0] || null)}
               className="text-xs md:text-sm text-gray-700 cursor-pointer"
             />
             <span id="file-hint" className="text-xs text-gray-500">Allowed: .pdf, .png, .jpg (up to 5MB)</span>
             {file && (
-              <div className="text-xs text-gray-700 font-medium bg-white p-1.5 rounded border border-gray-200">
-                Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)
+              <div className="selected-file text-xs text-gray-700 font-medium bg-white p-1.5 rounded border border-gray-200">
+                <span>Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
+                <button type="button" onClick={() => { if (fileInputRef.current) fileInputRef.current.value = ''; updateFile(null); }}>Remove file</button>
               </div>
             )}
           </div>
@@ -227,6 +290,7 @@ function App() {
 
         {/* In-flow accessible Submit CTA with verified clearance */}
         <div className="submit-container pt-3">
+          <p className="text-xs text-gray-600 mb-2">Edited fields are checked again when you submit.</p>
           <button
             type="submit"
             className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-semibold rounded text-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm cursor-pointer"

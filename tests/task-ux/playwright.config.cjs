@@ -9,7 +9,7 @@ module.exports = defineConfig({
   workers: 1,
   reporter: [
     ['list'],
-    ['json', { outputFile: 'artifacts/test-results.json' }],
+    ['json', { outputFile: process.env.TASK_UX_RESULTS || 'artifacts/test-results.json' }],
   ],
   use: {
     headless: true,

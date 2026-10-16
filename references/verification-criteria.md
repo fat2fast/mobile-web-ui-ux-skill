@@ -25,6 +25,8 @@ Check whether the proposed or implemented change helps users complete mobile tas
 - **NOT RUN:** A proposed interaction or assertion was not executed; provide the missing environment and replay steps.
 - **INFERRED:** A bounded conclusion from inspected source or a design hypothesis; name its basis and limits. Inspecting source does not make an unrun interaction check `PASS`.
 
+A headless click/fill on `input[type=date]` proves input reachability and value synchronization; it does not prove selection from the platform calendar popup, unsupported-picker fallback, or physical virtual-keyboard clearance. Mark those separately. For build/browser evidence, use artifacts from the same run and source revision; identify a dirty local worktree as such.
+
 Keep source and metadata checks separate from UX results. A successful prompt-hash check, for example, establishes provenance, not form behavior.
 
 ## Baseline / after format
