@@ -2,7 +2,7 @@
 
 Records follow the [decision contract](../../references/decision-contract.md). These are decision reviews (`INFERRED`) unless an explicit browser observation is cited; they do not claim a redesigned UI passed.
 
-**Task-first local run provenance:** `local-20261016-release`, base SHA `b70877d54ba895d1864d284fb3a3affb34e63a2a`, dirty working tree. The executed 34-spec JSON is at `plans/mobile-web-ui-ux-next-implementation-2026-10-16/reports/local-task-ux-release-run/test-results.json`; scope and limits are in [task UX evidence](../../tests/reports/task-ux-evidence.md). This is not clean-commit CI evidence.
+**Task-first local run provenance:** `local-20261016-release`, base SHA `b70877d54ba895d1864d284fb3a3affb34e63a2a`, dirty working tree. The executed 34-spec JSON remains in the local, ignored plan report directory. The durable [task UX evidence](../../tests/reports/task-ux-evidence.md) links the clean-commit CI run and records scope and limits; the local SHA alone is not clean-commit evidence.
 
 ## NAV-01 — Dense admin dashboard
 

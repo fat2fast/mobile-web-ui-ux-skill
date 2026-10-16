@@ -28,7 +28,7 @@ The browser run used WSL Ubuntu 24.04 and wrote JSON plus screenshots under `/tm
 ## Limits and follow-up
 
 - **NOT RUN:** actual selection inside the platform calendar popup, an unsupported-picker browser, physical iOS/Android virtual keyboard, touch handling, screen reader and human task walkthrough. The native date test clicks the control and fills its value; it proves synchronization, not popup use.
-- **NOT RUN:** representative 20-record bulk task and long-label translation/zoom review. The four-record fixture proves state retention and geometry only.
+- **NOT RUN:** representative 20-record bulk task and long-label translation/zoom review. The four-record fixture proves state retention and geometry only. Seeded UI regressions and alternate-markup sensitivity checks were not executed; the evidence rejection checks cover report integrity only.
 - Headless test duration is automation time, not human task time. These fixture outcomes do not establish general skill superiority.
 
 The skill decisions behind the list, comparison table and paired date controls are recorded in `evals/decisions/`.
