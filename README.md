@@ -97,7 +97,9 @@ README.md / README.vi.md     Project documentation
 docs/                        Product scope, MVP boundaries, roadmap
 references/                  Runtime guidance, verification criteria and evidence record
 references/decisions/        Eight task-based mobile UX playbooks
-evals/fixtures/              Runnable order dashboard and form retrofits
+evals/fixtures/              Runnable baselines for mobile UX evaluation
+evals/implementations/       Historical retrofits and task-first implementations
+tests/task-ux/              Current task browser suite and evidence tools
 evals/scenarios/             Mobile UX evaluation scenarios
 evals/decisions/             Decision cases and counterexamples
 evals/evaluation-criteria.md Reviewer entry point to shared verification criteria
@@ -117,13 +119,13 @@ Requires Python 3.9+ (standard library only):
 python3 scripts/validate_skill.py
 ```
 
-This validates the skill's structure, metadata, and local documentation links. It does not measure usability. CI also runs unit tests and builds both fixtures; the [local browser checks](tests/261015-retrofit/) provide narrower task and viewport evidence. Physical-device behavior remains untested.
+This validates the skill's structure, metadata, and local documentation links. It does not measure usability. CI also runs tooling unit tests, fixture and implementation builds, and the [task browser suite](tests/task-ux/). The [workflow](.github/workflows/validate.yml) owns the current job and project set. [Earlier retrofit checks](tests/261015-retrofit/) remain historical evidence. Physical-device behavior remains untested.
 
 ## Project status
 
-**Fixture-validated MVP for dashboard and form tasks.** The repository includes eight focused playbooks and two runnable mobile retrofits. Fresh [Tier A with-skill regressions](tests/reports/regression-261015-tier-a.md) passed four targeted advice cases and two counterexamples; a separate form code variant also passed its focused check. [Before/after Chromium browser checks](tests/reports/retrofit-261015-browser-evidence.md) cover dashboard and form tasks at phone widths and desktop, with screenshots and limits recorded. The six older exploratory pairs remain [archived](tests/reports/261014-mobile-ux-skill-comparison-review.md). A controlled Tier B skill comparison is still `NOT RUN`; these fixture results do not establish a general usability gain or physical-phone behavior.
+**Useful alpha with fixture-validated mobile tasks.** Historical dashboard/form retrofits are complemented by task-first orders, aligned comparison and contextual request-form implementations. See the [task acceptance contract](docs/mobile-task-acceptance.md), [browser suite](tests/task-ux/) and [recorded evidence](tests/reports/task-ux-evidence.md) for coverage and limits. Fresh [Tier A with-skill regressions](tests/reports/regression-261015-tier-a.md) passed four targeted advice cases and two counterexamples; a separate form code variant also passed its focused check. [Before/after Chromium browser checks](tests/reports/retrofit-261015-browser-evidence.md) cover dashboard and form tasks at phone widths and desktop, with screenshots and limits recorded. The six older exploratory pairs remain [archived](tests/reports/261014-mobile-ux-skill-comparison-review.md). A controlled Tier B skill comparison is still `NOT RUN`; these fixture results do not establish a general usability gain or physical-phone behavior.
 
-Next milestones are a controlled Tier B comparison, the remaining scenario, real-phone keyboard and screen-reader checks, and browser/PWA-specific guidance. See [MVP scope](docs/mvp-scope.md), [decision evaluation](evals/results/decision-evaluation.md), and [roadmap](docs/roadmap.md).
+Next milestones are executable coverage for the [original navigation scenario](evals/scenarios/navigation.md), focused real-phone and assistive-technology checks, and a controlled Tier B comparison. The newer comparison/request-form journeys do not replace that navigation commitment. Browser/PWA specialization follows those evidence gaps. See [MVP scope](docs/mvp-scope.md), [decision evaluation](evals/results/decision-evaluation.md), and [roadmap](docs/roadmap.md).
 
 ## Contributing
 

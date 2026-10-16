@@ -1,34 +1,35 @@
 # Development Roadmap
 
-Phases are sequential milestones, not fixed-duration sprints.
+Use this page to choose the next work; phase files track task-level DoD, evidence and remaining work. Their checklists are manually reconciled with source and executed evidence; Git preserves earlier planning states. Existing task journeys extend the MVP scope without replacing its original Dashboard/Navigation/Form commitment.
 
-| Phase | Goal | Completion evidence |
+## Evidence and open work
+
+| Area | Evidence owner | Remaining boundary |
 | --- | --- | --- |
-| P00 Product scope & eval plan | Define user, constraints and three test scenarios | Product/MVP scope + scenario specs |
-| P01 Skill foundation | Agent Skills metadata, workflow, lightweight validator | Local validation passes |
-| P02 Decision intelligence | Eight task-based playbooks and decision comparison | Playbooks/cases exist; protocol-compliant comparison remains `NOT RUN` |
-| P03 Implementation guidance | Apply patterns with minimal codebase changes | Dashboard and form fixture retrofits recorded |
-| P04 Verification & evaluation | Before/after task tests, mobile widths, desktop regression | Three task-first scenarios have local headless browser checks and clean-commit CI; physical device checks remain |
-| P05 Browser/PWA specialization | Keyboard, visual viewport, standalone, offline/update | Browser-specific test matrix |
-| P06 Distribution & scaling | Rule search if needed, more stacks, packaging/CLI | Publishable, tested distribution |
+| Product scope and skill foundation | [Product scope](product-scope.md), [MVP scope](mvp-scope.md), [runtime entry point](../SKILL.md), [validator](../scripts/validate_skill.py) | Structural checks do not prove agent activation, mode behavior or installation in a supported agent. |
+| Decision guidance | [Runtime playbook routes](../SKILL.md), [decision cases](../evals/decisions/), [Tier A regression record](../tests/reports/regression-261015-tier-a.md) | Targeted regressions do not establish general decision quality or skill superiority. |
+| Implemented task journeys | [Task acceptance](mobile-task-acceptance.md), [task browser suite](../tests/task-ux/), [recorded evidence](../tests/reports/task-ux-evidence.md) | Orders, comparison and request form have headless checks; the original navigation scenario still needs dedicated executable coverage. |
+| Automated verification | [CI workflow](../.github/workflows/validate.yml), [current-run evidence verifier](../tests/task-ux/verify-evidence.py) | Refer to run-specific evidence for results; checked-in artifacts do not prove the current revision passed. |
+| Human and device verification | [Verification criteria](../references/verification-criteria.md), [recorded limits](../tests/reports/task-ux-evidence.md) | Actual picker selection, physical keyboard/touch, screen reader, human discoverability and translation/zoom review remain open. |
+| Controlled comparison | [Tier B protocol](../evals/comparison-protocol.md), [evaluation record](../evals/results/decision-evaluation.md) | Tier B remains `NOT RUN`; require matched controls, an access boundary and independent review. |
 
-## Proposed initial issues
+## Next work, in order
 
-- [ ] P00-01 Agree on core persona and non-designer prompt
-- [ ] P00-02 Freeze MVP boundaries and preserve rules
-- [ ] P00-03 Turn 3 scenario specs into runnable fixtures
-- [ ] P01-01 Review `SKILL.md` triggers with real user prompts
-- [ ] P01-02 Verify links, frontmatter, directory structure
-- [ ] P02-01 Test navigation playbook decisions on multiple web app types
-- [ ] P02-02 Test data-display playbook against data integrity/accessibility
-- [ ] P02-03 Test forms playbook with keyboard and validation states
-- [x] P03-01 Execute first mobile-UX improvement on a sample app (local dashboard and form fixtures)
-- [x] P04-01 Add browser task checks and recorded before/after evidence for the two fixtures
+1. **Close receipt and archive-redaction gaps.** In the [request fixture API](../evals/implementations/task-first/request-form/server.js), derive file receipt from received content rather than caller-supplied size, and make the [upload regression check](../tests/task-ux/request-form.spec.cjs) reject metadata-only delivery. Extend the [archive redactor](../scripts/archive-comparison-case.py) to cover supported Windows/WSL home paths before sharing transcripts. Keep current successful multipart evidence distinct from these regression gaps.
+2. **Complete original navigation coverage.** Start from the [navigation scenario](../evals/scenarios/navigation.md) and [verification phase](phases/p04-verification-regression-skill-evaluation.md). Cover destination discovery, active state, secondary destinations, Back/deep links and keyboard operation, beyond the orders drawer smoke checks.
+3. **Validate existing journeys with people and devices.** Focus on request-form keyboard/picker/error recovery, screen-reader traversal, zoom/long labels and bulk-action discovery. Record device/browser, task, observation and limits; keep unavailable checks `NOT RUN`.
+4. **Measure the skill's contribution.** Run a bounded Tier B trial using the existing protocol, then repeat before generalizing. Fixture correctness and generated-agent performance are separate claims.
+5. **Prepare a bounded release.** Verify installation, activation and mode behavior in an explicitly tested agent. Synchronize published capability claims with that evidence.
 
-## Release gates
+Browser/PWA specialization and distribution scaling follow the evidence gaps above. Do not add a retrieval engine, component library or extra stack merely to expand the feature list; require a demonstrated use case.
 
-- **Scaffold ready:** P00/P01 docs and validator exist (current starter).
-- **Useful alpha:** P02/P03 validated on ≥1 actual fixture (met for the local fixtures).
-- **MVP 0.1 release:** P04 checks on all three scenarios, desktop regressions investigated.
+## Release boundaries
 
-The order and form fixtures have [before/after browser task evidence](../tests/reports/retrofit-261015-browser-evidence.md) at 320, 375, 390, 430 and 1280 CSS px. Targeted with-skill decision regressions are [recorded separately](../tests/reports/regression-261015-tier-a.md). Controlled Tier B comparison remains [recorded as `NOT RUN`](../evals/results/decision-evaluation.md). The task-first orders, comparison and request-form implementations now have local headless task checks; CI passed on implementation commit `67fc5d5`; physical-device behavior remains unverified. See [current task evidence](../tests/reports/task-ux-evidence.md). Fixture results do not establish general skill superiority.
+- **Foundation:** runtime instructions and structural validation exist. Structural PASS alone does not prove behavioral reliability.
+- **Useful alpha:** implemented fixture tasks have recorded automated evidence. This is the supported maturity description.
+- **Original MVP completion:** executable Dashboard/Navigation/Form checks with desktop regressions investigated. The original navigation requirement remains open.
+- **Broader readiness claims:** require evidence matching the claim. Headless geometry does not prove physical keyboard or screen-reader behavior; fixture improvements do not prove skill superiority. A comparative claim requires Tier B evidence.
+
+## Phase references
+
+[Scope](phases/p00-product-scope-evaluation-design.md) · [Foundation](phases/p01-agent-skill-foundation.md) · [Decisions](phases/p02-mobile-ux-decision-intelligence.md) · [Implementation](phases/p03-mobile-ux-implementation-workflow.md) · [Verification](phases/p04-verification-regression-skill-evaluation.md) · [Browser/PWA](phases/p05-mobile-browser-pwa-specialization.md) · [Distribution](phases/p06-distribution-quality-scaling.md)
