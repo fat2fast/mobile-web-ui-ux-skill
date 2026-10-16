@@ -5,15 +5,16 @@
 - Agent Skills-compatible `SKILL.md` and modular references.
 - Modes: Improve (default), Build Mobile View in an existing project, Audit Only, Verify Only.
 - Project discovery that identifies product tasks, design system and code constraints.
-- Initial decision playbooks: navigation, dense data/tables and forms.
+- Task-based decision guidance, loaded through the [playbook routes in SKILL.md](../SKILL.md).
 - Small, reversible modifications, desktop and functionality preservation guidance.
 - Manual verification checklist and audit report template.
-- Scenario **specifications** for three representative mobile UX failures.
-- Standard-library-only repository validator, unit tests, fixture builds in CI, and local browser checks for the dashboard and form fixtures.
+- Original Dashboard/Navigation/Form scenario contracts under [evals/scenarios](../evals/scenarios/); navigation remains a specification without its own executable journey.
+- Additional runnable orders, aligned comparison and contextual request-form journeys governed by [mobile task acceptance](mobile-task-acceptance.md). These do not replace the original navigation scope.
+- Standard-library-only repository validation, tooling unit tests, fixture/implementation builds and current-run browser evidence checks in the [CI workflow](../.github/workflows/validate.yml).
 
 ## Explicitly not included yet
 
-- Automated, controlled skill A/B comparison runner. Local before/after browser scripts capture screenshots for two fixtures.
+- Automated, controlled skill A/B comparison runner. Existing comparison tooling supports preparation and recording; it does not establish Tier B isolation by itself. See the [comparison protocol](../evals/comparison-protocol.md).
 - Prebuilt React/Next.js/Tailwind UI component library.
 - Search engine, CSV rule catalog or CLI installer.
 - Native iOS/Android design or application building.
@@ -31,4 +32,4 @@
 
 ## Next release
 
-Complete the third scenario, physical-device keyboard and screen-reader checks, and a controlled Tier B comparison before broad release claims. Browser/PWA-specific heuristics remain later work.
+Complete executable coverage for the [original navigation scenario](../evals/scenarios/navigation.md), then focused physical-device keyboard/picker, screen-reader and human task checks. Run a controlled Tier B comparison before claiming an advantage over a no-skill condition. Use the [roadmap](roadmap.md) for release boundaries and [recorded task evidence](../tests/reports/task-ux-evidence.md) for executed checks and limits. Browser/PWA specialization remains later work.

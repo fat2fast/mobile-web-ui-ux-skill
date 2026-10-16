@@ -7,7 +7,7 @@ This document defines the acceptance contract for mobile UX improvements in the 
 2. **Task-oriented user acceptance** (observable completion of user goals without interface friction like horizontal scrolling on primary actions), and
 3. **Pattern-only checks** (implementation-specific assertions that must never be enforced universally).
 
-This contract freezes historical test provenance and governs successor test harnesses across three runnable scenarios:
+This contract freezes historical test provenance and governs successor test harnesses for the runnable journeys below. They extend the original Dashboard/Navigation/Form scope; the [original navigation scenario](../evals/scenarios/navigation.md) still needs dedicated executable coverage:
 - Dense order management: [evals/scenarios/dashboard.md](../evals/scenarios/dashboard.md)
 - Aligned comparison: [docs/comparison-scenario.md](comparison-scenario.md)
 - Contextual request/date-range form: [docs/request-form-scenario.md](request-form-scenario.md)
@@ -104,7 +104,7 @@ The 5 visual references from the mobile UI observations provide real-world mobil
 ### Decision on Notification Fixture
 Notification triage presents important mobile patterns (dense list, unread markers, clear action semantics). However, without real backend domain semantics, synthesizing a 4th standalone fixture would duplicate the dense-list principles already covered by the Order Dashboard and Comparison Table. Therefore:
 - The visual notification triage case is captured in decision guidance (`evals/decisions/content-cases.md`) with explicit `INFERRED` tags.
-- Three runnable scenarios (Orders, Comparison Table, Request Form) provide full automated coverage for list triage, tabular comparison, and complex contextual form entry.
+- The Orders, Comparison Table and Request Form journeys exercise specified list-triage, aligned-comparison and contextual-form interactions in the [task browser suite](../tests/task-ux/). Coverage and unverified device/human behavior are bounded by the [recorded evidence](../tests/reports/task-ux-evidence.md).
 - If subsequent evidence proves an unaddressed behavioral gap, a notification fixture will be formally specified and implemented with matching CI.
 
 ---

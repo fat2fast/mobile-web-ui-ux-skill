@@ -2,7 +2,7 @@
 
 > Giải quyết các vấn đề đặc thù mobile browser và PWA mà responsive layout không bao phủ.
 
-**Mốc kiểm tra:** branch `main`, commit `62505f6f161b` (12/10/2026). Trạng thái trong tài liệu là đánh giá lúc lập kế hoạch, không tự động đồng bộ với repo; kiểm tra lại trước khi triển khai. `SKILL.md`, README, docs, 3 playbook, scenario specs và CI cấu trúc đã tồn tại; runnable fixtures, UX e2e và A/B chưa có.
+**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source/evidence đã đọc, gồm [review và lượt kiểm tra gần nhất](../../plans/reports/review-261017-0428-skill-codebase.md). Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
 
 ## Kết quả cần đạt
 
@@ -10,11 +10,12 @@ Có playbooks browser/PWA cùng ma trận kiểm thử; không bắt buộc mọ
 
 ## Task breakdown
 
-Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp** chỉ xác nhận đã có tài liệu, **không** đồng nghĩa có UX validation.
+Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng tiêu chí và phạm vi bằng chứng ghi tại task; `[ ]` là chưa đạt hoặc chưa đủ bằng chứng. Task có thể còn **MỘT PHẦN** dù DoD trên fixture đã đạt, khi đầu ra hướng dẫn hoặc coverage dự kiến vẫn thiếu. Không suy ra phase hoàn tất từ việc file đã tồn tại.
 
 ### P05-01 — Browser support & capability matrix
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P04-10.
+- **Ưu tiên:** `P0` · **Trạng thái:** CHƯA TRIỂN KHAI · **Phụ thuộc:** P04-10.
+- **Bằng chứng / còn thiếu:** [MVP exclusions](../mvp-scope.md) và [verification limits](../../tests/reports/task-ux-evidence.md) chưa cung cấp browser support/capability matrix; không lấy Chromium emulation làm Safari iOS/Chrome Android coverage.
 - **Các bước thực hiện:**
   1. Định nghĩa target là Safari iOS và Chrome Android theo phiên bản/thiết bị được thử thực tế.
   2. Tra nguồn chính thức/compat data cho API như visualViewport, viewport units, display-mode và permissions.
@@ -29,7 +30,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-02 — Viewport, browser chrome và safe-area
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-01.
+- **Ưu tiên:** `P0` · **Trạng thái:** CHƯA TRIỂN KHAI · **Phụ thuộc:** P05-01.
+- **Bằng chứng / còn thiếu:** [Verification guidance](../../references/verification-criteria.md) nhắc safe-area/viewport nhưng chưa có browser-specific guide, fallback và tab/standalone evidence.
 - **Các bước thực hiện:**
   1. Viết guidance `svh/lvh/dvh`, scroll containers, fixed headers/footers, safe-area insets.
   2. Có ví dụ nội dung bị địa chỉ browser/cử chỉ hệ thống che và cách xử lý.
@@ -44,7 +46,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-03 — Virtual keyboard, focus và mobile forms
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-01, P02-03.
+- **Ưu tiên:** `P0` · **Trạng thái:** MỘT PHẦN; device validation NOT RUN · **Phụ thuộc:** P05-01, P02-03.
+- **Bằng chứng / còn thiếu:** [Forms guidance](../../references/decisions/forms.md) và [headless clearance tests](../../tests/task-ux/request-form.spec.cjs) là nền tảng; chưa có keyboard-focus guide/manual device procedure và kết quả iOS/Android thật.
 - **Các bước thực hiện:**
   1. Mô tả hành vi visual viewport khi keyboard mở và ảnh hưởng sticky CTA.
   2. Hướng dẫn kiểm soát focus/scroll/caret/error và tránh autofocus gây bật keyboard bất ngờ.
@@ -59,7 +62,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-04 — Installed PWA / standalone experience
 
-- **Ưu tiên:** `P1` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-01, P05-02.
+- **Ưu tiên:** `P1` · **Trạng thái:** CHƯA TRIỂN KHAI · **Phụ thuộc:** P05-01, P05-02.
+- **Bằng chứng / còn thiếu:** [SKILL](../../SKILL.md) chỉ yêu cầu phân biệt tab/standalone; chưa có standalone implementation/scenario hoặc homescreen test.
 - **Các bước thực hiện:**
   1. Audit manifest/start_url/scope/display/icon theo yêu cầu từng nền tảng nhưng không auto-enable PWA.
   2. Kiểm tra UX khi mở từ homescreen, không có browser UI truyền thống.
@@ -74,7 +78,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-05 — Back, deep linking, routing & restoration
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-04.
+- **Ưu tiên:** `P0` · **Trạng thái:** MỘT PHẦN trong browser tab · **Phụ thuộc:** P05-04.
+- **Bằng chứng / còn thiếu:** [Order history checks](../../tests/task-ux/order.spec.cjs) có Back/deep link; chưa có tab/standalone restoration và access-control evidence đủ cho PWA task.
 - **Các bước thực hiện:**
   1. Test URL state, Back, reload, direct link, scroll/focus restoration trong tab/standalone.
   2. Ghi anti-pattern redirect không thể Back và mất state khi chuyển màn hình.
@@ -88,7 +93,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-06 — Offline, loading, retry & service worker updates
 
-- **Ưu tiên:** `P1` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-04.
+- **Ưu tiên:** `P1` · **Trạng thái:** CHƯA TRIỂN KHAI · **Phụ thuộc:** P05-04.
+- **Bằng chứng / còn thiếu:** [MVP scope](../mvp-scope.md) loại full offline/service-worker diagnostics; form network-error test không thay thế offline/update/cache contract.
 - **Các bước thực hiện:**
   1. Phân loại sản phẩm cần offline fallback nào thay vì auto cache mọi API/data.
   2. Định nghĩa message offline, retry, stale content, update available và data sync conflict khi áp dụng.
@@ -103,7 +109,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-07 — PWA install / permission UX
 
-- **Ưu tiên:** `P1` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-01, P05-04.
+- **Ưu tiên:** `P1` · **Trạng thái:** CHƯA TRIỂN KHAI · **Phụ thuộc:** P05-01, P05-04.
+- **Bằng chứng / còn thiếu:** Chưa có install-permissions guide hoặc permission/install scenario. [Scope](../mvp-scope.md) không tuyên bố PWA installation support.
 - **Các bước thực hiện:**
   1. Chỉ xuất hiện install prompt khi platform và user intent phù hợp.
   2. Ghi khác biệt iOS/Android, không dùng tutorial lỗi thời cho mọi browser.
@@ -117,7 +124,8 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 
 ### P05-08 — Real device smoke tests & limitations
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P05-02 → P05-07.
+- **Ưu tiên:** `P0` · **Trạng thái:** NOT RUN · **Phụ thuộc:** P05-02 → P05-07.
+- **Bằng chứng / còn thiếu:** [Recorded limits](../../tests/reports/task-ux-evidence.md) ghi rõ không có physical device, touch, keyboard, standalone tests. Chưa có device matrix hoặc browser-specific bug inventory; không tick task chỉ vì đã ghi emulator khác physical device.
 - **Các bước thực hiện:**
   1. Chạy tối thiểu một iOS Safari và một Android Chrome khi có thiết bị; nếu không có, ghi NOT RUN.
   2. Test keyboard, address bar, safe-area, orientation, network transitions và standalone.
@@ -134,7 +142,9 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 - [ ] Tất cả task P0 của phase có bằng chứng và reviewer có thể tái hiện.
 - [ ] Mọi thay đổi source giữ nguyên hành vi/nghiệp vụ và desktop ngoài phạm vi đã thống nhất.
 - [ ] Documentation, SKILL.md và automated checks (nếu liên quan) được cập nhật nhất quán.
-- [ ] Các điểm chưa test ghi rõ `NOT RUN`, rủi ro còn lại và task kế tiếp.
+- [x] Các điểm chưa test ghi rõ `NOT RUN`, rủi ro còn lại và task kế tiếp (xem trạng thái/bằng chứng từng task).
+
+Phase chưa đóng: các task bắt buộc hoặc bằng chứng toàn phạm vi còn mở; không đánh dấu các exit gate còn lại chỉ dựa vào structural/browser PASS.
 
 ## Handoff cho phase tiếp theo
 

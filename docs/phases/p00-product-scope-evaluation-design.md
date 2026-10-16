@@ -2,7 +2,7 @@
 
 > Xác định rõ người dùng không chuyên UI/UX, giới hạn sản phẩm và cách đánh giá một cải thiện mobile UX có thật.
 
-**Mốc kiểm tra:** branch `main`, commit `62505f6f161b` (12/10/2026). Trạng thái trong tài liệu là đánh giá lúc lập kế hoạch, không tự động đồng bộ với repo; kiểm tra lại trước khi triển khai. `SKILL.md`, README, docs, 3 playbook, scenario specs và CI cấu trúc đã tồn tại; runnable fixtures, UX e2e và A/B chưa có.
+**Đối chiếu hiện trạng:** 17/10/2026, base HEAD `4ad759f`. Checklist và trạng thái từng task bên dưới phản ánh source/evidence đã đọc, gồm [review và lượt kiểm tra gần nhất](../../plans/reports/review-261017-0428-skill-codebase.md). Đây là hồ sơ tiến độ có thể cập nhật; Git lưu lịch sử kế hoạch ban đầu.
 
 ## Kết quả cần đạt
 
@@ -10,11 +10,12 @@ Tài liệu phạm vi + bộ kịch bản đánh giá chuẩn hóa; chưa coi sc
 
 ## Task breakdown
 
-Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp** chỉ xác nhận đã có tài liệu, **không** đồng nghĩa có UX validation.
+Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng tiêu chí và phạm vi bằng chứng ghi tại task; `[ ]` là chưa đạt hoặc chưa đủ bằng chứng. Task có thể còn **MỘT PHẦN** dù DoD trên fixture đã đạt, khi đầu ra hướng dẫn hoặc coverage dự kiến vẫn thiếu. Không suy ra phase hoàn tất từ việc file đã tồn tại.
 
 ### P00-01 — Chốt persona và job-to-be-done
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Đã có bản nháp · **Phụ thuộc:** —.
+- **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD tài liệu · **Phụ thuộc:** —.
+- **Bằng chứng / còn thiếu:** [Product scope](../product-scope.md) xác định hai nhóm người dùng, khó khăn và kết quả; [README](../../README.md) có prompt tự nhiên. File prompt riêng trong kế hoạch chưa được tạo; ví dụ hiện do README sở hữu.
 - **Các bước thực hiện:**
   1. Đối chiếu `docs/product-scope.md` với mục tiêu: vibe coder có web responsive nhưng UX mobile chưa tốt.
   2. Mô tả ít nhất 2 persona (vibe coder, developer không chuyên UX) và nhu cầu khác biệt.
@@ -23,13 +24,14 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
   - `docs/product-scope.md` cập nhật
   - `evals/prompts/non-designer-prompts.md`
 - **Definition of Done (DoD):**
-  - [ ] Persona nêu rõ nguồn vào, khó khăn và đầu ra mong đợi.
-  - [ ] Prompt không yêu cầu người dùng chỉ định pattern UX.
+  - [x] Persona nêu rõ nguồn vào, khó khăn và đầu ra mong đợi.
+  - [x] Prompt không yêu cầu người dùng chỉ định pattern UX.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
 ### P00-02 — Khóa MVP boundary và operating modes
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Đã có bản nháp · **Phụ thuộc:** P00-01.
+- **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD tài liệu · **Phụ thuộc:** P00-01.
+- **Bằng chứng / còn thiếu:** [SKILL operating modes](../../SKILL.md), [MVP scope](../mvp-scope.md) và [constraints](../constraints.md) thống nhất quyền sửa code. Đây là hợp đồng hướng dẫn, không phải behavioral test từng mode.
 - **Các bước thực hiện:**
   1. Đối chiếu `docs/mvp-scope.md`, `docs/constraints.md` và `SKILL.md` để phát hiện mâu thuẫn.
   2. Giữ 4 mode: Improve, Build Mobile View, Audit Only, Verify; phân biệt khi nào được sửa code.
@@ -38,13 +40,14 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
   - `docs/mvp-scope.md`
   - `docs/constraints.md`
 - **Definition of Done (DoD):**
-  - [ ] Các mode thống nhất giữa docs và SKILL.md.
-  - [ ] Audit/Verify không được tự ý thay đổi code.
+  - [x] Các mode thống nhất giữa docs và SKILL.md.
+  - [x] Audit/Verify không được tự ý thay đổi code.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
 ### P00-03 — Chuẩn hóa 3 scenario trước khi dựng fixture
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Có scenario mô tả · **Phụ thuộc:** P00-01, P00-02.
+- **Ưu tiên:** `P0` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P00-01, P00-02.
+- **Bằng chứng / còn thiếu:** [Dashboard](../../evals/scenarios/dashboard.md) có acceptance cụ thể; [navigation](../../evals/scenarios/navigation.md) vẫn specification, [form](../../evals/scenarios/form.md) còn mô tả khái quát. Chưa đủ bước tái hiện/data/error contract cho cả ba; không lấy comparison/request-form thay navigation.
 - **Các bước thực hiện:**
   1. Rà soát `evals/scenarios/dashboard.md`, `navigation.md`, `form.md`.
   2. Mỗi scenario xác định tác vụ, trạng thái khởi đầu, dữ liệu mẫu, hành vi lỗi, expected behavior và các chức năng bắt buộc giữ.
@@ -54,12 +57,13 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
   - `evals/scenarios/README.md`
 - **Definition of Done (DoD):**
   - [ ] Mỗi scenario có bước tái hiện, điểm kết thúc và failure criteria.
-  - [ ] Chưa đánh dấu đã test nếu fixture chưa có.
+  - [x] Chưa đánh dấu đã test nếu fixture chưa có.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
 ### P00-04 — Xây evaluation contract trước/sau
 
-- **Ưu tiên:** `P0` · **Trạng thái ban đầu:** Có tiêu chí nền · **Phụ thuộc:** P00-03.
+- **Ưu tiên:** `P0` · **Trạng thái:** ĐẠT DoD contract · **Phụ thuộc:** P00-03.
+- **Bằng chứng / còn thiếu:** [Evaluation entry point](../../evals/evaluation-criteria.md) dẫn tới [verification criteria](../../references/verification-criteria.md) và [evidence template](../../evals/evidence-template.md). Đạt yêu cầu định nghĩa nhãn; không xác nhận mọi báo cáo lịch sử dùng nhãn đúng.
 - **Các bước thực hiện:**
   1. Chuẩn hóa PASS / FAIL / NOT RUN / INFERRED trong `evals/evaluation-criteria.md`.
   2. Chọn chỉ số quan sát được: hoàn thành tác vụ, lỗi, số bước, discoverability, accessibility, desktop regressions.
@@ -68,13 +72,14 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
   - `evals/evaluation-criteria.md`
   - `evals/evidence-template.md`
 - **Definition of Done (DoD):**
-  - [ ] Không dùng UX score do AI tự suy diễn.
-  - [ ] Mỗi PASS đòi bằng chứng đã chạy hoặc quan sát trực tiếp.
+  - [x] Không dùng UX score do AI tự suy diễn.
+  - [x] Mỗi PASS đòi bằng chứng đã chạy hoặc quan sát trực tiếp.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
 ### P00-05 — Thiết lập benchmark so sánh agent có/không skill
 
-- **Ưu tiên:** `P1` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P00-04.
+- **Ưu tiên:** `P1` · **Trạng thái:** ĐẠT DoD protocol; thực nghiệm Tier B NOT RUN · **Phụ thuộc:** P00-04.
+- **Bằng chứng / còn thiếu:** [Comparison protocol](../../evals/comparison-protocol.md) định nghĩa controls, isolation, reviewer và giới hạn một trial; [evaluation record](../../evals/results/decision-evaluation.md) không tuyên bố superiority. Task này thiết lập quy trình; kết quả controlled run thuộc P04-09.
 - **Các bước thực hiện:**
   1. Định nghĩa hai điều kiện thử nghiệm, cùng model, tool access, prompt và baseline code.
   2. Yêu cầu 2 workspace/branch độc lập; reset trạng thái giữa các lần thử.
@@ -82,13 +87,14 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 - **Đầu ra/file dự kiến:**
   - `evals/comparison-protocol.md`
 - **Definition of Done (DoD):**
-  - [ ] Có quy trình lặp lại và phân biệt khác biệt do skill với khác biệt do môi trường.
-  - [ ] Không khẳng định skill tốt hơn nếu chưa có kết quả.
+  - [x] Có quy trình lặp lại và phân biệt khác biệt do skill với khác biệt do môi trường.
+  - [x] Không khẳng định skill tốt hơn nếu chưa có kết quả.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
 ### P00-06 — Thiết lập quality gates và traceability
 
-- **Ưu tiên:** `P1` · **Trạng thái ban đầu:** Chưa làm · **Phụ thuộc:** P00-02, P00-04.
+- **Ưu tiên:** `P1` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P00-02, P00-04.
+- **Bằng chứng / còn thiếu:** [Roadmap](../roadmap.md) sở hữu release boundaries và evidence routes; chưa có xác nhận reviewer cho từng task hoặc mapping hoàn chỉnh theo kế hoạch. Không tạo thêm release-gates/task-traceability chỉ để khớp filename dự kiến.
 - **Các bước thực hiện:**
   1. Định nghĩa gate Foundation, Useful Alpha, Verified MVP, PWA Extended và Distribution.
   2. Mỗi gate gắn với artefact/đầu ra kiểm chứng cụ thể.
@@ -97,7 +103,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
   - `docs/release-gates.md`
   - `docs/task-traceability.md`
 - **Definition of Done (DoD):**
-  - [ ] Các gate đo bằng kết quả có thể kiểm tra, không theo số trang tài liệu.
+  - [x] Các gate đo bằng kết quả có thể kiểm tra, không theo số trang tài liệu.
   - [ ] Mỗi task có một người review xác nhận tiêu chí xong khi áp dụng team workflow.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
@@ -106,7 +112,9 @@ Mỗi task nên làm thành một issue/PR nhỏ. Dấu **Đã có bản nháp**
 - [ ] Tất cả task P0 của phase có bằng chứng và reviewer có thể tái hiện.
 - [ ] Mọi thay đổi source giữ nguyên hành vi/nghiệp vụ và desktop ngoài phạm vi đã thống nhất.
 - [ ] Documentation, SKILL.md và automated checks (nếu liên quan) được cập nhật nhất quán.
-- [ ] Các điểm chưa test ghi rõ `NOT RUN`, rủi ro còn lại và task kế tiếp.
+- [x] Các điểm chưa test ghi rõ `NOT RUN`, rủi ro còn lại và task kế tiếp (xem trạng thái/bằng chứng từng task).
+
+Phase chưa đóng: các task bắt buộc hoặc bằng chứng toàn phạm vi còn mở; không đánh dấu các exit gate còn lại chỉ dựa vào structural/browser PASS.
 
 ## Handoff cho phase tiếp theo
 

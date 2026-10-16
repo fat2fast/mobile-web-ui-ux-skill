@@ -97,7 +97,9 @@ README.md / README.vi.md     Tài liệu dự án
 docs/                        Product scope, MVP scope, roadmap
 references/                  Hướng dẫn runtime, tiêu chí kiểm chứng và mẫu bằng chứng
 references/decisions/        Tám playbook chọn UX theo tác vụ
-evals/fixtures/              Dashboard và form đã cải thiện, chạy được
+evals/fixtures/              Baseline chạy được để đánh giá mobile UX
+evals/implementations/       Retrofit lịch sử và triển khai theo tác vụ
+tests/task-ux/              Bộ test browser và công cụ kiểm chứng hiện hành
 evals/scenarios/             Các kịch bản đánh giá mobile UX
 evals/decisions/             Decision cases và phản ví dụ
 evals/evaluation-criteria.md Điểm vào cho reviewer đến tiêu chí kiểm chứng chung
@@ -117,13 +119,13 @@ Yêu cầu Python 3.9+ (chỉ sử dụng thư viện chuẩn):
 python3 scripts/validate_skill.py
 ```
 
-Lệnh này kiểm tra cấu trúc skill, metadata và liên kết nội bộ; nó không đánh giá chất lượng sử dụng. CI còn chạy unit test và build hai fixture. [Kiểm tra browser tại máy](tests/261015-retrofit/) cung cấp bằng chứng hẹp hơn về tác vụ và kích thước màn hình. Hành vi trên thiết bị thật chưa được kiểm chứng.
+Lệnh này kiểm tra cấu trúc skill, metadata và liên kết nội bộ; nó không đánh giá chất lượng sử dụng. CI còn chạy unit test tooling, build fixture và implementation, rồi chạy [bộ test browser theo tác vụ](tests/task-ux/). [Workflow](.github/workflows/validate.yml) quản lý tập job và project hiện hành. [Các phép kiểm retrofit cũ](tests/261015-retrofit/) là bằng chứng lịch sử. Hành vi trên thiết bị thật chưa được kiểm chứng.
 
 ## Trạng thái phát triển
 
-**MVP đã kiểm chứng trên fixture dashboard và form.** Repository có tám playbook và hai fixture đã cải thiện cho mobile. [Hồi quy Tier A mới với skill](tests/reports/regression-261015-tier-a.md) đạt bốn case tư vấn và hai phản ví dụ; biến thể yêu cầu code form có phép kiểm riêng. [Kiểm tra Chromium trước/sau](tests/reports/retrofit-261015-browser-evidence.md) chạy các tác vụ dashboard và form ở kích thước điện thoại và desktop, có ảnh chụp và giới hạn rõ ràng. Sáu cặp output thăm dò cũ vẫn [được lưu](tests/reports/261014-mobile-ux-skill-comparison-review.md). Đối chứng skill Tier B vẫn `NOT RUN`; các kết quả trên fixture chưa chứng minh mức tăng khả năng sử dụng nói chung hay hành vi trên điện thoại thật.
+**Useful alpha với các tác vụ mobile đã kiểm chứng trên fixture.** Bên cạnh retrofit dashboard/form lịch sử, repo có triển khai theo tác vụ cho orders, bảng so sánh và form yêu cầu theo ngữ cảnh. Xem [hợp đồng nghiệm thu](docs/mobile-task-acceptance.md), [bộ test browser](tests/task-ux/) và [bằng chứng đã ghi](tests/reports/task-ux-evidence.md) để biết phạm vi và giới hạn. [Hồi quy Tier A mới với skill](tests/reports/regression-261015-tier-a.md) đạt bốn case tư vấn và hai phản ví dụ; biến thể yêu cầu code form có phép kiểm riêng. [Kiểm tra Chromium trước/sau](tests/reports/retrofit-261015-browser-evidence.md) chạy các tác vụ dashboard và form ở kích thước điện thoại và desktop, có ảnh chụp và giới hạn rõ ràng. Sáu cặp output thăm dò cũ vẫn [được lưu](tests/reports/261014-mobile-ux-skill-comparison-review.md). Đối chứng skill Tier B vẫn `NOT RUN`; các kết quả trên fixture chưa chứng minh mức tăng khả năng sử dụng nói chung hay hành vi trên điện thoại thật.
 
-Các bước tiếp theo gồm đối chứng Tier B, kịch bản còn lại, thử bàn phím và screen reader trên điện thoại thật, rồi mở rộng hướng dẫn browser/PWA. Xem [MVP scope](docs/mvp-scope.md), [kết quả decision](evals/results/decision-evaluation.md) và [roadmap](docs/roadmap.md).
+Các bước tiếp theo gồm kiểm thử chạy được cho [kịch bản navigation ban đầu](evals/scenarios/navigation.md), kiểm tra tập trung trên điện thoại thật và công nghệ hỗ trợ, rồi đối chứng Tier B có kiểm soát. Các tác vụ comparison/request-form mới không thay thế cam kết navigation đó. Hướng dẫn browser/PWA chuyên sâu đi sau các khoảng trống bằng chứng này. Xem [MVP scope](docs/mvp-scope.md), [kết quả decision](evals/results/decision-evaluation.md) và [roadmap](docs/roadmap.md).
 
 ## Đóng góp
 
