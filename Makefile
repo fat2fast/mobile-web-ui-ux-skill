@@ -1,48 +1,108 @@
 FIXTURE ?= order-dashboard
 
 .DEFAULT_GOAL := help
-.PHONY: help no-skill with-skill both all
+.PHONY: help no-skill with-skill both all install install-dry-run check-version update update-dry-run rollback version
 
 help:
 	@echo "======================================================================"
-	@echo " Makefile: Hướng dẫn tạo project test đối chứng (Comparison Projects)"
+	@echo " Makefile: Quản lý và sử dụng Mobile Web UI/UX Skill"
 	@echo " Skill: mobile-web-ui-ux-skill"
 	@echo "======================================================================"
 	@echo ""
-	@echo "Mục đích:"
-	@echo "  Tạo 2 bản sao độc lập ('no-skill' và 'with-skill') từ cùng một fixture"
+	@echo "1. CÀI ĐẶT & CẬP NHẬT TRONG DỰ ÁN WEB HIỆN HỮU:"
+	@echo "  make install DEST=<đường-dẫn-dự-án>"
+	@echo "      Cài đặt bản copy project-local độc lập vào .agents/skills/ trong dự án."
+	@echo "      Không chỉnh sửa file code, config hay dependencies của ứng dụng."
+	@echo ""
+	@echo "  make install-dry-run DEST=<đường-dẫn-dự-án>"
+	@echo "      Kiểm tra validation payload và môi trường đích; không ghi file (zero writes)."
+	@echo ""
+	@echo "  make check-version DEST=<đường-dẫn-dự-án>"
+	@echo "      So sánh version của skill đã cài trong dự án với version nguồn."
+	@echo ""
+	@echo "  make update DEST=<đường-dẫn-dự-án>"
+	@echo "      Cập nhật an toàn bản cài đặt (tự động tạo backup, rollback khi lỗi)."
+	@echo ""
+	@echo "  make update-dry-run DEST=<đường-dẫn-dự-án>"
+	@echo "      Kiểm tra trước quá trình cập nhật mà không ghi file."
+	@echo ""
+	@echo "  make rollback DEST=<đường-dẫn-dự-án>"
+	@echo "      Khôi phục lại phiên bản trước đó từ bản backup (.mobile-web-ui-ux-skill.bak)."
+	@echo ""
+	@echo "  make version"
+	@echo "      Hiển thị phiên bản hiện tại của mã nguồn skill."
+	@echo ""
+	@echo "2. TẠO PROJECT TEST ĐỐI CHỨNG (Comparison Projects từ Fixture):"
+	@echo "  Mục đích: Tạo 2 bản sao độc lập ('no-skill' và 'with-skill') từ fixture mẫu"
 	@echo "  để so sánh quyết định thiết kế mobile web UI/UX của AI coding agent."
 	@echo ""
-	@echo "Cú pháp:"
-	@echo "  make <target> DEST=<đường-dẫn-thư-mục-cha> [FIXTURE=<tên-fixture>]"
+	@echo "  make both DEST=<thư-mục-cha> [FIXTURE=order-dashboard|mobile-form]"
+	@echo "      Tạo cả 2 project 'no-skill' và 'with-skill' vào thư mục cha."
 	@echo ""
-	@echo "Các targets khả dụng:"
-	@echo "  both / all   Tạo cả 2 project 'no-skill' và 'with-skill' vào DEST"
-	@echo "  no-skill     Chỉ tạo project baseline (không kèm skill)"
-	@echo "  with-skill   Chỉ tạo project candidate (kèm skill tại .agents/skills/)"
-	@echo "  help         Hiển thị bảng hướng dẫn này"
+	@echo "  make no-skill DEST=<thư-mục-cha> [FIXTURE=order-dashboard|mobile-form]"
+	@echo "      Chỉ tạo project baseline (không kèm skill)."
+	@echo ""
+	@echo "  make with-skill DEST=<thư-mục-cha> [FIXTURE=order-dashboard|mobile-form]"
+	@echo "      Chỉ tạo project candidate (kèm skill tại .agents/skills/)."
 	@echo ""
 	@echo "Tham số cấu hình:"
-	@echo "  DEST         [Bắt buộc] Thư mục cha đã tồn tại (nằm ngoài skill repo)."
-	@echo "               Lưu ý: Nếu chưa có thư mục, hãy tạo trước: mkdir -p <DEST>"
-	@echo "  FIXTURE      [Tùy chọn] Tên fixture mẫu (mặc định: order-dashboard):"
+	@echo "  DEST         [Bắt buộc] Thư mục dự án hiện hữu (đối với install/update/check-version)"
+	@echo "               hoặc thư mục cha đã tồn tại (đối với comparison targets)."
+	@echo "  FIXTURE      [Tùy chọn] Tên fixture mẫu cho comparison (mặc định: order-dashboard):"
 	@echo "               - order-dashboard : Bảng đơn hàng desktop responsive"
 	@echo "               - mobile-form     : Biểu mẫu form mobile phức tạp"
-	@echo ""
-	@echo "Các bước sử dụng khuyến nghị (Quick Start):"
-	@echo "  1. Chuẩn bị thư mục đích:"
-	@echo "     mkdir -p ~/work/mobile-ux-test"
-	@echo ""
-	@echo "  2. Tạo cả 2 dự án test (fixture mặc định order-dashboard):"
-	@echo "     make both DEST=~/work/mobile-ux-test"
-	@echo ""
-	@echo "  3. Hoặc tạo với fixture mobile-form:"
-	@echo "     make both DEST=~/work/mobile-ux-test FIXTURE=mobile-form"
-	@echo ""
-	@echo "  4. Cài dependencies cho từng project trước khi mở agent:"
-	@echo "     cd ~/work/mobile-ux-test/no-skill && npm ci"
-	@echo "     cd ~/work/mobile-ux-test/with-skill && npm ci"
 	@echo "======================================================================"
+
+version:
+	@python3 scripts/install-skill.py --version
+
+install:
+	@test -n "$(DEST)" || { \
+		echo "Lỗi: Chưa chỉ định tham số DEST cho target '$@'!" >&2; \
+		echo "Cách dùng: make $@ DEST=/duong-dan/du-an-hien-huu" >&2; \
+		exit 2; \
+	}
+	@python3 scripts/install-skill.py --project "$(DEST)"
+
+install-dry-run:
+	@test -n "$(DEST)" || { \
+		echo "Lỗi: Chưa chỉ định tham số DEST cho target '$@'!" >&2; \
+		echo "Cách dùng: make $@ DEST=/duong-dan/du-an-hien-huu" >&2; \
+		exit 2; \
+	}
+	@python3 scripts/install-skill.py --project "$(DEST)" --dry-run
+
+check-version:
+	@test -n "$(DEST)" || { \
+		echo "Lỗi: Chưa chỉ định tham số DEST cho target '$@'!" >&2; \
+		echo "Cách dùng: make $@ DEST=/duong-dan/du-an-hien-huu" >&2; \
+		exit 2; \
+	}
+	@python3 scripts/install-skill.py --project "$(DEST)" --check-version
+
+update:
+	@test -n "$(DEST)" || { \
+		echo "Lỗi: Chưa chỉ định tham số DEST cho target '$@'!" >&2; \
+		echo "Cách dùng: make $@ DEST=/duong-dan/du-an-hien-huu" >&2; \
+		exit 2; \
+	}
+	@python3 scripts/install-skill.py --project "$(DEST)" --update
+
+update-dry-run:
+	@test -n "$(DEST)" || { \
+		echo "Lỗi: Chưa chỉ định tham số DEST cho target '$@'!" >&2; \
+		echo "Cách dùng: make $@ DEST=/duong-dan/du-an-hien-huu" >&2; \
+		exit 2; \
+	}
+	@python3 scripts/install-skill.py --project "$(DEST)" --update --dry-run
+
+rollback:
+	@test -n "$(DEST)" || { \
+		echo "Lỗi: Chưa chỉ định tham số DEST cho target '$@'!" >&2; \
+		echo "Cách dùng: make $@ DEST=/duong-dan/du-an-hien-huu" >&2; \
+		exit 2; \
+	}
+	@python3 scripts/install-skill.py --project "$(DEST)" --rollback
 
 both all:
 	@test -n "$(DEST)" || { \

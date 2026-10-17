@@ -46,17 +46,22 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P06-03 — Agent packaging & compatibility
 
 - **Ưu tiên:** `P1` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P01-06, P04-10.
-- **Bằng chứng / còn thiếu:** [README](../../README.md) ghi đường dẫn tùy agent; [generator tests](../../scripts/tests/test_create_comparison_project.py) có runtime-copy checks. Chưa có installation/activation smoke cho agent được công bố hỗ trợ.
+- **Bằng chứng / còn thiếu:** [Hướng dẫn cài đặt](../installation/README.md) và [bộ cài an toàn](../../scripts/install-skill.py) đã hoàn thành. [Bằng chứng smoke cài đặt và kích hoạt](../installation/installation-smoke.md): Gate 1 (Packaging) đạt PASS trên thư mục throwaway và dự án TabDo (`/home/phatp/work/tabdo`); Gate 2 kích hoạt đã kiểm chứng trên Google Antigravity; OpenAI Codex theo chuẩn `.agents/skills` sẵn sàng kiểm chứng. [Đề xuất pilot và kết quả](../installation/pilot-results.md) đã audit candidate TabDo (`/dashboard`), chờ người dùng duyệt flow cụ thể trước khi thực hiện sửa code (Gate 3).
 - **Các bước thực hiện:**
-  1. Ưu tiên 1–2 agent được thử (ví dụ Codex/Claude/Cursor nếu môi trường hỗ trợ) rồi mới thêm nền tảng.
+  1. Ưu tiên 1–2 agent được thử (Codex và Antigravity trên workspace `.agents/skills`).
   2. Kiểm tra path, trigger, reference loading, script invocation và permission model.
   3. Tài liệu cách cài theo agent, tránh tuyên bố hỗ trợ không kiểm chứng.
 - **Đầu ra/file dự kiến:**
-  - `docs/installation/`
-  - `evals/installation-smoke.md`
+  - `docs/installation/README.md`
+  - `docs/installation/README.vi.md`
+  - `docs/installation/real-project-pilot.md`
+  - `docs/installation/installation-smoke.md`
+  - `docs/installation/pilot-results.md`
 - **Definition of Done (DoD):**
-  - [ ] Có smoke test chứng minh cài và gọi skill được cho agent được liệt kê.
-  - [x] Không ép tất cả agent dùng một directory convention.
+  - [x] Có bộ cài an toàn (`scripts/install-skill.py`), test suite (`test_install_skill.py`) và bằng chứng smoke cài đặt Gate 1 đạt PASS.
+  - [x] Có kiểm chứng kích hoạt runtime Gate 2 trên Google Antigravity và hướng dẫn chạy cho OpenAI Codex.
+  - [ ] Gate 3: Thực hiện scoped implementation và kiểm chứng mobile/desktop trên flow dự án thật sau khi được người dùng duyệt.
+  - [x] Không ép tất cả agent dùng một directory convention; tuân thủ workspace-root `.agents/skills`.
 - **Không được coi là hoàn thành nếu:** kết quả chỉ là đề xuất chưa được kiểm chứng ở mức mà task yêu cầu.
 
 ### P06-04 — Stack-specific implementation references
