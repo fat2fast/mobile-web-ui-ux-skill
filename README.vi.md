@@ -1,42 +1,42 @@
 # Mobile Web UI/UX Skill
 
-**Cải thiện trải nghiệm UI/UX trên mobile web — không chỉ dừng ở responsive layout.**
+**Cải thiện UI/UX web trên mobile — không chỉ dừng ở responsive layout.**
 
-AI skill giúp người vibe coding, lập trình viên và người phát triển sản phẩm biến website responsive hiện có thành **trải nghiệm mobile trực quan, dễ thao tác, thân thiện với cảm ứng** mà **không cần kiến thức chuyên sâu về thiết kế UI/UX**.
+AI skill giúp vibe coder, lập trình viên và người xây dựng sản phẩm biến website responsive hiện có thành trải nghiệm mobile trực quan, thân thiện với cảm ứng **mà không đòi hỏi chuyên môn thiết kế UI/UX**.
 
-[English](README.md) · [Hướng dẫn skill](SKILL.md) · [Phạm vi MVP](docs/mvp-scope.md) · [Roadmap](docs/roadmap.md)
+[English](README.md) · [Hướng dẫn skill](SKILL.md) · [Hướng dẫn cài đặt](docs/installation/README.vi.md) · [Runbook pilot](docs/installation/real-project-pilot.md) · [Phạm vi MVP](docs/mvp-scope.md) · [Lộ trình phát triển](docs/roadmap.md)
 
-## Vì sao cần skill này?
+## Lý do tồn tại của skill
 
-Một website có thể hiển thị vừa màn hình điện thoại nhưng vẫn khó sử dụng. Sidebar từ desktop trở thành menu nhiều tầng, bảng dữ liệu khó đọc, form bất tiện khi bàn phím ảo xuất hiện và các thao tác quan trọng không dễ tìm thấy.
+Một website có thể co giãn tốt (responsive) nhưng vẫn rất khó chịu khi dùng trên điện thoại. Sidebar desktop biến thành menu dài khó bấm, bảng dữ liệu khó đọc, form nhập liệu bị bàn phím ảo che khuất, và các nút bấm quan trọng thường bị đặt lệch khỏi tầm với ngón tay cái.
 
-Skill tập trung vào **cách người dùng thực sự sử dụng website trên điện thoại**, thay vì chỉ kiểm tra giao diện có co giãn theo màn hình hay không. AI coding agent sẽ phân tích sản phẩm, chọn UX pattern phù hợp và cải thiện trải nghiệm mà không bắt người dùng phải tự đưa ra những quyết định chuyên môn về thiết kế.
+Skill này tập trung vào **cách người dùng thao tác thực tế trên điện thoại**, chứ không chỉ kiểm tra xem layout có vừa màn hình hay không. AI agent sẽ hiểu ngữ cảnh sản phẩm, lựa chọn UX pattern phù hợp cho mobile và cải thiện trải nghiệm mà không bắt người dùng phải đưa ra các quyết định thiết kế chuyên sâu.
 
-## Skill giúp bạn làm gì?
+## Những gì skill giúp bạn làm
 
-- **Hiểu sản phẩm hiện có:** nhận diện tác vụ chính trên mobile, màn hình, component và các ràng buộc của dự án.
-- **Cải thiện khả năng sử dụng:** ưu tiên điều hướng, trình bày dữ liệu, form, tương tác cảm ứng và thứ tự thông tin.
-- **Tự quyết định UX theo ngữ cảnh:** không áp dụng máy móc bottom navigation, card hoặc bottom sheet cho mọi website.
-- **Tận dụng code hiện tại:** tái sử dụng component và design tokens, giữ nhận diện, desktop UX, routes, phân quyền và business logic.
-- **Kiểm chứng thay đổi:** kiểm tra các kích thước mobile và luồng thao tác khi có công cụ; nêu rõ kết quả đã kiểm tra và những giả định chưa được xác minh.
+- **Hiểu sản phẩm hiện có:** xác định các tác vụ mobile quan trọng nhất, các màn hình, component và ràng buộc kỹ thuật.
+- **Cải thiện trải nghiệm mobile:** ưu tiên điều hướng (navigation), hiển thị dữ liệu, form nhập liệu, tương tác cảm ứng và thứ bậc nội dung.
+- **Đưa ra quyết định thiết kế phù hợp ngữ cảnh:** lựa chọn pattern dựa trên tác vụ người dùng thay vì áp dụng máy móc bottom navigation, card hay bottom sheet.
+- **Tương thích với code hiện tại:** tái sử dụng component và design token sẵn có; giữ nguyên nhận diện thương hiệu, trải nghiệm desktop, routing, phân quyền và logic nghiệp vụ.
+- **Kiểm chứng thay đổi:** kiểm tra trên các viewport điện thoại tiêu biểu và luồng tương tác thực tế khi có công cụ test; phân biệt rõ kết quả đã kiểm chứng và giả định chưa kiểm tra.
 
-Skill hướng tới mobile websites và responsive web apps. Skill cũng có thể hỗ trợ xây mobile view trong dự án PWA; các kiểm tra chuyên sâu theo trình duyệt và PWA đã cài đặt sẽ được bổ sung ở những giai đoạn sau.
+Skill hỗ trợ tốt website mobile và ứng dụng web responsive. Skill có thể định hướng thiết kế mobile view trong các dự án PWA, trong khi các phép kiểm chuyên sâu cho từng trình duyệt hoặc PWA đã cài đặt sẽ được bổ sung ở các giai đoạn sau.
 
-## Ai nên sử dụng?
+## Đối tượng sử dụng
 
-- **Người vibe coding:** muốn AI coding agent tự đưa ra quyết định mobile UX hợp lý.
-- **Lập trình viên:** đã biết xây responsive UI nhưng chưa chuyên về thiết kế tương tác trên điện thoại.
-- **Indie makers và nhóm sản phẩm:** muốn nâng cấp trải nghiệm mobile mà không phải thiết kế lại toàn bộ website.
+- **Vibe coder** muốn AI coding agent tự đưa ra quyết định mobile UX hợp lý.
+- **Lập trình viên** nắm vững responsive layout nhưng không chuyên về thiết kế tương tác mobile.
+- **Indie maker và nhóm phát triển sản phẩm** cần tối ưu trải nghiệm mobile mà không phải đập đi xây lại toàn bộ website.
 
-## Cách skill hoạt động
+## Cách thức hoạt động
 
-1. **Discover:** tìm hiểu dự án và các tác vụ mobile quan trọng.
-2. **Diagnose:** phát hiện vấn đề sử dụng, không chỉ lỗi bố cục hoặc CSS.
-3. **Decide:** chọn UX pattern dựa trên ngữ cảnh sản phẩm.
-4. **Improve:** cải thiện những phần code cần thiết với phạm vi thay đổi nhỏ.
-5. **Verify:** kiểm tra trải nghiệm mobile và tránh ảnh hưởng desktop; báo cáo rõ phần đã/chưa kiểm chứng.
+1. **Khám phá (Discover):** tìm hiểu dự án hiện có và các tác vụ mobile quan trọng nhất.
+2. **Chẩn đoán (Diagnose):** phát hiện các vấn đề trải nghiệm vượt ra ngoài lỗi layout hay tràn khung (overflow).
+3. **Quyết định (Decide):** chọn pattern mobile UX phù hợp với ngữ cảnh thực tế của sản phẩm.
+4. **Cải thiện (Improve):** chỉnh sửa phần code tối thiểu cần thiết trong implementation hiện có.
+5. **Kiểm chứng (Verify):** kiểm tra tương tác trên mobile, rà soát hồi quy trên desktop và báo cáo rõ phạm vi đã kiểm chứng.
 
-### Các chế độ sử dụng
+### Các chế độ hoạt động
 
 | Chế độ | Mục đích |
 | --- | --- |
@@ -49,13 +49,27 @@ Skill hướng tới mobile websites và responsive web apps. Skill cũng có th
 
 Dự án tuân theo [Agent Skills specification](https://agentskills.io/specification). AI agent tương thích cần truy cập được thư mục `mobile-web-ui-ux-skill` và file `SKILL.md`.
 
-1. Tải hoặc clone repository.
-2. Đặt toàn bộ thư mục `mobile-web-ui-ux-skill` vào vị trí chứa skills mà agent hỗ trợ (ví dụ `.agents/skills/mobile-web-ui-ux-skill/` nếu tương thích).
-3. Mở dự án web hiện có và yêu cầu AI coding agent cải thiện trải nghiệm mobile.
+### 1. Cài đặt, kiểm tra phiên bản và cập nhật trong dự án hiện hữu (Khuyến nghị)
 
-Mỗi agent có thể quy định vị trí cài đặt khác nhau. Hãy tham khảo tài liệu của agent đang sử dụng. Nếu agent không tự phát hiện skill, có thể yêu cầu đọc file `SKILL.md` của repository này.
+Để cài đặt hoặc quản lý bản sao project-local độc lập của skill trong dự án web đang chạy mà không làm thay đổi mã nguồn, dependencies hay cấu hình ứng dụng, hãy dùng bộ cài đặt an toàn:
 
-### Tạo hai project để đối chứng
+```bash
+# Kiểm tra trước (dry-run, không ghi file)
+make install-dry-run DEST=/duong/dan/du-an
+
+# Cài đặt thực tế
+make install DEST=/duong/dan/du-an
+
+# Kiểm tra phiên bản đã cài so với bản nguồn
+make check-version DEST=/duong/dan/du-an
+
+# Cập nhật an toàn (tự động sao lưu và rollback nếu lỗi)
+make update DEST=/duong/dan/du-an
+```
+
+Bộ cài đặt sẽ đặt `SKILL.md`, `references/**` và `LICENSE` tại `<project>/.agents/skills/mobile-web-ui-ux-skill/`. Cả OpenAI Codex và Google Antigravity đều hỗ trợ nhận diện vị trí này tại thư mục gốc workspace. Xem chi tiết tại [Hướng dẫn cài đặt](docs/installation/README.vi.md) và [Runbook pilot dự án thật](docs/installation/real-project-pilot.md) để biết thêm về quy trình kích hoạt, cập nhật, rollback và xử lý sự cố. Nếu agent không tự phát hiện skill, có thể yêu cầu agent đọc trực tiếp file `SKILL.md` đã cài.
+
+### 2. Tạo hai project để đối chứng
 
 Trong WSL, tạo hai bản sao độc lập của cùng một fixture vào thư mục đích đã tồn tại (nằm ngoài repository này):
 
@@ -95,6 +109,7 @@ Mỗi bản sao có `AGENTS.md` ghi nhận giống nhau và các thư mục case
 SKILL.md                     Hướng dẫn và workflow cho AI agent
 README.md / README.vi.md     Tài liệu dự án
 docs/                        Product scope, MVP scope, roadmap
+docs/installation/           Hướng dẫn cài đặt và runbook pilot dự án thật
 references/                  Hướng dẫn runtime, tiêu chí kiểm chứng và mẫu bằng chứng
 references/decisions/        Tám playbook chọn UX theo tác vụ
 evals/fixtures/              Baseline chạy được để đánh giá mobile UX
@@ -104,6 +119,7 @@ evals/scenarios/             Các kịch bản đánh giá mobile UX
 evals/decisions/             Decision cases và phản ví dụ
 evals/evaluation-criteria.md Điểm vào cho reviewer đến tiêu chí kiểm chứng chung
 examples/                    Báo cáo UX mẫu
+scripts/install-skill.py     Bộ cài đặt và cập nhật skill an toàn vào dự án
 scripts/validate_skill.py    Kiểm tra cấu trúc và liên kết Markdown
 .github/workflows/           Kiểm tra tự động bằng CI
 tests/261015-retrofit/        Kiểm tra browser trước/sau và ảnh chụp

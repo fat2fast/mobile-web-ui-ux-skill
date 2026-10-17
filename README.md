@@ -4,7 +4,7 @@
 
 An AI skill that helps vibe coders, developers, and product builders turn existing responsive websites into intuitive, touch-friendly mobile experiences **without requiring UI/UX design expertise**.
 
-[Tiếng Việt](README.vi.md) · [Skill instructions](SKILL.md) · [MVP scope](docs/mvp-scope.md) · [Roadmap](docs/roadmap.md)
+[Tiếng Việt](README.vi.md) · [Skill instructions](SKILL.md) · [Installation guide](docs/installation/README.md) · [Pilot runbook](docs/installation/real-project-pilot.md) · [MVP scope](docs/mvp-scope.md) · [Roadmap](docs/roadmap.md)
 
 ## Why this skill exists
 
@@ -49,13 +49,27 @@ The skill supports mobile websites and responsive web apps. It can guide mobile 
 
 This project follows the [Agent Skills specification](https://agentskills.io/specification). A compatible agent needs access to the `mobile-web-ui-ux-skill` directory and its `SKILL.md` file.
 
-1. Download or clone the repository.
-2. Place the complete `mobile-web-ui-ux-skill` directory in your agent's supported skills location (for example, `.agents/skills/mobile-web-ui-ux-skill/` where supported).
-3. Open an existing web project and ask your coding agent to improve its mobile UX.
+### 1. Install, check version, and update in an existing project (Recommended)
 
-Skills directories differ between agents. Refer to your agent's documentation for its supported installation path. If automatic skill discovery is unavailable, ask the agent to read this repository's `SKILL.md`.
+To install or manage an independent, project-local copy of the skill in your existing web project without modifying application code, dependencies, or configuration, use the safe installer:
 
-### Create comparison projects
+```bash
+# Dry-run validation (zero writes)
+make install-dry-run DEST=/path/to/your/project
+
+# Perform installation
+make install DEST=/path/to/your/project
+
+# Check installed version vs available source version
+make check-version DEST=/path/to/your/project
+
+# Safe self-update with automated backup and rollback on failure
+make update DEST=/path/to/your/project
+```
+
+The installer places `SKILL.md`, `references/**`, and `LICENSE` at `<project>/.agents/skills/mobile-web-ui-ux-skill/`. Both OpenAI Codex and Google Antigravity recognize this location at the project workspace root. See the [Installation Guide](docs/installation/README.md) and [Real-Project Pilot Runbook](docs/installation/real-project-pilot.md) for activation details, safety rules, updates, rollbacks, and troubleshooting. If automatic skill discovery is unavailable, ask the agent to read the installed `SKILL.md`.
+
+### 2. Create comparison projects from fixtures
 
 From WSL, create two independent copies of the same runnable fixture in an existing destination directory outside this repository:
 
@@ -95,6 +109,7 @@ Each copy has identical `AGENTS.md` recording instructions and all case folders 
 SKILL.md                     Agent instructions and workflow
 README.md / README.vi.md     Project documentation
 docs/                        Product scope, MVP boundaries, roadmap
+docs/installation/           Installation guides and real-project pilot runbook
 references/                  Runtime guidance, verification criteria and evidence record
 references/decisions/        Eight task-based mobile UX playbooks
 evals/fixtures/              Runnable baselines for mobile UX evaluation
@@ -104,6 +119,7 @@ evals/scenarios/             Mobile UX evaluation scenarios
 evals/decisions/             Decision cases and counterexamples
 evals/evaluation-criteria.md Reviewer entry point to shared verification criteria
 examples/                    Sample UX report
+scripts/install-skill.py     Safe project-local skill installer & updater
 scripts/validate_skill.py    Structure and Markdown-link validator
 .github/workflows/           CI validation
 tests/261015-retrofit/        Before/after browser checks and screenshots
