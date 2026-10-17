@@ -38,3 +38,23 @@ All proposals follow the [decision contract](../../references/decision-contract.
 - **Rejected:** Tall cards with ambiguous standalone checkmark button, because checkmark icon meaning (mark read vs approve vs accept) is visually ambiguous and prone to misclicks.
 - **Preserved:** Read/unread state, notification body, timestamps, link targets, and desktop view. All notification dismissal side effects remain inferred.
 - **Verify:** `NOT RUN`; requires real notification backend. Check at 320px/390px for unread indicator clarity and accessible button labels.
+
+## CONTENT-04 — Frequent record triage
+
+- **Evidence/source:** `INFERRED` example grounded in the [order task contract](../../docs/mobile-task-acceptance.md) and [data cases](data-display-cases.md); priorities must be checked against actual handlers/data.
+- **Mobile task:** scan a queue, identify an order from existing ID/status/total and use its existing action.
+- **Candidates:** compact labeled list with optional details; spaced cards retaining the same data and actions.
+- **Acceptable selection:** compact list when scan frequency and repeated metadata dominate; a card can pass when richer per-record context justifies space. Map required ID/status/total → existing action → customer/date → optional details → critical status, without inventing eligibility.
+- **Counterexample:** tall repetitive cards that bury the action, or removing exact amount/unit/identity to fit the screen. Reject a table only when this task requires individual-record action without sideways scrolling, not by width alone.
+- **Preserved:** handler eligibility for all existing statuses, exact data, accessible labels, details/Back and desktop table.
+- **Verify:** `NOT RUN` for this new decision case; inspect source ownership, then check 320/390px scan/action, long labels, independent 200% text resize and desktop. Historical fixture checks are not a replay of this rule revision.
+
+## CONTENT-05 — Aligned attribute comparison
+
+- **Evidence/source:** `INFERRED` [comparison scenario](../../docs/comparison-scenario.md), opposite task to CONTENT-04.
+- **Mobile task:** compare exact prices/units/specifications across products in a shared row context.
+- **Candidates:** semantic comparison matrix with contained scrolling; repeated labeled product cards.
+- **Acceptable selection:** aligned matrix when cross-column relationships carry meaning. Map required attributes/price/unit → existing compare control → product context → optional specs → availability, using only fields that exist. Keep row identity and header associations reachable.
+- **Counterexample:** reusing the triage list for every product or dropping units to eliminate horizontal scrolling. Cards remain viable for browsing, but lose convenient alignment for this task.
+- **Preserved:** exact monetary precision, currency, units, availability, selected products, controls, keyboard and desktop.
+- **Verify:** `NOT RUN` for this new decision case; inspect full values/headers at narrow widths, keyboard scroll, 200% text resize and effective-320 reflow separately. The two-dimensional exception does not exempt unreadable cell text.

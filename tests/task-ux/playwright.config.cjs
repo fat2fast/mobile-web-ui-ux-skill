@@ -3,6 +3,7 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: '.',
+  outputDir: process.env.TASK_UX_ARTIFACTS || 'test-results',
   testMatch: /.*\.spec\.cjs/,
   timeout: 45000,
   fullyParallel: false,

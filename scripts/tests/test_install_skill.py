@@ -15,6 +15,12 @@ INSTALLER = ROOT / "scripts" / "install-skill.py"
 SKILL_NAME = "mobile-web-ui-ux-skill"
 
 
+def source_version():
+    match = re.search(r'version:\s*"([^"\n]+)"', (ROOT / "SKILL.md").read_text(encoding="utf-8"))
+    assert match is not None, "Source metadata version missing"
+    return match.group(1)
+
+
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     h.update(path.read_bytes())
@@ -45,7 +51,8 @@ class InstallSkillTest(unittest.TestCase):
             text=True,
         )
         self.assertEqual(result.returncode, 0)
-        self.assertIn(f"{SKILL_NAME} v0.1.1", result.stdout)
+        version = source_version()
+        self.assertIn(f"{SKILL_NAME} v{version}", result.stdout)
 
     def test_dry_run_zero_writes(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -356,9 +363,9 @@ class InstallSkillTest(unittest.TestCase):
             )
             self.assertEqual(res1.returncode, 0)
             self.assertIn("NOT_INSTALLED", res1.stdout)
-            self.assertIn("Available source version: v0.1.1", res1.stdout)
+            self.assertIn(f"Available source version: v{source_version()}", res1.stdout)
 
-            # 2. Installed matching version (0.1.1)
+            # 2. Installed matching source version
             subprocess.run([sys.executable, str(INSTALLER), "--project", str(project)], check=True)
             res2 = subprocess.run(
                 [sys.executable, str(INSTALLER), "--project", str(project), "--check-version"],
@@ -366,10 +373,10 @@ class InstallSkillTest(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(res2.returncode, 0)
-            self.assertIn("Installed version: v0.1.1", res2.stdout)
+            self.assertIn(f"Installed version: v{source_version()}", res2.stdout)
             self.assertIn("UP_TO_DATE", res2.stdout)
 
-            # 3. Installed older version (0.1.0 < 0.1.1)
+            # 3. Installed older version (0.1.0)
             dest_skill_md = project / ".agents" / "skills" / SKILL_NAME / "SKILL.md"
             dest_skill_md.write_text("---\nmetadata:\n  version: \"0.1.0\"\n---\n", encoding="utf-8")
             res3 = subprocess.run(
@@ -381,7 +388,7 @@ class InstallSkillTest(unittest.TestCase):
             self.assertIn("Installed version: v0.1.0", res3.stdout)
             self.assertIn("UPDATE_AVAILABLE", res3.stdout)
 
-            # 4. Installed newer version (9.0.0 > 0.1.1)
+            # 4. Installed newer version (9.0.0)
             dest_skill_md.write_text("---\nmetadata:\n  version: \"9.0.0\"\n---\n", encoding="utf-8")
             res4 = subprocess.run(
                 [sys.executable, str(INSTALLER), "--project", str(project), "--check-version"],
@@ -537,10 +544,10 @@ class InstallSkillTest(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(up_res.returncode, 0)
-            self.assertIn(f"Updated {SKILL_NAME} from v0.1.0 to v0.1.1", up_res.stdout)
+            self.assertIn(f"Updated {SKILL_NAME} from v0.1.0 to v{source_version()}", up_res.stdout)
 
-            # Updated skill has v0.1.1
-            self.assertIn("0.1.1", (dest / "SKILL.md").read_text(encoding="utf-8"))
+            # Updated skill matches the source payload exactly
+            self.assertEqual((ROOT / "SKILL.md").read_bytes(), (dest / "SKILL.md").read_bytes())
             self.assertFalse((dest / "custom_note.txt").exists())
 
             # Backup preserved with original v0.1.0 content

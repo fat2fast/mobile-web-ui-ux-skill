@@ -23,3 +23,9 @@ These are **design heuristics**, not universal mandates.
 ## Evidence requirements
 
 Every material recommendation should cite an observed screen/source behavior or mark itself as a hypothesis to verify. For standards-specific claims (WCAG, browser API support) use current primary references rather than memory alone.
+
+## Visual decisions follow the task
+
+Use the [content hierarchy playbook](decisions/content-hierarchy.md) to choose density and ordering: triage and aligned comparison need different treatment. Reuse typography and spacing tokens while retaining exact labels, dates, amounts and units. Plan the supported loading/empty/error/success states as well as the populated screen.
+
+Use the [accessibility playbook](decisions/accessibility.md) for semantic foreground/background roles and the smallest measured contrast correction. Keep brand recognition, provide meaning beyond color, and distinguish 200% text resize from effective-320 reflow. Neither attractive screenshots nor palette arithmetic alone establish rendered usability.

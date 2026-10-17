@@ -202,3 +202,9 @@ Phase chưa đóng: các task bắt buộc hoặc bằng chứng toàn phạm vi
 ## Handoff cho phase tiếp theo
 
 Ghi lại link PR/commit, baseline fixture version, kết quả thử nghiệm và blockers trong `evals/results/` hoặc issue tương ứng. Không dựa chỉ vào tick checklist.
+
+## Visual foundation update — 2026-10-17
+
+Runtime 0.2.0 adds source-owned discovery, a compact Information Priority Map, conditional hierarchy/density guidance and semantic-color/contrast correction within the existing accessibility/content playbooks. New [accessibility cases](../../evals/decisions/accessibility-cases.md) and [conflicting hierarchy cases](../../evals/decisions/content-cases.md) are reasoned examples, not executed consumer results. The [replay rubric](../../evals/visual-replay-protocol.md) is frozen before new fixtures.
+
+Rendered contrast, broader state coverage and fresh-session implementation replay remain NOT RUN for this revision until their owning execution gates complete. Existing partial DoD and historical results above retain their original limits; this guidance update does not close P02.

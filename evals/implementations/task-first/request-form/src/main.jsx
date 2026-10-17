@@ -143,7 +143,7 @@ function App() {
             aria-describedby={fieldErrors.requestType ? 'requestType-error' : undefined}
             aria-invalid={!!fieldErrors.requestType}
             onChange={(e) => updateField('requestType', e.target.value)}
-            className="w-full border border-gray-300 p-2.5 rounded text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full border border-gray-500 p-2.5 rounded text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
             <option>Annual Leave</option>
             <option>Equipment Request</option>
@@ -169,7 +169,7 @@ function App() {
               aria-describedby={fieldErrors.startDate ? 'startDate-error' : 'startDate-hint'}
               aria-invalid={!!fieldErrors.startDate}
               onChange={(e) => updateField('startDate', e.target.value)}
-              className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.startDate ? 'border-red-500 bg-red-50/20' : 'border-gray-300'}`}
+              className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.startDate ? 'border-red-500 bg-red-50/20' : 'border-gray-500'}`}
             />
             <input
               type="date"
@@ -180,7 +180,7 @@ function App() {
               max="2027-12-31"
               value={isValidCalendarDate(form.startDate) ? form.startDate : ''}
               onChange={(e) => updateField('startDate', e.target.value)}
-              className="date-picker border border-gray-300 rounded"
+              className="date-picker border border-gray-500 rounded"
             />
             </div>
             <span id="startDate-hint" className="block text-xs text-gray-500 mt-0.5">Format: YYYY-MM-DD (2026-01-01 to 2027-12-31)</span>
@@ -202,7 +202,7 @@ function App() {
               aria-describedby={fieldErrors.endDate ? 'endDate-error' : 'endDate-hint'}
               aria-invalid={!!fieldErrors.endDate}
               onChange={(e) => updateField('endDate', e.target.value)}
-              className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.endDate ? 'border-red-500 bg-red-50/20' : 'border-gray-300'}`}
+              className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.endDate ? 'border-red-500 bg-red-50/20' : 'border-gray-500'}`}
             />
             <input
               type="date"
@@ -213,7 +213,7 @@ function App() {
               max="2027-12-31"
               value={isValidCalendarDate(form.endDate) ? form.endDate : ''}
               onChange={(e) => updateField('endDate', e.target.value)}
-              className="date-picker border border-gray-300 rounded"
+              className="date-picker border border-gray-500 rounded"
             />
             </div>
             <span id="endDate-hint" className="block text-xs text-gray-500 mt-0.5">Format: YYYY-MM-DD (2026-01-01 to 2027-12-31)</span>
@@ -252,7 +252,7 @@ function App() {
             aria-invalid={!!fieldErrors.reason}
             onChange={(e) => updateField('reason', e.target.value)}
             placeholder="Explain the purpose of your request..."
-            className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.reason ? 'border-red-500 bg-red-50/20' : 'border-gray-300'}`}
+            className={`w-full border p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${fieldErrors.reason ? 'border-red-500 bg-red-50/20' : 'border-gray-500'}`}
           />
           {fieldErrors.reason && (
             <p id="reason-error" role="alert" className="text-xs text-red-600 mt-1 font-medium">{fieldErrors.reason}</p>

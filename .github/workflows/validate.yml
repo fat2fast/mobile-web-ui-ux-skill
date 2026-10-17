@@ -132,9 +132,11 @@ jobs:
         env:
           TASK_UX_RESULTS: ${{ runner.temp }}/task-ux/test-results.json
           TASK_UX_SCREENSHOTS: ${{ runner.temp }}/task-ux/screenshots
+          TASK_UX_ARTIFACTS: ${{ runner.temp }}/task-ux/artifacts
           SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
         run: |
+          test -z "$(git status --porcelain --untracked-files=normal)"
           python3 stamp-test-results.py --begin --results "$TASK_UX_RESULTS" --manifest "$RUNNER_TEMP/task-ux/run-manifest.json" --sha "$SHA" --run-id "$RUN_ID"
           npx playwright test
       - name: Bind and verify current-run evidence
@@ -146,6 +148,7 @@ jobs:
           python3 tests/task-ux/collect-build-results.py --input-dir "$RUNNER_TEMP/task-ux/builds" --output "$RUNNER_TEMP/task-ux/build-results.json" --sha "$SHA" --run-id "$RUN_ID"
           python3 tests/task-ux/verify-evidence.py --build-results "$RUNNER_TEMP/task-ux/build-results.json" --test-results "$RUNNER_TEMP/task-ux/test-results.json" --run-manifest "$RUNNER_TEMP/task-ux/run-manifest.json" --sha "$SHA" --run-id "$RUN_ID"
           python3 tests/task-ux/check-evidence-rejections.py --build-results "$RUNNER_TEMP/task-ux/build-results.json" --test-results "$RUNNER_TEMP/task-ux/test-results.json" --run-manifest "$RUNNER_TEMP/task-ux/run-manifest.json" --sha "$SHA" --run-id "$RUN_ID"
+          test -z "$(git status --porcelain --untracked-files=normal)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -153,4 +156,5 @@ jobs:
           path: |
             ${{ runner.temp }}/task-ux/*.json
             ${{ runner.temp }}/task-ux/screenshots/*.png
+            ${{ runner.temp }}/task-ux/artifacts/**
           if-no-files-found: ignore

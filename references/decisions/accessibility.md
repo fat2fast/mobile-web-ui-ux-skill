@@ -12,3 +12,20 @@ Use [WCAG 2.2](https://www.w3.org/TR/WCAG22/) for normative criteria and the [ch
 For a target-size exception, state the exact condition and measure the rendered hit areas and neighboring targets before claiming that SC 2.5.8 passes. Words such as "generous spacing" do not establish the required geometry. Passing one criterion is not proof of full WCAG AA conformance. Treat palette contrast and keyboard behavior as `NOT RUN` until tested in the rendered interface.
 
 Apply these constraints to navigation, tables, forms, actions, content, overlays and touch decisions from the start. A horizontal comparison table can be valid under the two-dimensional reflow exception; maintain headers and row identity.
+
+## Semantic color and measured correction
+
+Inspect existing token owners before changing styles. Map roles using project names; illustrative pairs are surface/on-surface, primary/on-primary, error/on-error, success/on-success, warning/on-warning and border/focus-ring against adjacent surfaces. These are roles, not a required new palette or token library.
+
+For each affected pair, record locator, trigger, actual state, computed foreground/background, resolved opacity/ancestor surfaces, threshold, unrounded ratio and disposition. Exercise supported normal, hover, keyboard focus, selected, active, disabled, error, warning and success states; mark unsupported states with a reason. Assert the state before measuring it. Test supported themes only. Resolve alpha and ancestor opacity in paint order; gradients, images, blending or unresolved overlays require focused rendered review or a blocker, never an assumed white background or hex-only PASS.
+
+| Criterion | Applicable threshold and boundary |
+| --- | --- |
+| [1.4.3 AA](https://www.w3.org/TR/WCAG22/#contrast-minimum) | Normal text ≥4.5:1; large text ≥3:1. Large means at least 18pt (24 CSS px), or 14pt (18⅔ CSS px) bold, or equivalent for CJK fonts. Use actual rendered font size/weight; do not round ratios up. |
+| [1.4.11 AA](https://www.w3.org/TR/WCAG22/#non-text-contrast) | ≥3:1 against adjacent colors for visual information needed to identify controls/states and essential graphical objects. A decorative border is not automatically essential. |
+| [1.4.1 A](https://www.w3.org/TR/WCAG22/#use-of-color) | Convey status/error/selection beyond color: visible descriptive text or recognizable shape/icon, with accessible semantics. A passing contrast ratio does not establish this criterion. |
+| [2.4.7 AA](https://www.w3.org/TR/WCAG22/#focus-visible) | Show keyboard focus. For author-supplied indicators, evaluate the applicable 1.4.11 adjacent-color conditions as well; do not confuse these with the stricter 2.4.13 AAA geometry requirements. |
+
+Apply exceptions per criterion: 1.4.3 excludes incidental text (including inactive controls, decoration, invisible text and incidental text in pictures) and logotypes. Its inactive exception does not cover an enabled selected/hover/error state. Under 1.4.11 inactive controls and controls whose appearance is determined by the user agent without author modification have exceptions; graphical objects have an essential-presentation exception. Disabled text being exempt from a ratio does not waive labels, state meaning or focus rules elsewhere. Record the exact reason rather than exempting all non-default states. See [W3C non-text guidance](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html).
+
+For a measured failing pair, try the smallest scoped foreground/on-color or surface correction first. Preserve brand primary when a suitable on-color works; adjust the owning token only after checking its consumers and supported states/themes. Do not globally replace a brand palette to fix one badge. Repeat the same rendered check and desktop/state regression checks after the patch. Color-only errors need text/semantics even when their colors pass. Automated scans cover detectable issues only; unresolved review is not PASS or full WCAG conformance.

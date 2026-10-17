@@ -13,3 +13,9 @@ Source: [W3C WCAG 2.2 Recommendation](https://www.w3.org/TR/WCAG22/), checked 20
 | [2.5.5 AAA](https://www.w3.org/TR/WCAG22/#target-size-enhanced) | 44×44 CSS px or AAA exception if AAA is a target; do not label this AA | NOT RUN |
 
 The [playbook](decisions/accessibility.md) gives decision context. A larger-than-required target is a design recommendation, not a separate WCAG rule. Native pt/dp units do not transfer directly to CSS px.
+
+## Representative state audit
+
+For each affected text/primary action/status/error/border/focus pair, record criterion, actual state trigger and oracle, computed paint stack, ratio/threshold and artifact. Treat normal, hover, active, focus, selected, disabled and actual error/warning/success transitions separately. Mark unsupported states with a source reason. Apply inactive/UA/decorative exceptions per criterion; do not exempt enabled selected/error controls.
+
+Check non-color meaning and names independently of contrast. Verify error text associations and real keyboard focus, including clipping/overlap by persistent controls. A scanner's incomplete result is review pending until applicable findings receive a disposition. Missing/unsupported paint measurements are review required, not PASS. A reviewed exception needs its criterion and reason. Use negative probes for low contrast, removed status meaning and hidden focus; assert detection and restored original state. The [verification criteria](verification-criteria.md) define run/source and artifact limits.
