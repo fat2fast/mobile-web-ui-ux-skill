@@ -242,7 +242,11 @@ function Editor({ task, onSave, onCancel }) {
         <input
           ref={input}
           value={title}
-          onChange={(event) => setTitle(event.target.value)}
+          onChange={(event) => {
+            const nextTitle = event.target.value;
+            setTitle(nextTitle);
+            if (error && nextTitle.trim()) setError("");
+          }}
           aria-invalid={!!error}
           aria-describedby={error ? "title-error" : undefined}
         />

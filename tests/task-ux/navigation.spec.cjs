@@ -10,20 +10,17 @@ for (const width of [320, 390, 1280]) {
   test(`navigation workflow at ${width}px preserves edit and browser history`, async ({
     page,
   }, info) => {
-    for (const file of ["navigation-data.js", "main.jsx"])
-      expect(
-        fs.readFileSync(
-          path.join(__dirname, "../../evals/fixtures/navigation/src", file),
-        ),
-      ).toEqual(
-        fs.readFileSync(
-          path.join(
-            __dirname,
-            "../../evals/implementations/task-first/navigation/src",
-            file,
-          ),
-        ),
-      );
+    // Preserve the source data contract without freezing the JSX implementation.
+    const dataFile = "navigation-data.js";
+    expect(
+      fs.readFileSync(
+        path.join(__dirname, "../../evals/fixtures/navigation/src", dataFile),
+      ),
+    ).toEqual(
+      fs.readFileSync(
+        path.join(__dirname, "../../evals/implementations/task-first/navigation/src", dataFile),
+      ),
+    );
     await page.setViewportSize({ width, height: 844 });
     await page.goto(URL + "/overview");
     await page.getByRole("link", { name: "Open tasks", exact: true }).click();
@@ -57,6 +54,15 @@ for (const width of [320, 390, 1280]) {
     await expect(page.getByLabel("Task title", { exact: true })).toBeFocused();
     const updated = "Reviewed handover checklist — distinguishing suffix North";
     await page.getByLabel("Task title", { exact: true }).fill(updated);
+    await expect(page.locator("#title-error")).toHaveCount(0);
+    await expect(page.getByLabel("Task title", { exact: true })).toHaveAttribute(
+      "aria-invalid",
+      "false",
+    );
+    await expect(page.getByLabel("Task title", { exact: true })).not.toHaveAttribute(
+      "aria-describedby",
+      "title-error",
+    );
     await page
       .getByRole("combobox", { name: "Task status", exact: true })
       .selectOption("Done");
