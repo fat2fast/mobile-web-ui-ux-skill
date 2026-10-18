@@ -1,8 +1,17 @@
 name: Validate skill
 
 on:
-  push:
   pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   structural-validation:
@@ -18,6 +27,7 @@ jobs:
         run: python3 -m unittest discover -s scripts/tests -p 'test_*.py' -v
 
   fixture-builds:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -59,6 +69,7 @@ jobs:
           path: ${{ runner.temp }}/builds/*.json
 
   implementation-builds:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -100,6 +111,7 @@ jobs:
           path: ${{ runner.temp }}/builds/*.json
 
   task-ux-browser:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     needs: [structural-validation, fixture-builds, implementation-builds]
     steps:
@@ -158,3 +170,24 @@ jobs:
             ${{ runner.temp }}/task-ux/screenshots/*.png
             ${{ runner.temp }}/task-ux/artifacts/**
           if-no-files-found: ignore
+
+  # Stable PR-only branch protection target. Fail closed if any upstream
+  # dependency failed, was skipped, or was cancelled.
+  required-ci:
+    if: ${{ always() && github.event_name == 'pull_request' }}
+    needs: [structural-validation, fixture-builds, implementation-builds, task-ux-browser]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every PR quality gate to succeed
+        env:
+          STRUCTURAL: ${{ needs.structural-validation.result }}
+          FIXTURES: ${{ needs.fixture-builds.result }}
+          IMPLEMENTATIONS: ${{ needs.implementation-builds.result }}
+          BROWSER: ${{ needs.task-ux-browser.result }}
+        run: |
+          for result in "$STRUCTURAL" "$FIXTURES" "$IMPLEMENTATIONS" "$BROWSER"; do
+            if [ "$result" != "success" ]; then
+              echo "::error::Required CI dependency is $result (expected success)"
+              exit 1
+            fi
+          done
