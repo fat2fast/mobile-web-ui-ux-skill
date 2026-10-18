@@ -66,7 +66,7 @@ function App() {
     <div className="app-shell min-h-screen">
       <header className="mobile-header">
         <strong>Ops</strong>
-        <button ref={menuButtonRef} type="button" onClick={() => menuRef.current?.showModal()} aria-label="Open navigation">Menu</button>
+        <button ref={menuButtonRef} type="button" onClick={() => menuRef.current?.showModal()} aria-label="Open navigation">Open navigation</button>
       </header>
       <dialog ref={menuRef} className="mobile-menu" aria-label="Navigation" onClose={() => menuButtonRef.current?.focus()} onClick={(event) => { if (event.target === menuRef.current) closeMenu(); }}>
         <nav aria-label="Mobile navigation">
@@ -107,6 +107,7 @@ function App() {
           <p>Section: {path.slice(1)}. <button onClick={() => go('/orders')}>Open orders</button></p>
         ) : (
           <>
+            <div className="order-results-pane">
             <div className="mb-4 flex flex-wrap gap-2 md:gap-3">
               <label className="text-sm">
                 Search orders{' '}
@@ -166,9 +167,9 @@ function App() {
                       {order.status}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm text-gray-700">
+                  <div className="order-summary flex justify-between text-sm text-gray-700">
                     <span>{order.customer}</span>
-                    <span className="font-semibold text-gray-900">{order.total}</span>
+                    <span className="order-total font-semibold text-gray-900">{order.total}</span>
                   </div>
                   <div className="flex justify-end pt-1 border-t">
                     <button
@@ -232,6 +233,7 @@ function App() {
               </table>
             </div>
 
+            </div>
             <div className={`bulk-actions ${selection.length ? 'has-selection' : ''}`}>
               {selection.length > 0 && <button type="button" onClick={() => setSelection([])}>Clear selection</button>}
               <button

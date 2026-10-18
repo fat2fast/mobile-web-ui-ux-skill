@@ -2,6 +2,7 @@
 """Open a browser run, then bind its fresh Playwright report to that run."""
 import argparse
 import json
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -22,7 +23,8 @@ def main():
         args.manifest.parent.mkdir(parents=True, exist_ok=True)
         args.manifest.write_text(json.dumps({"sha": args.sha, "run_id": args.run_id,
                                              "started_at": now.isoformat(),
-                                             "results": str(args.results.resolve())}), encoding="utf-8")
+                                             "results": str(args.results.resolve()),
+                                             "artifacts": str(Path(os.environ["TASK_UX_ARTIFACTS"]).resolve())}), encoding="utf-8")
         return
 
     if not args.results.is_file() or not args.manifest.is_file():

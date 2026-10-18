@@ -3,8 +3,10 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: '.',
+  outputDir: process.env.TASK_UX_ARTIFACTS || 'test-results',
   testMatch: /.*\.spec\.cjs/,
   timeout: 45000,
+  updateSnapshots: 'none',
   fullyParallel: false,
   workers: 1,
   reporter: [
@@ -23,6 +25,10 @@ module.exports = defineConfig({
     },
   ],
   webServer: [
+    { command: 'npm --prefix ../../evals/fixtures/navigation run dev', url: 'http://127.0.0.1:4185', reuseExistingServer: false, timeout: 60000 },
+    { command: 'npm --prefix ../../evals/implementations/task-first/navigation run dev', url: 'http://127.0.0.1:4186', reuseExistingServer: false, timeout: 60000 },
+    { command: 'npm --prefix ../../evals/fixtures/catalog run dev', url: 'http://127.0.0.1:4183', reuseExistingServer: false, timeout: 60000 },
+    { command: 'npm --prefix ../../evals/implementations/task-first/catalog run dev', url: 'http://127.0.0.1:4184', reuseExistingServer: false, timeout: 60000 },
     {
       command: 'npm --prefix ../../evals/fixtures/order-dashboard run dev',
       url: 'http://127.0.0.1:4173/orders',

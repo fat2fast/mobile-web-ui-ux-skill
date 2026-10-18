@@ -7,7 +7,7 @@ This document defines the acceptance contract for mobile UX improvements in the 
 2. **Task-oriented user acceptance** (observable completion of user goals without interface friction like horizontal scrolling on primary actions), and
 3. **Pattern-only checks** (implementation-specific assertions that must never be enforced universally).
 
-This contract freezes historical test provenance and governs successor test harnesses for the runnable journeys below. They extend the original Dashboard/Navigation/Form scope; the [original navigation scenario](../evals/scenarios/navigation.md) still needs dedicated executable coverage:
+This contract freezes historical test provenance and governs successor test harnesses for the runnable journeys below. They extend the original Dashboard/Navigation/Form scope; the [original navigation scenario](../evals/scenarios/navigation.md) has dedicated behavioral coverage alongside the original contracts:
 - Dense order management: [evals/scenarios/dashboard.md](../evals/scenarios/dashboard.md)
 - Aligned comparison: [docs/comparison-scenario.md](comparison-scenario.md)
 - Contextual request/date-range form: [docs/request-form-scenario.md](request-form-scenario.md)
@@ -120,7 +120,19 @@ Notification triage presents important mobile patterns (dense list, unread marke
 
 ## 5. Scenario Contract Links
 
-The three concrete executable scenario contracts are:
+The existing three executable scenario contracts are listed below; the catalog contract follows in the next section:
 - [evals/scenarios/dashboard.md](../evals/scenarios/dashboard.md): Dense order dashboard (list-first on mobile, table on desktop, 320/390px zero sideways scroll).
 - [docs/comparison-scenario.md](comparison-scenario.md): Multi-entity comparison table (semantic horizontal scroll, pinned headers, keyboard navigation).
 - [docs/request-form-scenario.md](request-form-scenario.md): Contextual date-range and request form (manual date input, derived days, upload affordance, error focus).
+
+## Catalog evaluation contract
+
+The [catalog scenario](../evals/scenarios/catalog.md) owns exact product data and browse/filter/sort/compare/reset semantics. Both fixture and candidate retain all six products, exact minor-unit currency values, Wh/kg, availability and uncapped comparison selection. Mobile browse and aligned comparison have distinct layouts; desktop table/actions remain available. In-memory evaluation data does not imply checkout, real inventory or an external product rule. Execution status is owned by the task evidence report.
+
+## Navigation and visual regression contracts
+
+The [navigation scenario](../evals/scenarios/navigation.md) owns twelve destinations, two local evaluation capabilities, actual in-memory edit/save and URL/history semantics. [Navigation checks](../tests/task-ux/navigation.spec.cjs) exercise mobile/desktop, direct routes, guard behavior and menu/route focus. These local guards are not production authorization proof.
+
+[Visual checks](../tests/task-ux/visual-states.spec.cjs) cover five journeys at five normal widths plus selected/error/long-content states that exist in those apps. [Reviewed registry](../tests/task-ux/visual-baselines.json) binds snapshot IDs to bytes, environment and reviewer verdict. Missing or unapproved references cannot pass; normal verification never updates images. Font bytes and actual browser-used faces are checked by the [font harness](../tests/task-ux/visual-fonts.cjs). Actual/expected images are copied into each run and verified against the reviewed reference. Screenshot agreement checks regression, not general UX quality.
+
+Effective320 reflow and200% root-font scaling are explicitly headless proxies. Actual400% browser zoom and200% text-only browser review remain NOT RUN until a connected headed browser can execute the settings and tasks. Their absence blocks the current implementation plan's phase completion; a headless full-suite PASS does not close that gate.

@@ -36,3 +36,6 @@ body { font-family: Arial, sans-serif; color: #1e293b; margin: 0; background-col
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
 }
+.scroll-cue { gap: 12px; }
+.scroll-cue > span:first-child { min-width: 0; flex: 1; }
+.scroll-cue > span:last-child { flex: none; white-space: nowrap; }

@@ -44,3 +44,19 @@ Limitations / untested:
 ## Completion
 
 Structural validation cannot establish UX quality. Record task and interaction results on the implemented UI before claiming improvement. Test on real devices for browser, keyboard or PWA behavior that emulation may miss.
+
+## Rendered color and state evidence
+
+For representative affected controls, retain actual state triggers/oracles, foreground/background paint sources, font size/weight, applicable threshold and unrounded contrast ratio. Use the [accessibility playbook](decisions/accessibility.md) for text/nontext distinctions and exceptions. Exercise supported normal/hover/active/keyboard-focus/selected/disabled/error/warning/success states; unsupported states need reasons. Color-only meaning, accessible names and associated errors need separate assertions. A palette-only computation or a zero-violation scan cannot settle unresolved painting or incomplete scanner findings.
+
+Keep screenshots and measurements bound to the executed source and run. A native test attachment can record check identity, browser/viewport, trigger, passed state oracle, criterion, measurements, disposition and referenced artifact hashes. Resolve files inside that run's artifact root; reject missing, stale, changed or escaping files. Match mandatory outcomes by source spec and browser project as well as title. Expected-negative probes pass only when they detect their injected defect and restore the original state.
+
+Solid-color helpers have rendering limits. Complex gradients/images/blending require focused rendered review or a blocker. Browser gamut mapping, supported focus-ring geometry and canvas assumptions need browser reference tests and disclosed precision; uncertain threshold boundaries remain review required. Label dirty local evidence EXPLORATORY and retain an actual source snapshot; a HEAD SHA alone does not identify uncommitted changes. Authoritative release evidence requires clean committed source/CI. Headless Chromium evidence covers its tested states; it is not device, human, screen-reader or full WCAG-conformance proof.
+
+## Reviewed visual references
+
+Freeze the responsive/state matrix before generation. Include normal widths and actual supported empty/error/selected/long-label states, with task/data/action assertions. Do not fabricate loading or role states. Keep genuine two-dimensional comparisons contained and usable.
+
+Create only missing references in a controlled runner, preserve existing hashes and inspect every image before approval. Normal checks never overwrite references after a mismatch. Bind each approved snapshot to its ID, file hash, browser/font environment and reviewer verdict. Store current actual and expected copies in run artifacts; reject absent, changed, substituted or unapproved evidence. Pin fonts and verify the faces actually used by the browser, not only the requested CSS family. Desktop preservation references and improved-mobile regression references serve different purposes.
+
+Test effective320 CSS-pixel reflow separately from text resizing. A root-font or headless viewport proxy must be named as such. Actual400% browser zoom and200% text-only review require a headed browser with the applicable setting, measured starting content viewport/text size, screenshots of settings and tasks, observed keyboard/Back outcomes and restoration. Record NOT RUN when unavailable; proxies cannot close the real-browser gate.

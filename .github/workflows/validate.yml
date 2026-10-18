@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        fixture: [order-dashboard, mobile-form, comparison-table, request-form]
+        fixture: [order-dashboard, mobile-form, comparison-table, request-form, catalog, navigation]
     defaults:
       run:
         working-directory: evals/fixtures/${{ matrix.fixture }}
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        implementation: [order-dashboard, comparison-table, request-form]
+        implementation: [order-dashboard, comparison-table, request-form, catalog, navigation]
     defaults:
       run:
         working-directory: evals/implementations/task-first/${{ matrix.implementation }}
@@ -100,7 +100,7 @@ jobs:
           path: ${{ runner.temp }}/builds/*.json
 
   task-ux-browser:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [structural-validation, fixture-builds, implementation-builds]
     steps:
       - uses: actions/checkout@v4
@@ -119,7 +119,7 @@ jobs:
           merge-multiple: true
       - name: Install dependencies across all fixtures and implementations
         run: |
-          for dir in evals/fixtures/order-dashboard evals/fixtures/comparison-table evals/fixtures/request-form evals/implementations/task-first/order-dashboard evals/implementations/task-first/comparison-table evals/implementations/task-first/request-form; do
+          for dir in evals/fixtures/navigation evals/implementations/task-first/navigation evals/fixtures/catalog evals/implementations/task-first/catalog evals/fixtures/order-dashboard evals/fixtures/comparison-table evals/fixtures/request-form evals/implementations/task-first/order-dashboard evals/implementations/task-first/comparison-table evals/implementations/task-first/request-form; do
             npm --prefix "$dir" ci
           done
       - name: Install task-ux dependencies and Playwright Chromium
@@ -132,9 +132,11 @@ jobs:
         env:
           TASK_UX_RESULTS: ${{ runner.temp }}/task-ux/test-results.json
           TASK_UX_SCREENSHOTS: ${{ runner.temp }}/task-ux/screenshots
+          TASK_UX_ARTIFACTS: ${{ runner.temp }}/task-ux/artifacts
           SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
         run: |
+          test -z "$(git status --porcelain --untracked-files=normal)"
           python3 stamp-test-results.py --begin --results "$TASK_UX_RESULTS" --manifest "$RUNNER_TEMP/task-ux/run-manifest.json" --sha "$SHA" --run-id "$RUN_ID"
           npx playwright test
       - name: Bind and verify current-run evidence
@@ -146,6 +148,7 @@ jobs:
           python3 tests/task-ux/collect-build-results.py --input-dir "$RUNNER_TEMP/task-ux/builds" --output "$RUNNER_TEMP/task-ux/build-results.json" --sha "$SHA" --run-id "$RUN_ID"
           python3 tests/task-ux/verify-evidence.py --build-results "$RUNNER_TEMP/task-ux/build-results.json" --test-results "$RUNNER_TEMP/task-ux/test-results.json" --run-manifest "$RUNNER_TEMP/task-ux/run-manifest.json" --sha "$SHA" --run-id "$RUN_ID"
           python3 tests/task-ux/check-evidence-rejections.py --build-results "$RUNNER_TEMP/task-ux/build-results.json" --test-results "$RUNNER_TEMP/task-ux/test-results.json" --run-manifest "$RUNNER_TEMP/task-ux/run-manifest.json" --sha "$SHA" --run-id "$RUN_ID"
+          test -z "$(git status --porcelain --untracked-files=normal)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -153,4 +156,5 @@ jobs:
           path: |
             ${{ runner.temp }}/task-ux/*.json
             ${{ runner.temp }}/task-ux/screenshots/*.png
+            ${{ runner.temp }}/task-ux/artifacts/**
           if-no-files-found: ignore

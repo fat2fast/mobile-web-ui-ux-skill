@@ -37,7 +37,7 @@ function App() {
       </div>
 
       <div className="comparison-wrapper relative">
-        <div className="overflow-x-auto comparison-scroll-container rounded-lg border border-gray-200 bg-white" tabIndex={0} aria-label="Cloud plans comparison matrix">
+        <div className="overflow-x-auto comparison-scroll-container rounded-lg border border-gray-200 bg-white" role="region" tabIndex={0} aria-label="Cloud plans comparison matrix">
           <table className="comparison-table w-full border-collapse">
             <thead>
               <tr>

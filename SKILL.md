@@ -4,7 +4,7 @@ description: >-
   Improve UI/UX for existing mobile websites, responsive web apps, and PWAs. Use when a user asks to make a responsive website easier to use on phones, improve mobile navigation, touch interactions, forms, tables, actions, content hierarchy, or mobile-first web layouts. Act as a mobile web UX specialist for vibe coders and non-designers: inspect the project, choose context-appropriate patterns, implement focused changes, and verify mobile and desktop behavior.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.4.0"
 ---
 
 # Mobile Web UI/UX Skill
@@ -30,7 +30,7 @@ Make the **most important user tasks easier to complete on mobile**. Do not equa
 
 1. **Existing project first.** Discover stack, routes, components, styles, existing breakpoints, primary tasks, and constraints before changing code.
 2. **Preserve business behavior.** Do not silently alter API contracts, authorization, data semantics, routes, analytics, or desktop behavior.
-3. **Keep the current visual identity.** Reuse colors, typography, design tokens, existing components, and interaction conventions unless the user explicitly requests a rebrand.
+3. **Keep the current visual identity.** Reuse typography, tokens, components and interaction conventions. For a measured contrast defect, make the smallest token-level correction using the [accessibility playbook](references/decisions/accessibility.md); preserve brand primary where possible. A correction does not authorize a rebrand.
 4. **Decide for non-designers.** Choose justified UX patterns rather than asking the user to pick among professional design terms. Ask only about blocking product decisions with real consequences.
 5. **Evidence over assumptions.** Distinguish observed problems from hypotheses. Never claim tested behavior if no browser/runtime tools were available.
 6. **Improve progressively.** Prefer small, reversible, testable changes; avoid sweeping UI rewrites.
@@ -53,7 +53,7 @@ For a request to recommend or advise, return UX decisions and verification steps
 
 ### 1. Discover
 
-Read [project-discovery](references/project-discovery.md) and inspect relevant source files. Identify the product's primary audience, top mobile tasks, mobile routes/screens, existing design system, and intended browser/PWA context. In the absence of analytics, state which task priorities are inferred.
+Read [project-discovery](references/project-discovery.md) and inspect relevant source files. Capture actor, top three tasks, frequency/urgency, risk, data density, supported states/themes and token/component/handler ownership. Separate source facts from inferred priorities and unknown rules. Keep discovery proportional to the edit.
 
 ### 2. Diagnose
 
@@ -67,20 +67,20 @@ Read [mobile principles](references/mobile-ux-principles.md), the [decision cont
 - Tables, dense content, filtering: [data display](references/decisions/data-display.md)
 - Forms, input, validation, keyboard: [forms](references/decisions/forms.md)
 - Primary, destructive or sticky actions: [actions](references/decisions/actions.md)
-- Long or layered content: [content hierarchy](references/decisions/content-hierarchy.md)
+- Hierarchy, density, typography, long or layered content: [content hierarchy](references/decisions/content-hierarchy.md)
 - Dialogs, drawers and sheets: [overlays](references/decisions/overlays.md)
 - Touch, gestures and hover fallbacks: [touch interactions](references/decisions/touch-interactions.md)
-- Semantics, focus, zoom and target size: [accessibility](references/decisions/accessibility.md)
+- Semantic color, rendered contrast, semantics, focus, zoom and target size: [accessibility](references/decisions/accessibility.md)
 
-For each change, fill the decision contract with evidence, task, candidates, selected/rejected reasons, preservation and verification. Prioritize task acceptance over minimal CSS tweaks. For record triage, verify identity and task-required existing metadata/actions (including status or a primary action only when present) remain reachable at representative phone widths without sideways scrolling. A true comparison matrix may scroll inside its container when row context, alignment and controls stay usable. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
+When business task/risk changes the choice, load [business task archetypes](references/business-task-archetypes.md); otherwise skip that reference. For each consequential choice, keep a short decision record with evidence, task, candidates, selected/rejected reasons, preservation and verification. For hierarchy changes, map required decision data, primary action, supporting context, optional detail and critical status using the content playbook. Prioritize task acceptance over minimal CSS tweaks. For record triage, verify identity and task-required existing metadata/actions (including status or a primary action only when present) remain reachable at representative phone widths without sideways scrolling. A true comparison matrix may scroll inside its container when row context, alignment and controls stay usable. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
 
 ### 4. Implement (only for Build/Improve)
 
-Change the smallest appropriate components and styles that fulfill the task acceptance contract. For individual-record tasks, keep identity and task-required existing metadata/actions reachable without sideways scrolling, while secondary details remain reachable through disclosure or detail routes. Do not invent status fields or row actions for records that have none. Preserve aligned tables when cross-column comparison is the task. Reuse existing abstractions. Preserve data access, permissions, semantics, and desktop layout. Prefer existing dependencies; don't add a UI library merely to implement a mobile pattern. Keep mobile behavior responsive to content length, language, orientation, zoom, and input method.
+Before editing, trace component/state → handler/API/rule → token → shared consumers → desktop guards using the [safe patch checkpoint](references/agent-workflow.md#safe-patch-checkpoint). Change the smallest appropriate components and styles that fulfill the task acceptance contract. For individual-record tasks, keep identity and task-required existing metadata/actions reachable without sideways scrolling, while secondary details remain reachable through disclosure or detail routes. Do not invent status fields or row actions for records that have none. Preserve aligned tables when cross-column comparison is the task. Reuse existing abstractions. Preserve data access, permissions, semantics, and desktop layout. Prefer existing dependencies; don't add a UI library merely to implement a mobile pattern. Keep mobile behavior responsive to content length, language, orientation, zoom, and input method.
 
 ### 5. Verify
 
-Follow [verification criteria](references/verification-criteria.md). When tools are available, run relevant tests, inspect representative small/mobile widths, verify key touch flows, keyboard focus, text scaling, and desktop regressions. Distinguish native control state synchronization in headless browsers from a person selecting inside a platform picker. For PWA, distinguish browser tab vs installed/standalone behavior. When runtime testing isn't possible, provide manual verification steps and mark those checks **NOT RUN**. Check the whole response for claims such as "verified", "passes" or "conforms" that lack a corresponding executed check.
+Follow [verification criteria](references/verification-criteria.md). When tools are available, run relevant tests, inspect representative small/mobile widths, verify key touch flows, keyboard focus, text scaling, and desktop regressions. For color changes, measure rendered pairs in applicable states; unresolved compositing needs review, not a palette-only PASS. Distinguish native control state synchronization in headless browsers from a person selecting inside a platform picker. For PWA, distinguish browser tab vs installed/standalone behavior. When runtime testing isn't possible, provide manual verification steps and mark those checks **NOT RUN**. Check the whole response for claims such as "verified", "passes" or "conforms" that lack a corresponding executed check.
 
 ### 6. Report
 
