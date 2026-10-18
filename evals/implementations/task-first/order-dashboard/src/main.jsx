@@ -167,9 +167,9 @@ function App() {
                       {order.status}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm text-gray-700">
+                  <div className="order-summary flex justify-between text-sm text-gray-700">
                     <span>{order.customer}</span>
-                    <span className="font-semibold text-gray-900">{order.total}</span>
+                    <span className="order-total font-semibold text-gray-900">{order.total}</span>
                   </div>
                   <div className="flex justify-end pt-1 border-t">
                     <button

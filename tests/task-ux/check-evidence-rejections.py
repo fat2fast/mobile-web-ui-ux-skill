@@ -131,6 +131,14 @@ def main():
     def missing_catalog_scenario(b, t, m):
         suite, spec = selected(t, "catalog task 320")
         suite["specs"].remove(spec)
+    def remove_check(check_id):
+        def mutate(b,t,m):
+            suite,spec=selected(t,check_id)
+            suite["specs"].remove(spec)
+        return mutate
+    rejected("missing navigation build", lambda b,t,m: b["projects"].pop("evals/fixtures/navigation"))
+    rejected("missing navigation check", remove_check("navigation routes and roles"))
+    rejected("skipped visual check", skip_check("visual normal-navigation-320"))
     rejected("missing catalog scenario", missing_catalog_scenario)
     rejected("missing catalog build", lambda b,t,m: b["projects"].pop("evals/fixtures/catalog"))
     rejected("missing contrast outcome", missing_contrast)
@@ -144,9 +152,9 @@ def main():
     root = Path(manifest["artifacts"]).resolve()
     with tempfile.TemporaryDirectory(prefix="rejection-probes-", dir=root) as temporary:
         scratch = Path(temporary)
-        def corrupt_attachment(label, mutate):
+        def corrupt_attachment(label, mutate, check_id="contrast order"):
             def change(b, t, m):
-                _, spec = selected(t, "contrast order")
+                _, spec = selected(t, check_id)
                 attachments = spec["tests"][0]["results"][-1]["attachments"]
                 attachment = next(a for a in attachments if a["name"] == "ux-evidence")
                 record = json.loads(Path(attachment["path"]).read_text(encoding="utf-8"))
@@ -156,6 +164,20 @@ def main():
                 attachment["path"] = str(target)
             rejected(label, change)
 
+        visual_check = "visual normal-navigation-320"
+        corrupt_attachment("missing snapshot metadata", lambda r: r.pop("snapshot"), visual_check)
+        corrupt_attachment("unapproved baseline identity", lambda r: r["snapshot"].update(snapshot_id="unreviewed"), visual_check)
+        corrupt_attachment("stale baseline hash", lambda r: r["snapshot"].update(sha256="0"*64), visual_check)
+        corrupt_attachment("wrong visual environment", lambda r: r["snapshot"].update(environment="other-runner"), visual_check)
+        corrupt_attachment("missing current actual", lambda r: r["snapshot"].update(actual_path="missing.png"), visual_check)
+        corrupt_attachment("substituted actual reference", lambda r: r["snapshot"].update(actual_path=r["snapshot"]["expected_path"]), visual_check)
+        def substitute_visual(record):
+            target = scratch / "substitute.png"
+            target.write_bytes(b"different current image")
+            relative = target.relative_to(root).as_posix()
+            record["snapshot"]["actual_path"] = relative
+            record["artifacts"].append({"kind":"screenshot", "relative_path":relative, "sha256":__import__("hashlib").sha256(target.read_bytes()).hexdigest()})
+        corrupt_attachment("substituted image with updated artifact hash", substitute_visual, visual_check)
         corrupt_attachment("stale attachment run", lambda r: r.update(run_id="stale"))
         corrupt_attachment("attachment source mismatch", lambda r: r.update(sha="wrong"))
         corrupt_attachment("attachment check mismatch", lambda r: r.update(check_id="a11y form"))

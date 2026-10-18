@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 PROJECTS = {
+    "evals/fixtures/navigation",
+    "evals/implementations/task-first/navigation",
     "evals/fixtures/catalog",
     "evals/implementations/task-first/catalog",
     'evals/fixtures/order-dashboard', 'evals/fixtures/mobile-form',
@@ -72,8 +74,25 @@ REQUIRED_TESTS.update({
     **{f"catalog task {width}": ("tests/task-ux/catalog.spec.cjs", "chromium", rf"^catalog workflow at {width}px preserves exact product information$") for width in (320,390,1280)},
     "catalog rendered states": ("tests/task-ux/catalog.spec.cjs", "chromium", r"^catalog rendered contrast and accessibility states$"),
 })
+REQUIRED_TESTS.update({
+    **{f"navigation task {width}": ("tests/task-ux/navigation.spec.cjs", "chromium", rf"^navigation workflow at {width}px preserves edit and browser history$") for width in (320,390,1280)},
+    "navigation routes and roles": ("tests/task-ux/navigation.spec.cjs", "chromium", r"^navigation direct links refresh and local role guards$"),
+    "navigation rendered states": ("tests/task-ux/navigation.spec.cjs", "chromium", r"^navigation rendered accessibility and keyboard states$"),
+})
+VISUAL_STATES = {"orders": ("selected-empty", "long-label"), "comparison": ("selected",),
+                 "form": ("server-error-selected", "success"), "catalog": ("selected-empty",),
+                 "navigation": ("edit-error", "long-detail", "restricted")}
+VISUAL_IDS = {f"normal-{name}-{width}": rf"^visual normal {name} {width}$"
+              for name in VISUAL_STATES for width in (320,375,390,430,1280)}
+VISUAL_IDS.update({f"{name}-{state}-{width}": rf"^visual state {name} {state} {width}$"
+                   for name, states in VISUAL_STATES.items() for state in states for width in (390,1280)})
+REQUIRED_TESTS.update({"visual " + key: ("tests/task-ux/visual-states.spec.cjs", "chromium", pattern)
+                       for key, pattern in VISUAL_IDS.items()})
+REQUIRED_TESTS.update({"resize proxies " + name: ("tests/task-ux/visual-states.spec.cjs", "chromium", rf"^reflow and text resize proxies {name}$") for name in VISUAL_STATES})
+REQUIRED_TESTS["visual action probe"] = ("tests/task-ux/visual-states.spec.cjs", "chromium", r"^visual negative probe detects a hidden required action$")
+REQUIRED_TESTS["order responsive containment"] = ("tests/task-ux/visual-states.spec.cjs", "chromium", r"^order long-content and desktop scrolling contracts$")
 ATTACHED_CHECKS = {key for key, (spec, _, _) in REQUIRED_TESTS.items()
-                   if spec.endswith(("contrast.spec.cjs", "accessibility.spec.cjs", "catalog.spec.cjs"))}
+                   if spec.endswith(("contrast.spec.cjs", "accessibility.spec.cjs", "catalog.spec.cjs", "navigation.spec.cjs", "visual-states.spec.cjs"))}
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -133,6 +152,52 @@ def verify_attachment(outcome, check_id, artifact_root, sha, run_id):
             target = contained_file(artifact_root / relative, artifact_root)
             if not artifact.get("kind") or hashlib.sha256(target.read_bytes()).hexdigest() != artifact.get("sha256"):
                 raise ValueError("referenced artifact content/hash mismatch")
+        if check_id.startswith("visual ") and check_id != "visual action probe":
+            snapshot = record.get("snapshot", {})
+            snapshot_id = check_id.removeprefix("visual ")
+            if snapshot.get("snapshot_id") != snapshot_id:
+                raise ValueError("snapshot identity mismatch")
+            registry = json.loads((ROOT / "tests/task-ux/visual-baselines.json").read_text(encoding="utf-8"))
+            matches = [entry for entry in registry["baselines"] if entry.get("snapshot_id") == snapshot_id]
+            if len(matches) != 1:
+                raise ValueError("missing or ambiguous reviewed baseline")
+            approved = matches[0]
+            if approved.get("verdict") != "approved" or not approved.get("reviewer", "").strip():
+                raise ValueError("baseline lacks reviewer approval")
+            for key in ("path", "sha256", "environment"):
+                if snapshot.get(key) != approved.get(key):
+                    raise ValueError("baseline hash/path/environment mismatch")
+            font_files = record["measurements"][0]["font_files"]
+            expected_fonts = []
+            for name, weight, postscript in (("DejaVuSans.ttf",400,"DejaVuSans"),("DejaVuSans-Bold.ttf",700,"DejaVuSans-Bold")):
+                font_hash = hashlib.sha256((ROOT / "tests/task-ux/fonts" / name).read_bytes()).hexdigest()
+                expected_fonts.append({"file":name,"weight":weight,"postScriptName":postscript,"sha256":font_hash})
+            if font_files != expected_fonts:
+                raise ValueError("snapshot font bytes mismatch")
+            font_identity = hashlib.sha256(json.dumps(expected_fonts,separators=(",", ":")).encode()).hexdigest()
+            used_fonts = record["measurements"][0]["browser_used_fonts"]
+            if not used_fonts or any(not font.get("isCustomFont") or font.get("postScriptName") not in {f["postScriptName"] for f in expected_fonts} for font in used_fonts):
+                raise ValueError("browser used unpinned fonts")
+            expected_environment = "linux-chromium-" + record["browser"]["version"] + "-dejavu-" + font_identity
+            if snapshot["environment"] != expected_environment:
+                raise ValueError("snapshot environment differs from executed browser")
+            baseline_path = Path(approved["path"])
+            if baseline_path.is_absolute() or ".." in baseline_path.parts:
+                raise ValueError("unsafe baseline path")
+            baseline = contained_file(ROOT / baseline_path, ROOT / "tests/task-ux/visual-states.spec.cjs-snapshots")
+            if hashlib.sha256(baseline.read_bytes()).hexdigest() != approved["sha256"]:
+                raise ValueError("reviewed baseline bytes changed")
+            if snapshot["actual_path"] == snapshot["expected_path"]:
+                raise ValueError("actual and expected must be distinct native files")
+            for key in ("actual_path", "expected_path"):
+                relative = Path(snapshot[key])
+                if relative.is_absolute() or ".." in relative.parts:
+                    raise ValueError("unsafe visual artifact path")
+                visual_file = contained_file(artifact_root / relative, artifact_root)
+                if not any(item["relative_path"] == relative.as_posix() for item in record["artifacts"]):
+                    raise ValueError("visual file lacks native artifact reference")
+                if hashlib.sha256(visual_file.read_bytes()).hexdigest() != approved["sha256"]:
+                    raise ValueError("actual/expected pixels differ from zero-tolerance reviewed reference")
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         return [f"{check_id}: invalid attachment: {exc}"]
     return []

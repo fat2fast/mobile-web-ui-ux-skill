@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "baselines": [
+    {
+      "snapshot_id": "catalog-selected-empty-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/catalog-selected-empty-1280-r2-chromium-linux.png",
+      "sha256": "9d882470b89da74f25a83a2c937dea006db276c593c37baad50c7ddb3e4445ac",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "catalog-selected-empty-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/catalog-selected-empty-390-r2-chromium-linux.png",
+      "sha256": "ecee105164be4fe168833be47ff57ab606de1ab6237eab3addaf048826577832",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "comparison-selected-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/comparison-selected-1280-r2-chromium-linux.png",
+      "sha256": "69c050c8111f6a15ca1bca908f31053b54f3cdd86f304cdcc80d45d9aebe8787",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "comparison-selected-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/comparison-selected-390-r2-chromium-linux.png",
+      "sha256": "064b535e9ac59c0f6d27847188722dd6ab97e6dc5d94218c57a41d7367863074",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "form-server-error-selected-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/form-server-error-selected-1280-r2-chromium-linux.png",
+      "sha256": "13092c5551e3b2595085f483d139593bd13736b27fe29a55841e0b8bf5cf6fa1",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "form-server-error-selected-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/form-server-error-selected-390-r2-chromium-linux.png",
+      "sha256": "b467bda07432e933c935bbb70194def4ffce5a201b5098a18a54e0754891fa15",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "form-success-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/form-success-1280-r2-chromium-linux.png",
+      "sha256": "6c4230df48f409cc67908b3b2a1a5907e36efd3a3869e156e8fcc3e7b5feb4b6",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "form-success-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/form-success-390-r2-chromium-linux.png",
+      "sha256": "66146d3f8b5dfba57e4a8b529d0f3a0be8aeb1cddfeda701c4111c72791167bf",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "navigation-edit-error-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/navigation-edit-error-1280-r2-chromium-linux.png",
+      "sha256": "ff9b5486b4af7894ca449cd2bd7e15ddd98bdd4aa52c8aaab236778f3ca08885",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "navigation-edit-error-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/navigation-edit-error-390-r2-chromium-linux.png",
+      "sha256": "73b86333976fac86fe5011185c3be0f85142aea03a87d2379bcaf3e0be3055a6",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "navigation-long-detail-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/navigation-long-detail-1280-r2-chromium-linux.png",
+      "sha256": "1c070a032386e2fab1de64c5935fae6c046bc7657161ed47226845631a59adf9",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "navigation-long-detail-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/navigation-long-detail-390-r2-chromium-linux.png",
+      "sha256": "a7a41b2d2ccab32d931d6d4b8d5b37685dfe12e4199177d0caf0824a42168648",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "navigation-restricted-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/navigation-restricted-1280-r2-chromium-linux.png",
+      "sha256": "a3d71ed92fb36da84e8431c37b6fdb111098c1e7a620f4bfe08b04c6bd5ccd7c",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "navigation-restricted-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/navigation-restricted-390-r2-chromium-linux.png",
+      "sha256": "04771b0a4ea0fab126d53df3c41387e77bd63d43c37c484a947056e755962cec",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-catalog-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-catalog-1280-r2-chromium-linux.png",
+      "sha256": "42abb450223b298e1ef011f04904c38987df0c4daf772295b9658c925d563a28",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-catalog-320",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-catalog-320-r2-chromium-linux.png",
+      "sha256": "975c52ede213d336819b81096f0d2a04583a144deab21c618d00eacc9216cd7d",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-catalog-375",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-catalog-375-r2-chromium-linux.png",
+      "sha256": "c1d60fc544fea4364ee95680485af4f40124d91fb6c0c14bb188ee1af51ebcd9",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-catalog-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-catalog-390-r2-chromium-linux.png",
+      "sha256": "33201a44e925dd199a6ceb240995cb6c801ee5e92eb0cb6a5b436d7b22df7cd1",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-catalog-430",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-catalog-430-r2-chromium-linux.png",
+      "sha256": "5825fa0416313f24d2306aa1d672ef6f433d34b75ac31cc59fbf4805a2843a65",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-comparison-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-comparison-1280-r2-chromium-linux.png",
+      "sha256": "45f3e4430497b61ded2764bd8c69a60fb020ac86ff7e583b53390ef3255e5c44",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-comparison-320",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-comparison-320-r2-chromium-linux.png",
+      "sha256": "ecd82a493238cca6aa81df1e16f045855171a8d3e2cd17e58b33979210b87ec1",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-comparison-375",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-comparison-375-r2-chromium-linux.png",
+      "sha256": "5075181fe9c501a33c68ed4d9c389a1df7d802e7ee4c5d715015329c931a24d4",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-comparison-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-comparison-390-r2-chromium-linux.png",
+      "sha256": "7ee347171244d95fdf6f0443d616034545e7e39343c0270710cd375ff872086d",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-comparison-430",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-comparison-430-r2-chromium-linux.png",
+      "sha256": "3f917f9f7addbad634d0fbd29291c38049c10ef6db52774f9adfea23ab2568d0",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-form-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-form-1280-r2-chromium-linux.png",
+      "sha256": "a27767e42c5acd11b27e2a44f576d34beb8124411f6f749fc732773bdbe49a95",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-form-320",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-form-320-r2-chromium-linux.png",
+      "sha256": "3feb06b8fced014db607972928b3929921f93435cf99a6e6bb8d66a2f876a04d",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-form-375",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-form-375-r2-chromium-linux.png",
+      "sha256": "4b252db0034f2f1083d127071a92ce43fe84663e779c9f31b084e1063f0fa87a",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-form-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-form-390-r2-chromium-linux.png",
+      "sha256": "66098a19aac2db3d635b81ebb74651d04badf97f5f94ff007d463639ad9734b8",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-form-430",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-form-430-r2-chromium-linux.png",
+      "sha256": "bc0b077e30fdce373cceb62b720eaf613d4d4cfc43483b5abcd468a6dfa63a4f",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-navigation-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-navigation-1280-r2-chromium-linux.png",
+      "sha256": "327bf2e8523777f6090d0f8ab227b6ace7568ee85dd6b0d84125a5ccc5ee788c",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-navigation-320",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-navigation-320-r2-chromium-linux.png",
+      "sha256": "a80a5f521f4119e36f2c535decb0b021905343877e6a25adfb744e74c37fd47a",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-navigation-375",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-navigation-375-r2-chromium-linux.png",
+      "sha256": "73f183b4847fdef208e35bb94d3b70318b1ec59ad2092a8547e83a67fc5593f3",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-navigation-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-navigation-390-r2-chromium-linux.png",
+      "sha256": "090280c2ee69b45193278c09a21042d8c1cd3a41bfd4a0af6f6fb3a6af621681",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-navigation-430",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-navigation-430-r2-chromium-linux.png",
+      "sha256": "d2f0222eb5054adc281ec61a21cf59a462080b09b291b5d308ed36ae6c2caa48",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-orders-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-orders-1280-r2-chromium-linux.png",
+      "sha256": "59eb2f37dbe08542e7cfa3610d3407c8b652ba14eebd65845bb1c710d82a6d8b",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-orders-320",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-orders-320-r2-chromium-linux.png",
+      "sha256": "c1c39c00d3fe6056ddafeca8e58d9ae9ccbb39535e979afac3149db8f98fd262",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-orders-375",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-orders-375-r2-chromium-linux.png",
+      "sha256": "96314ee6b0d5320a1ea2318fb7cf6fe709d6ade28559d252a3877f96cd532368",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-orders-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-orders-390-r2-chromium-linux.png",
+      "sha256": "d2f222d06301890aced8f367b3ee017a1171766f977f47ea66845240d640557f",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "normal-orders-430",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/normal-orders-430-r2-chromium-linux.png",
+      "sha256": "443b664bbc9b246310b7fe6f658d5e1684461918af198685ea204a193e1cfd36",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "orders-long-label-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/orders-long-label-1280-r2-chromium-linux.png",
+      "sha256": "2bf988cab39dc763ebe2984b3583a19ab86c5241dd5ddfe128d19e8b9be56693",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "orders-long-label-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/orders-long-label-390-r2-chromium-linux.png",
+      "sha256": "3c457ddad52f9fa19dab339ed81f72d9701b639f857500b75cdb9dccc6f0535f",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "orders-selected-empty-1280",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/orders-selected-empty-1280-r2-chromium-linux.png",
+      "sha256": "eb359faf8a754dd7251d36a9a10dfaadcb3804efe4a6cdb144a07d534f177ac1",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    },
+    {
+      "snapshot_id": "orders-selected-empty-390",
+      "path": "tests/task-ux/visual-states.spec.cjs-snapshots/orders-selected-empty-390-r2-chromium-linux.png",
+      "sha256": "dc359ba92f2a648e4726577a48606fa3088998004c6217ee011ec7624b99b279",
+      "environment": "linux-chromium-156.0.8078.4-dejavu-8fc84e1a3ff2363cf31a1d17d1451fb888943e68187146eeb022612530d7d3df",
+      "reviewer": "independent code-simplifier image review 2026-10-18; phase-04-image-review-r2.md",
+      "verdict": "approved"
+    }
+  ]
+}

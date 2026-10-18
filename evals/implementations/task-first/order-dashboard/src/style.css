@@ -43,3 +43,7 @@ aside a { display: block; color: white; padding: 14px; }
   .bulk-actions { flex: none; flex-wrap: wrap; padding-bottom: env(safe-area-inset-bottom); }
   .bulk-actions.has-selection { background: white; padding: 8px 8px max(8px, env(safe-area-inset-bottom)); box-shadow: 0 -2px 8px #0002; }
 }
+
+.order-summary { gap: 12px; }
+.order-summary > span:first-child { min-width: 0; flex: 1; }
+.order-total { flex: none; white-space: nowrap; }

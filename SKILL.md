@@ -4,7 +4,7 @@ description: >-
   Improve UI/UX for existing mobile websites, responsive web apps, and PWAs. Use when a user asks to make a responsive website easier to use on phones, improve mobile navigation, touch interactions, forms, tables, actions, content hierarchy, or mobile-first web layouts. Act as a mobile web UX specialist for vibe coders and non-designers: inspect the project, choose context-appropriate patterns, implement focused changes, and verify mobile and desktop behavior.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Mobile Web UI/UX Skill

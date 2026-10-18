@@ -79,7 +79,7 @@ Mỗi task nên làm thành một issue/PR nhỏ. `[x]` chỉ xác nhận đúng
 ### P04-05 — End-to-end task: Navigation
 
 - **Ưu tiên:** `P0` · **Trạng thái:** MỘT PHẦN · **Phụ thuộc:** P04-01, P02-01.
-- **Bằng chứng / còn thiếu:** [Order drawer smoke](../../tests/task-ux/order.spec.cjs) có close/focus/Back; [original navigation scenario](../../evals/scenarios/navigation.md) vẫn specification. Chưa có full transitions/secondary destinations hoặc restricted-role checks.
+- **Bằng chứng / còn thiếu:** [Original navigation scenario](../../evals/scenarios/navigation.md) có baseline/candidate và [navigation suite](../../tests/task-ux/navigation.spec.cjs) kiểm edit/save/Cancel/Back, secondary destinations, direct routes, local viewer guards, keyboard/dismissal/resize và modified links. Sáu focused checks đã chạy đạt; local role fixture không phải production authorization.
 - **Các bước thực hiện:**
   1. Dựng fixture/navigation path từ scenario C nếu chưa có.
   2. Test menu discovery, active state, page transitions, deep-link và browser Back.
@@ -183,3 +183,11 @@ Phase chưa đóng: các task bắt buộc hoặc bằng chứng toàn phạm vi
 ## Handoff cho phase tiếp theo
 
 Ghi lại link PR/commit, baseline fixture version, kết quả thử nghiệm và blockers trong `evals/results/` hoặc issue tương ứng. Không dựa chỉ vào tick checklist.
+
+## Current bounded implementation — 2026-10-18
+
+The [original navigation contract](../../evals/scenarios/navigation.md) has a baseline/candidate pair and [six focused behavioral/accessibility tests](../../tests/task-ux/navigation.spec.cjs), executed locally with zero unexpected/skipped results. The local viewer/editor fixture is not production authentication. Current-run provenance is checked by the [evidence verifier](../../tests/task-ux/verify-evidence.py); focused results alone do not establish a clean full-suite run.
+
+The [visual suite](../../tests/task-ux/visual-states.spec.cjs) defines25 normal width/journey combinations and18 real risk-state references, plus five explicitly labeled resize proxies, an expected-negative action probe and desktop scrolling/long-content assertions. [Baseline registry](../../tests/task-ux/visual-baselines.json) contains43 independently reviewed revised references. The [font harness](../../tests/task-ux/visual-fonts.cjs) pins regular/bold bytes and checks rendered text faces. Original references remain intact; revised paths record a deliberate native-to-webfont environment change and two mobile readability repairs. Ordinary non-update visual/contrast/accessibility verification passed62 checks. Exact captured image bytes must match approved references; bounded capture attempts are retained. This is not a general UX or pixel-preservation claim across environments.
+
+Actual headed400% browser zoom and200% text-only review are NOT RUN while the browser capability is unavailable. These pending checks, human/device limits and Tier B remain open; no Verified MVP claim follows from fixture coverage. Earlier task sections are historical gaps until their required full evidence is reconciled.
