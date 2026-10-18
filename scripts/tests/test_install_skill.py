@@ -112,8 +112,29 @@ class InstallSkillTest(unittest.TestCase):
             self.assertFalse((dest / "docs").exists())
             self.assertFalse((dest / "evals").exists())
             self.assertFalse((dest / "tests").exists())
-            self.assertFalse((dest / "scripts").exists())
+            self.assertTrue((dest / "scripts" / "pilot-evidence.py").is_file())
+            self.assertFalse((dest / "scripts" / "install-skill.py").exists())
             self.assertFalse((dest / "Makefile").exists())
+
+            # The CLI must execute from the installed payload, without a source checkout on sys.path.
+            example = ROOT / "examples" / "pilot-evidence-safe" / "draft.json"
+            exported = project / "pilot-sample-001"
+            command = subprocess.run(
+                [sys.executable, str(dest / "scripts" / "pilot-evidence.py"),
+                 "export", "--input", str(example), "--out", str(exported)],
+                cwd=project, capture_output=True, text=True,
+            )
+            self.assertEqual(command.returncode, 0, command.stderr)
+            self.assertEqual(
+                {p.name for p in exported.iterdir()},
+                {"manifest.json", "checks.json", "report.md"},
+            )
+            validation = subprocess.run(
+                [sys.executable, str(dest / "scripts" / "pilot-evidence.py"),
+                 "validate", "--package", str(exported), "--policy", "public"],
+                cwd=project, capture_output=True, text=True,
+            )
+            self.assertEqual(validation.returncode, 0, validation.stderr)
 
             # Local link closure in installed package
             for md_path in dest.rglob("*.md"):
