@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 PROJECTS = {
+    "evals/fixtures/catalog",
+    "evals/implementations/task-first/catalog",
     'evals/fixtures/order-dashboard', 'evals/fixtures/mobile-form',
     'evals/fixtures/comparison-table', 'evals/fixtures/request-form',
     'evals/implementations/task-first/order-dashboard',
@@ -66,8 +68,12 @@ REQUIRED_TESTS.update({
     "inactive boundary": ("tests/task-ux/accessibility.spec.cjs", "chromium", r"^inactive exception does not exempt essential enabled borders$"),
     "order unobscured controls": ("tests/task-ux/accessibility.spec.cjs", "chromium", r"^order selection action row leaves record controls unobscured$"),
 })
+REQUIRED_TESTS.update({
+    **{f"catalog task {width}": ("tests/task-ux/catalog.spec.cjs", "chromium", rf"^catalog workflow at {width}px preserves exact product information$") for width in (320,390,1280)},
+    "catalog rendered states": ("tests/task-ux/catalog.spec.cjs", "chromium", r"^catalog rendered contrast and accessibility states$"),
+})
 ATTACHED_CHECKS = {key for key, (spec, _, _) in REQUIRED_TESTS.items()
-                   if spec.endswith(("contrast.spec.cjs", "accessibility.spec.cjs"))}
+                   if spec.endswith(("contrast.spec.cjs", "accessibility.spec.cjs", "catalog.spec.cjs"))}
 ROOT = Path(__file__).resolve().parents[2]
 
 

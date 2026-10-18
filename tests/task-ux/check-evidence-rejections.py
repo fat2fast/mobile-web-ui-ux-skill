@@ -128,6 +128,11 @@ def main():
         _, spec = selected(t, "contrast order")
         spec["tests"][0]["results"][-1]["attachments"] = []
 
+    def missing_catalog_scenario(b, t, m):
+        suite, spec = selected(t, "catalog task 320")
+        suite["specs"].remove(spec)
+    rejected("missing catalog scenario", missing_catalog_scenario)
+    rejected("missing catalog build", lambda b,t,m: b["projects"].pop("evals/fixtures/catalog"))
     rejected("missing contrast outcome", missing_contrast)
     rejected("skipped a11y outcome", skip_check("a11y form"))
     rejected("skipped negative probe", skip_check("focus probe"))

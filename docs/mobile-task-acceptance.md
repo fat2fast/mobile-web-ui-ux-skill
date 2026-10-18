@@ -120,7 +120,11 @@ Notification triage presents important mobile patterns (dense list, unread marke
 
 ## 5. Scenario Contract Links
 
-The three concrete executable scenario contracts are:
+The existing three executable scenario contracts are listed below; the catalog contract follows in the next section:
 - [evals/scenarios/dashboard.md](../evals/scenarios/dashboard.md): Dense order dashboard (list-first on mobile, table on desktop, 320/390px zero sideways scroll).
 - [docs/comparison-scenario.md](comparison-scenario.md): Multi-entity comparison table (semantic horizontal scroll, pinned headers, keyboard navigation).
 - [docs/request-form-scenario.md](request-form-scenario.md): Contextual date-range and request form (manual date input, derived days, upload affordance, error focus).
+
+## Catalog evaluation contract
+
+The [catalog scenario](../evals/scenarios/catalog.md) owns exact product data and browse/filter/sort/compare/reset semantics. Both fixture and candidate retain all six products, exact minor-unit currency values, Wh/kg, availability and uncapped comparison selection. Mobile browse and aligned comparison have distinct layouts; desktop table/actions remain available. In-memory evaluation data does not imply checkout, real inventory or an external product rule. Execution status is owned by the task evidence report.

@@ -8,6 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PROJECTS = [
+    "evals/fixtures/catalog",
+    "evals/implementations/task-first/catalog",
     "evals/fixtures/order-dashboard",
     "evals/fixtures/mobile-form",
     "evals/fixtures/comparison-table",

@@ -163,3 +163,7 @@ Phase chưa đóng: các task bắt buộc hoặc bằng chứng toàn phạm vi
 ## Handoff cho phase tiếp theo
 
 Ghi lại link PR/commit, baseline fixture version, kết quả thử nghiệm và blockers trong `evals/results/` hoặc issue tương ứng. Không dựa chỉ vào tick checklist.
+
+## Audit-driven workflow addition — 2026-10-17
+
+The runtime [safe patch checkpoint](../../references/agent-workflow.md#safe-patch-checkpoint) now traces component/state/handler/token/shared consumers and desktop guards; [business archetypes](../../references/business-task-archetypes.md) load conditionally. The [catalog contract](../../evals/scenarios/catalog.md) adds a deliberate local evaluation app. Guidance/case review is distinct from executed fixture correctness and fresh agent replay; no broad phase completion or industry-effectiveness claim follows.

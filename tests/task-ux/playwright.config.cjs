@@ -24,6 +24,8 @@ module.exports = defineConfig({
     },
   ],
   webServer: [
+    { command: 'npm --prefix ../../evals/fixtures/catalog run dev', url: 'http://127.0.0.1:4183', reuseExistingServer: false, timeout: 60000 },
+    { command: 'npm --prefix ../../evals/implementations/task-first/catalog run dev', url: 'http://127.0.0.1:4184', reuseExistingServer: false, timeout: 60000 },
     {
       command: 'npm --prefix ../../evals/fixtures/order-dashboard run dev',
       url: 'http://127.0.0.1:4173/orders',

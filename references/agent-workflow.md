@@ -34,3 +34,9 @@ Read only the applicable focused playbook(s). Consider the current design system
 ## Step 6: Explain in plain language
 
 Summarize what was hard to use, what changed, how it improves the task, and what testing remains. Use [report template](report-template.md).
+
+## Safe patch checkpoint
+
+Before editing a consequential flow, record a compact map: route/component → owning state → handler/API/business rule → token/style owner → shared consumers → desktop guards. Use the [business archetypes](business-task-archetypes.md) only when domain context changes the choice. Preserve unknown rules.
+
+Map supported loading/empty/error/success/selection states to their actual owners and transitions. Do not invent a fetch delay, permission, validation or success state to fill a checklist. Select the smallest reversible patch, identify affected shared consumers, and record a scoped rollback boundary (owned diff only, preserving user edits). Recheck exact data/actions/labels and desktop after each shared token/component change; a before/after screenshot alone does not prove handler preservation.
