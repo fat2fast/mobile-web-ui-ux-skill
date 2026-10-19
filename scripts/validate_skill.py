@@ -17,7 +17,7 @@ REQUIRED = (
     'references/project-discovery.md', 'references/agent-workflow.md',
     'references/mobile-ux-principles.md', 'references/report-template.md',
     'references/verification-criteria.md', 'references/evidence-template.md',
-    'references/accessibility-checklist.md',
+    'references/accessibility-checklist.md', 'references/external-pilot-evidence.md',
     'references/decisions/navigation.md', 'references/decisions/data-display.md',
     'references/decisions/forms.md', 'evals/evaluation-criteria.md',
     'evals/scenarios/dashboard.md', 'evals/scenarios/navigation.md',

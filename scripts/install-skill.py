@@ -90,6 +90,13 @@ def collect_and_validate_payload(source_root: Path) -> tuple[set[Path], list[str
                 else:
                     payload_files.add(file_path.resolve())
 
+    # Only the offline evidence exporter is shipped from scripts/.
+    evidence_cli = source_root / "scripts" / "pilot-evidence.py"
+    if not evidence_cli.is_file() or os.path.islink(evidence_cli):
+        errors.append("Missing, invalid or symlinked runtime scripts/pilot-evidence.py")
+    else:
+        payload_files.add(evidence_cli.resolve())
+
     if errors:
         return payload_files, errors
 

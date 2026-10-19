@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "pilot_id": "pilot-sample-001",
+  "skill": {"version": "0.4.1", "source_sha": "unknown", "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "project": {"alias": "demo-project", "baseline_sha": "1111111111111111111111111111111111111111", "after_sha": "2222222222222222222222222222222222222222", "dirty_state": "clean"},
+  "agent": {"runtime": "example-agent", "version": "unknown"},
+  "task": {"id": "scan-records", "summary": "Find a priority record and retain its action"},
+  "scope": {"route_id": "dashboard"},
+  "environment": {"browser": "headless-chromium", "viewport": {"width": 390, "height": 844}},
+  "created_utc": "2026-10-18T15:00:00Z",
+  "decision": {"selected": "compact labeled record list", "rejected": "full-width table on small screens", "reason": "single-record scanning is the assumed primary task", "preserved": "status, row actions and desktop table"},
+  "limitations": ["Fictional example; no human task metrics", "Physical-device checks were NOT RUN"],
+  "checks": [
+    {"id": "before-overflow", "phase": "before", "target": "TASK", "status": "FAIL", "method": "browser", "assertion": "record action is visible without document sideways scrolling", "observed": "record action required horizontal scrolling", "revision": "1111111111111111111111111111111111111111", "evidence_ref": "artifact:before-task"},
+    {"id": "after-reachability", "phase": "after", "target": "TASK", "status": "PASS", "method": "browser", "assertion": "record action reachable at narrow viewport", "observed": "record action and status reachable", "revision": "2222222222222222222222222222222222222222", "evidence_ref": "artifact:after-task"},
+    {"id": "desktop-preservation", "phase": "regression", "target": "DESKTOP", "status": "PASS", "method": "browser", "assertion": "desktop table remains usable", "observed": "table and row action preserved", "revision": "2222222222222222222222222222222222222222", "evidence_ref": "artifact:desktop-check"},
+    {"id": "user-discoverability", "phase": "regression", "target": "TASK", "status": "NOT RUN", "method": "unavailable", "assertion": "human participant can discover priority task", "observed": "no human participant available", "revision": "2222222222222222222222222222222222222222"}
+  ]
+}

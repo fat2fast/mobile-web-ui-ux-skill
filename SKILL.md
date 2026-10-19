@@ -4,7 +4,7 @@ description: >-
   Improve UI/UX for existing mobile websites, responsive web apps, and PWAs. Use when a user asks to make a responsive website easier to use on phones, improve mobile navigation, touch interactions, forms, tables, actions, content hierarchy, or mobile-first web layouts. Act as a mobile web UX specialist for vibe coders and non-designers: inspect the project, choose context-appropriate patterns, implement focused changes, and verify mobile and desktop behavior.
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Mobile Web UI/UX Skill
@@ -86,6 +86,10 @@ Follow [verification criteria](references/verification-criteria.md). When tools 
 
 Use the concise format in [report template](references/report-template.md): issue → UX choice → changed files → validation → remaining risk. For advice or audit, give the decision and checks without sample implementation code unless requested. Don't overwhelm non-designers with unexplained terminology.
 Before sending, check the entire answer against the [decision contract](references/decision-contract.md): no new business restriction without a source rule, no unsolicited implementation code, no unmeasured rendered dimensions or numerical benefit, and no verification claim stronger than its executed evidence.
+
+### Optional external-project evidence handoff
+
+When the user explicitly requests reporting back to the skill repository after a project-specific mobile UX pilot, follow [external pilot evidence v1](references/external-pilot-evidence.md). Prepare only a sanitized structured draft, run the installed offline `scripts/pilot-evidence.py` exporter, and request explicit human review before any transfer. The tool never uploads, commits, or proves UX quality; keep private screenshots, app source and raw logs in the originating project. Do not treat an exported PASS, valid checksum or review import as skill superiority evidence.
 
 ## Quick rules of judgment
 

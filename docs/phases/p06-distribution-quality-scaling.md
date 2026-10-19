@@ -158,3 +158,7 @@ Phase chưa đóng: các task bắt buộc hoặc bằng chứng toàn phạm vi
 ## Handoff cho phase tiếp theo
 
 Ghi lại link PR/commit, baseline fixture version, kết quả thử nghiệm và blockers trong `evals/results/` hoặc issue tương ứng. Không dựa chỉ vào tick checklist.
+
+## Cross-project feedback mechanism (P06 extension)
+
+A consumer installation now includes only one allowlisted runtime script, `scripts/pilot-evidence.py`, in addition to the established `SKILL.md`, `LICENSE` and `references/**` payload. The [operator runbook](../installation/cross-project-feedback.md) describes offline local export/validate/import and the mandatory human sharing and reviewer gates. No GitHub token, automatic PR, telemetry, source scraping or new CI trigger is introduced. Independently verify use from an actually installed skill before marking this capability production-proven.

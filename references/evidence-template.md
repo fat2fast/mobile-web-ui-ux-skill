@@ -15,3 +15,5 @@ Use `PASS` only for a check actually run and observed. Use `FAIL` with reproduct
 | Limitations | Real keyboard, browser, or other untested conditions |
 
 Keep baseline observation separate from later implementation and skill evaluation.
+
+For a user-authorized pilot in a **different project**, use the portable [external pilot evidence v1](external-pilot-evidence.md) contract and its offline exporter. Keep local screenshots/logs with the project owner; report metadata validation is not UX approval.

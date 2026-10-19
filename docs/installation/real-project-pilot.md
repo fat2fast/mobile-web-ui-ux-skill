@@ -65,3 +65,7 @@ If any verification step fails:
 1. Revert only the authorized application file diff using git checkout against the recorded baseline SHA.
 2. Retain all failure logs and evidence in the documentation; do not mark a failed gate as PASS.
 3. Clean up any installed skill files or background processes created during the run.
+
+## Optional evidence handoff after approved Gate 3
+
+After the scoped implementation has actually been authorized and verified, follow the [cross-project feedback runbook](cross-project-feedback.md). Create the portable package **locally in the consumer project**, retain private screenshots/source/logs there, and require the project owner to approve the exact sanitized bytes and digest before import into the skill repository. The existence of this workflow does not approve TabDo edits or mark Gate 3 completed.
