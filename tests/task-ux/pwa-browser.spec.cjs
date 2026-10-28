@@ -109,6 +109,8 @@ test('simulated standalone keeps navigation and manifest scope rules', async ({ 
   try {
     await controlled(page);
     await expect(page.locator('#display-mode')).toHaveText('Standalone mode');
+    await page.evaluate(() => window.dispatchEvent(new Event('beforeinstallprompt', { cancelable: true })));
+    await expect(page.locator('#install-offer')).toBeHidden();
     const manifest = await page.evaluate(async () => (await fetch('/app/manifest.webmanifest')).json());
     const inScope = (start, scope) => new URL(start, base).pathname.startsWith(new URL(scope, base).pathname);
     expect(inScope(manifest.start_url, manifest.scope)).toBe(true);
@@ -117,7 +119,57 @@ test('simulated standalone keeps navigation and manifest scope rules', async ({ 
     await page.getByRole('link', { name: 'Detail' }).click();
     await page.goBack(); await expect(page).toHaveURL(base + '/app/');
     await page.goForward(); await expect(page).toHaveURL(base + '/app/detail');
+    await page.goBack(); await expect(page).toHaveURL(base + '/app/');
+    await page.locator('#draft').fill('standalone draft');
+    await Promise.all([
+      page.waitForURL(base + '/app/detail', { waitUntil: 'load' }),
+      page.evaluate(() => { document.querySelector('#detail-link').focus({ preventScroll: true }); scrollTo(0, 400); document.querySelector('#detail-link').click(); }),
+    ]);
+    await page.goBack();
+    await expect(page).toHaveURL(base + '/app/');
+    await expect(page.locator('#draft')).toHaveValue('standalone draft');
+    await expect(page.locator('#detail-link')).toBeFocused();
+    await expect.poll(() => page.evaluate(() => Math.round(scrollY))).toBe(400);
   } finally { await context.close(); }
+});
+
+test('manifest audit detects missing and wrong-scope manifests', async ({ page }) => {
+  await controlled(page);
+  await page.getByRole('button', { name: 'Check manifest' }).click();
+  await expect(page.locator('#audit-result')).toHaveText('Manifest scope valid');
+  for (const path of ['/app/missing.webmanifest', '/app/manifest.webmanifest?wrong=1', '/app/manifest.webmanifest?empty=1', '/app/manifest.webmanifest?outside=1']) {
+    await page.getByLabel('Manifest URL').fill(path);
+    const response = page.waitForResponse(result => result.url() === base + path);
+    await page.getByRole('button', { name: 'Check manifest' }).click();
+    await response;
+    await expect(page.locator('#audit-result')).toHaveText('Manifest invalid or unavailable');
+  }
+  await page.locator('#draft').fill('normal task remains usable');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page.locator('#status')).toHaveText('Saved');
+});
+
+test('navigation retains an unsaved edit after Back', async ({ page }) => {
+  await controlled(page);
+  await page.locator('#draft').fill('in progress');
+  await page.evaluate(() => { document.querySelector('#detail-link').focus({ preventScroll: true }); scrollTo(0, 400); document.querySelector('#detail-link').click(); });
+  await expect(page.locator('#draft')).toHaveValue('in progress');
+  await page.goBack();
+  await expect(page.locator('#draft')).toHaveValue('in progress');
+  await expect(page.locator('#detail-link')).toBeFocused();
+  await expect.poll(() => page.evaluate(() => Math.round(scrollY))).toBe(400);
+});
+
+test('account switch does not restore another user draft', async ({ page, context }) => {
+  await context.addCookies([{ name: 'user', value: 'A', url: base }]);
+  await controlled(page);
+  await page.locator('#draft').fill('PRIVATE-A draft');
+  await page.reload();
+  await expect(page.locator('#draft')).toHaveValue('PRIVATE-A draft');
+  await context.clearCookies();
+  await context.addCookies([{ name: 'user', value: 'B', url: base }]);
+  await page.reload();
+  await expect(page.locator('#draft')).toHaveValue('');
 });
 
 test('HTTP cache negative control detects stale account content', async ({ page, context }) => {
@@ -127,6 +179,7 @@ test('HTTP cache negative control detects stale account content', async ({ page,
   expect(await get('?unsafe=1')).toContain('PRIVATE-A');
   await context.clearCookies(); await context.addCookies([{ name: 'user', value: 'B', url: base }]);
   expect(await get('?unsafe=1')).toContain('PRIVATE-A');
+  expect(await page.evaluate(async () => (await fetch('/app/private.json?unsafe=1', {cache: 'no-store'})).text())).toContain('PRIVATE-B');
   expect(await get('')).toContain('PRIVATE-B');
 });
 
@@ -254,4 +307,82 @@ test('stale CSRF is rejected and a current PUT reaches the server', async ({ pag
   const current = await page.evaluate(async () => (await fetch('/app/write', { method: 'PUT', headers: {'X-CSRF-Token': 'fixture-current'}, body: 'current' })).status);
   expect(current).toBe(200);
   expect(await count()).toBe(before + 1);
+});
+
+test('expired form retains draft and recovers only on explicit retry', async ({ page, request }) => {
+  await controlled(page);
+  await page.locator('#draft').fill('keep this draft');
+  await request.post(base + '/control/csrf?mode=rotate');
+  try {
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#status')).toHaveText('Form expired; refresh and retry');
+    await expect(page.locator('#draft')).toHaveValue('keep this draft');
+    await page.getByRole('button', { name: 'Refresh form' }).click();
+    await expect(page.locator('#status')).toHaveText('Form refreshed; retry save');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#status')).toHaveText('Saved');
+    expect(await (await request.get(base + '/app/saved-draft')).text()).toBe('keep this draft');
+  } finally { await request.post(base + '/control/csrf?mode=reset'); }
+});
+
+test('offline form refresh fails visibly without losing draft', async ({ page, context }) => {
+  await controlled(page);
+  await page.locator('#draft').fill('recover me');
+  await context.setOffline(true);
+  await page.getByRole('button', { name: 'Refresh form' }).click();
+  await expect(page.locator('#status')).toHaveText('Refresh failed; reconnect and retry');
+  await expect(page.locator('#draft')).toHaveValue('recover me');
+  await context.setOffline(false);
+  await page.getByRole('button', { name: 'Refresh form' }).click();
+  await expect(page.locator('#status')).toHaveText('Form refreshed; retry save');
+});
+
+test('negative controls detect unsafe targets, unsolicited permission and intercepted writes', async ({ page, request }) => {
+  await page.addInitScript(() => {
+    window.permissionCalls = 0;
+    Object.defineProperty(window, 'Notification', { configurable: true, value: { permission: 'default', requestPermission: async () => { window.permissionCalls++; return 'denied'; } } });
+  });
+  await controlled(page);
+  const assertSafe = async () => expect(await page.evaluate(() => window.safeTarget('https://example.org/'))).toBeNull();
+  await assertSafe();
+  await page.evaluate(() => { window.originalTarget = window.safeTarget; window.safeTarget = url => url; });
+  try { await expect(assertSafe()).rejects.toThrow(); } finally { await page.evaluate(() => { window.safeTarget = window.originalTarget; }); }
+  await assertSafe();
+  const assertNoPermission = async () => expect(await page.evaluate(() => window.permissionCalls)).toBe(0);
+  await assertNoPermission();
+  await page.evaluate(() => Notification.requestPermission());
+  try { await expect(assertNoPermission()).rejects.toThrow(); } finally { await page.evaluate(() => { window.permissionCalls = 0; }); }
+  await assertNoPermission();
+  const count = async () => Number(await (await request.get(base + '/control/writes')).text());
+  const write = () => page.evaluate(async () => (await fetch('/app/write', { method: 'PUT', headers: { 'X-CSRF-Token': 'fixture-current' }, body: 'value' })).status);
+  const assertWritten = async before => expect(await count()).toBe(before + 1);
+  const before = await count();
+  const intercept = route => route.fulfill({ status: 200, body: 'fake success' });
+  await page.route('**/app/write', intercept);
+  try { expect(await write()).toBe(200); await expect(assertWritten(before)).rejects.toThrow(); } finally { await page.unroute('**/app/write', intercept); }
+  expect(await write()).toBe(200);
+  await assertWritten(before);
+});
+
+test('negative control detects a worker falsely accepting writes', async ({ browser, request }) => {
+  const count = async () => Number(await (await request.get(base + '/control/writes')).text());
+  const attempt = page => page.evaluate(async () => (await fetch('/app/write', { method: 'PUT', headers: { 'X-CSRF-Token': 'fixture-current' }, body: 'value' })).status);
+  const assertWritten = async before => expect(await count()).toBe(before + 1);
+  await request.post(base + '/control/worker?mode=intercept');
+  const badContext = await browser.newContext();
+  try {
+    const page = await badContext.newPage();
+    await controlled(page);
+    const before = await count();
+    expect(await attempt(page)).toBe(200);
+    await expect(assertWritten(before)).rejects.toThrow();
+  } finally { await badContext.close(); await request.post(base + '/control/worker?mode=safe'); }
+  const goodContext = await browser.newContext();
+  try {
+    const page = await goodContext.newPage();
+    await controlled(page);
+    const before = await count();
+    expect(await attempt(page)).toBe(200);
+    await assertWritten(before);
+  } finally { await goodContext.close(); }
 });

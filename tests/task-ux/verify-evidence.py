@@ -95,6 +95,13 @@ REQUIRED_TESTS.update({
         'revoked permission and absent subscription do not claim delivery',
         'saving does not discard edits made while the request is pending',
         'stale CSRF is rejected and a current PUT reaches the server',
+        'manifest audit detects missing and wrong-scope manifests',
+        'negative controls detect unsafe targets, unsolicited permission and intercepted writes',
+        'navigation retains an unsaved edit after Back',
+        'account switch does not restore another user draft',
+        'negative control detects a worker falsely accepting writes',
+        'expired form retains draft and recovers only on explicit retry',
+        'offline form refresh fails visibly without losing draft',
         *(f'task and overlay remain usable at {width}px' for width in (320, 390, 1280)),
     )
 })
