@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="manifest" href="/app/manifest.webmanifest"><link rel="stylesheet" href="/app/static.123.css"><title>PWA fixture</title></head><body>
+<h1>PWA fixture</h1><nav><a href="/app/">Overview</a> <a href="/app/detail">Detail</a></nav><label>Draft <input id="draft"></label><button id="save">Save</button><button id="notifications">Enable notifications</button><p id="status" role="status"></p><p id="permission" role="status"></p>
+<script>
+navigator.serviceWorker.register('/app/sw.js', {scope: '/app/'});
+window.safeTarget = value => { try { const target = new URL(value, location.origin); return target.origin === location.origin && target.pathname.startsWith('/app/') ? target.href : null; } catch { return null; } };
+document.querySelector('#notifications').addEventListener('click', async () => {
+  const result = !('Notification' in window) ? 'unsupported' : Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
+  document.querySelector('#permission').textContent = result;
+});
+document.querySelector('#save').addEventListener('click', async () => {
+  try { const response = await fetch('/app/write', {method:'POST'}); document.querySelector('#status').textContent = response.ok ? 'Saved' : 'Not saved'; }
+  catch { document.querySelector('#status').textContent = 'Not saved'; }
+});
+</script></body></html>
