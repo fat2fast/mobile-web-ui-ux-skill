@@ -27,6 +27,8 @@ Check whether the proposed or implemented change helps users complete mobile tas
 
 A headless click/fill on `input[type=date]` proves input reachability and value synchronization; it does not prove selection from the platform calendar popup, unsupported-picker fallback, or physical virtual-keyboard clearance. Mark those separately. For build/browser evidence, use artifacts from the same run and source revision; identify a dirty local worktree as such.
 
+For relevant PWA work, distinguish tab from actual installed behavior and manifest scope from worker control and server authorization. Check private data and mutation handling, offline recovery, waiting updates and draft preservation when applicable. Separate install-event availability, user choice, notification permission, subscription and delivery; simulated standalone and mocked permission are not OS installation or delivery. Use the [capability guide](pwa/browser-capabilities.md) for replay planning; real devices and unexecuted capabilities remain NOT RUN.
+
 Keep source and metadata checks separate from UX results. A successful prompt-hash check, for example, establishes provenance, not form behavior.
 
 ## Baseline / after format

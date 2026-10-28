@@ -8,7 +8,7 @@ Use when starting work on an existing web project.
 - Layout and design tokens: breakpoints, typography, spacing, components, interaction conventions.
 - Page(s) concerned and their shared components.
 - Relevant tests and whether a runnable browser preview exists.
-- If PWA features exist: manifest, service worker registration, display mode, offline fallback (do not rewrite these automatically).
+- If PWA intent or features exist: inspect served manifest identity, launch and scope, service worker script and registration scope, auth and role boundaries, display mode, offline fallback, install and push state. Record browser/OS/version and tab versus installed context. Do not register a worker or enable offline writes, push or installation automatically. For browser-specific viewport or keyboard work without a PWA, inspect only the relevant capabilities and layout.
 
 ## Infer user tasks
 
