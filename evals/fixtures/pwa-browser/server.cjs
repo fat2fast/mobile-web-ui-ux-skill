@@ -12,6 +12,7 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1:4187');
   const send = (status, type, body, headers = {}) => { res.writeHead(status, { 'Content-Type': type, ...headers }); res.end(body); };
   if (url.pathname === '/control/version' && req.method === 'POST') { version++; return send(200, 'text/plain', String(version)); }
+  if (url.pathname === '/control/rollback' && req.method === 'POST') { const previous = Number(url.searchParams.get('version')); if (!Number.isInteger(previous) || previous < 1 || previous >= version) return send(400, 'text/plain', 'invalid version'); version = previous; return send(200, 'text/plain', String(version)); }
   if (url.pathname === '/control/assets' && req.method === 'POST') { assetMode = ['safe', 'private', 'redirect'].includes(url.searchParams.get('mode')) ? url.searchParams.get('mode') : 'safe'; return send(200, 'text/plain', assetMode); }
   if (url.pathname === '/control/worker' && req.method === 'POST') { workerMode = url.searchParams.get('mode') === 'intercept' ? 'intercept' : 'safe'; return send(200, 'text/plain', workerMode); }
   if (url.pathname === '/control/csrf' && req.method === 'POST') { csrfToken = url.searchParams.get('mode') === 'rotate' ? 'fixture-rotated' : 'fixture-current'; return send(200, 'text/plain', 'updated'); }

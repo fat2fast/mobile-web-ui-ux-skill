@@ -208,6 +208,15 @@ test('waiting update preserves draft and cleans only owned caches', async ({ pag
   expect(await page.evaluate(() => caches.has('unrelated-sentinel'))).toBe(true);
   await page.reload();
   expect(await (await request.get(base + '/app/saved-draft')).text()).toBe('unsaved');
+  const oldNumber = Number(previousVersion.replace('pwa-fixture-', ''));
+  expect((await request.post(base + '/control/rollback?version=' + oldNumber)).ok()).toBe(true);
+  await page.evaluate(async () => (await navigator.serviceWorker.ready).update());
+  await expect.poll(() => page.evaluate(async () => Boolean((await navigator.serviceWorker.ready).waiting))).toBe(true);
+  await expect(page.getByRole('button', { name: 'Apply update' })).toBeVisible();
+  await page.getByRole('button', { name: 'Apply update' }).click();
+  await expect.poll(version).toBe(previousVersion);
+  expect(await (await request.get(base + '/app/saved-draft')).text()).toBe('unsaved');
+  expect(await page.evaluate(() => caches.has('unrelated-sentinel'))).toBe(true);
 });
 
 test('permission requires a gesture and notification targets stay in scope', async ({ page, context }) => {
