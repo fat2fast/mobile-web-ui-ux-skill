@@ -1,0 +1,5 @@
+# Worker updates and recovery
+
+For a person editing a form, preserve the draft and task during online → offline → retry → reconnect. Explain unavailable or stale data without implying a write succeeded. Prefer network navigation and a data-free offline page when privacy requires it; an ordinary network error is the fallback if offline support is not justified. Do not automatically reload or force `skipWaiting` while work is in progress. When an update is waiting, offer an explicit safe activation after work is saved or allow the old worker to retire naturally. [PWA updates](https://web.dev/learn/pwa/update), source checked 2026-10-28.
+
+Verify a controlled old tab with an unsaved draft, a changed worker in waiting state, no involuntary reload, and explicit activation after resolution. Check old owned cache cleanup while an unrelated cache survives. Record worker scope/version, rollback and recovery procedure; do not delete all caches on an origin. Device lifecycle timing remains NOT RUN until observed on the target device.
