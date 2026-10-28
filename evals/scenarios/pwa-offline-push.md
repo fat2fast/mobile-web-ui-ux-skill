@@ -5,7 +5,7 @@ Fictional users A and B share one browser context. Preserve authentication, muta
 | Probe | Oracle and cleanup |
 | --- | --- |
 | Offline and retry | Controlled tab gets a public data-free fallback offline; reconnect and retry reach the network. Private HTML and JSON never appear in any cache key or body. |
-| Logout and switch | A → logout → B in the same context; offline never exposes A's marker to B. |
+| Logout and switch | A → logout → B in the same context; online and offline never expose A's marker to B. Inspect HTTP cache policy and actual responses as well as CacheStorage. A deliberately cacheable private response must trigger the isolation oracle; restore safe headers and rerun in a fresh context. |
 | Mutations | Offline POST/PUT fail visibly and are not queued or replayed after reconnect. |
 | Update and draft | Changed worker waits with existing draft intact and no automatic reload; explicit activation cleans only owned old caches, leaving unrelated sentinel cache. |
 | Permission and click | Mock unsupported/denied/revoked state without spontaneous request; reject external URLs and have server deny same-origin cross-tenant detail. Mocking is not delivery evidence. |
