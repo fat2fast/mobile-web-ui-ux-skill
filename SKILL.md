@@ -4,7 +4,7 @@ description: >-
   Improve UI/UX for existing mobile websites, responsive web apps, and PWAs. Use when a user asks to make a responsive website easier to use on phones, improve mobile navigation, touch interactions, forms, tables, actions, content hierarchy, or mobile-first web layouts. Act as a mobile web UX specialist for vibe coders and non-designers: inspect the project, choose context-appropriate patterns, implement focused changes, and verify mobile and desktop behavior.
 license: MIT
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Mobile Web UI/UX Skill
@@ -73,6 +73,8 @@ Read [mobile principles](references/mobile-ux-principles.md), the [decision cont
 - Semantic color, rendered contrast, semantics, focus, zoom and target size: [accessibility](references/decisions/accessibility.md)
 
 When business task/risk changes the choice, load [business task archetypes](references/business-task-archetypes.md); otherwise skip that reference. For each consequential choice, keep a short decision record with evidence, task, candidates, selected/rejected reasons, preservation and verification. For hierarchy changes, map required decision data, primary action, supporting context, optional detail and critical status using the content playbook. Prioritize task acceptance over minimal CSS tweaks. For record triage, verify identity and task-required existing metadata/actions (including status or a primary action only when present) remain reachable at representative phone widths without sideways scrolling. A true comparison matrix may scroll inside its container when row context, alignment and controls stay usable. Trace proposed changes to existing handlers, validation, permissions and routes before recommending them; leave unknown rules as questions rather than inventing restrictions. Never universally prescribe bottom navigation, cards, drawers, or bottom sheets.
+
+For a browser-specific viewport or keyboard problem, load [capabilities](references/pwa/browser-capabilities.md) and the relevant [viewport](references/pwa/viewport-safe-area.md) or [keyboard](references/pwa/keyboard-focus.md) guidance. Only when the project already has or the user explicitly requests PWA behavior, additionally load the relevant [manifest](references/pwa/manifest-standalone.md), [navigation](references/pwa/navigation-history.md), [install](references/pwa/install-prompts.md), [offline privacy](references/pwa/offline-cache-security.md), [updates](references/pwa/sw-updates-recovery.md) or [push](references/pwa/push-permissions.md) playbook. A responsive site does not automatically need a worker, installation or push. Record target context, options, preservation, fallback, security and observed versus untested evidence; never enable PWA features without scoped authorization.
 
 ### 4. Implement (only for Build/Improve)
 

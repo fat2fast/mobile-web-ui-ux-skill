@@ -10,6 +10,7 @@ Use this page to choose the next work; phase files track task-level DoD, evidenc
 | Decision guidance | [Runtime playbook routes](../SKILL.md), [decision cases](../evals/decisions/), [Tier A regression record](../tests/reports/regression-261015-tier-a.md) | Targeted regressions do not establish general decision quality or skill superiority. |
 | Implemented task journeys | [Task acceptance](mobile-task-acceptance.md), [task browser suite](../tests/task-ux/), [recorded evidence](../tests/reports/task-ux-evidence.md) | Orders, comparison and request form have headless checks; the original navigation scenario still needs dedicated executable coverage. |
 | Automated verification | [CI workflow](../.github/workflows/validate.yml), [current-run evidence verifier](../tests/task-ux/verify-evidence.py) | Refer to run-specific evidence for results; checked-in artifacts do not prove the current revision passed. |
+| Browser/PWA specialization | [P05 status and evidence](phases/p05-mobile-browser-pwa-specialization.md), [PWA browser suite](../tests/task-ux/pwa-browser.spec.cjs) | Chromium and mocked states do not prove physical device, OS installation or push delivery. |
 | Human and device verification | [Verification criteria](../references/verification-criteria.md), [recorded limits](../tests/reports/task-ux-evidence.md) | Actual picker selection, physical keyboard/touch, screen reader, human discoverability and translation/zoom review remain open. |
 | Controlled comparison | [Tier B protocol](../evals/comparison-protocol.md), [evaluation record](../evals/results/decision-evaluation.md) | Tier B remains `NOT RUN`; require matched controls, an access boundary and independent review. |
 
@@ -25,7 +26,7 @@ The [cross-project evidence contract](../references/external-pilot-evidence.md) 
 4. **Measure the skill's contribution.** Run a bounded Tier B trial using the existing protocol, then repeat before generalizing. Fixture correctness and generated-agent performance are separate claims.
 5. **Prepare a bounded release.** Verify installation, activation and mode behavior in an explicitly tested agent. Synchronize published capability claims with that evidence.
 
-Browser/PWA specialization and distribution scaling follow the evidence gaps above. Do not add a retrieval engine, component library or extra stack merely to expand the feature list; require a demonstrated use case.
+Browser/PWA specialization is in progress; distribution scaling follows the evidence gaps above. Do not add a retrieval engine, component library or extra stack merely to expand the feature list; require a demonstrated use case.
 
 ## Release boundaries
 

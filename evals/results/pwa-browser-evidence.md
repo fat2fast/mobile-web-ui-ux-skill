@@ -1,0 +1,5 @@
+# PWA browser evidence
+
+The executable checks are in `tests/task-ux/pwa-browser.spec.cjs`; run results belong to the current test run's artifact directory, not this tracked document. Record source revision, dirty/clean status, browser/version, test command and artifact location before treating a result as evidence. Local checks from a dirty worktree are exploratory. The [PR run for a7b3176](https://github.com/fat2fast/mobile-web-ui-ux-skill/actions/runs/40626039782) passed `required-ci`; subsequent commits need a fresh same-head run.
+
+The fixture uses synthetic users and localhost, and tests CacheStorage and HTTP-cache behavior separately. The unsafe HTTP-cache negative is bypassed with a fresh request and disposed with the test context; it does not prove removal of that cache entry. Synthetic account switching reloads the page. Permission and target checks are simulated; OS install, actual permission UI, push subscription/delivery, physical keyboard and physical devices are **NOT RUN**. See [manual device replay](../tests/pwa-device-manual.md).

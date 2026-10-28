@@ -1,0 +1,5 @@
+# Navigation and history decisions
+
+For an authorized user moving from overview to detail or edit, retain addressable URLs and native Back/Forward rather than inventing a separate installed-only history. Test overview → detail → edit → Back/Forward, deep-link reload, focus and scroll restoration in a tab and, separately, an installed app where available. Preserve unsaved work and existing route/role guards; expired authentication should return through the authorized login flow without exposing prior content.
+
+Resolve notification entry targets against the application origin, reject external redirects and unsafe schemes, and perform fresh server-side authorization even for same-origin routes. Same origin alone does not prove a user may access a record. Failure examples: Back exits unexpectedly, reload loses the route, login restores a forbidden record, or a cross-origin target is opened. Offer the ordinary authorized overview when restoration is unavailable; mark real installed navigation NOT RUN without a device observation. Source/date: [browser capabilities](browser-capabilities.md).

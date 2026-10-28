@@ -25,6 +25,7 @@ module.exports = defineConfig({
     },
   ],
   webServer: [
+    { command: 'node ../../evals/fixtures/pwa-browser/server.cjs', url: 'http://127.0.0.1:4187/app/', reuseExistingServer: false, timeout: 30000 },
     { command: 'npm --prefix ../../evals/fixtures/navigation run dev', url: 'http://127.0.0.1:4185', reuseExistingServer: false, timeout: 60000 },
     { command: 'npm --prefix ../../evals/implementations/task-first/navigation run dev', url: 'http://127.0.0.1:4186', reuseExistingServer: false, timeout: 60000 },
     { command: 'npm --prefix ../../evals/fixtures/catalog run dev', url: 'http://127.0.0.1:4183', reuseExistingServer: false, timeout: 60000 },
