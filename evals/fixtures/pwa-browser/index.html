@@ -1,14 +1,36 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="manifest" href="/app/manifest.webmanifest"><link rel="stylesheet" href="/app/static.123.css"><title>PWA fixture</title></head><body>
-<h1>PWA fixture</h1><nav><a href="/app/">Overview</a> <a href="/app/detail">Detail</a></nav><label>Draft <input id="draft"></label><button id="save">Save</button><button id="notifications">Enable notifications</button><p id="status" role="status"></p><p id="permission" role="status"></p>
+<h1>PWA fixture</h1><p id="display-mode"></p><nav><a href="/app/">Overview</a> <a href="/app/detail">Detail</a></nav><label>Draft <input id="draft"></label><button id="save">Save</button><button id="notifications">Enable notifications</button><button id="notification-status">Check notifications</button><button id="update" hidden>Apply update</button><button id="menu">Open menu</button><dialog id="dialog"><button id="close">Close menu</button></dialog><aside id="install-offer" hidden><button id="install">Install</button><button id="dismiss">Dismiss</button></aside><p id="status" role="status"></p><p id="permission" role="status"></p><p id="subscription" role="status"></p><p id="update-status" role="status"></p>
 <script>
-navigator.serviceWorker.register('/app/sw.js', {scope: '/app/'});
+let registration;
+document.querySelector('#display-mode').textContent = matchMedia('(display-mode: standalone)').matches ? 'Standalone mode' : 'Browser tab';
+let installEvent;
+window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installEvent = event; document.querySelector('#install-offer').hidden = false; });
+document.querySelector('#dismiss').addEventListener('click', () => { document.querySelector('#install-offer').hidden = true; installEvent = null; });
+document.querySelector('#install').addEventListener('click', async () => { if (installEvent) await installEvent.prompt(); installEvent = null; document.querySelector('#install-offer').hidden = true; });
+document.querySelector('#menu').addEventListener('click', () => document.querySelector('#dialog').showModal());
+document.querySelector('#close').addEventListener('click', () => { document.querySelector('#dialog').close(); document.querySelector('#menu').focus(); });
+function showWaiting() { if (registration && registration.waiting) { document.querySelector('#update').hidden = false; document.querySelector('#update-status').textContent = 'Update ready'; } }
+navigator.serviceWorker.register('/app/sw.js', {scope: '/app/'}).then(value => { registration = value; showWaiting(); value.addEventListener('updatefound', () => { const worker = value.installing; worker.addEventListener('statechange', showWaiting); }); });
+navigator.serviceWorker.addEventListener('controllerchange', () => { document.querySelector('#update').hidden = true; document.querySelector('#update-status').textContent = 'Update active'; });
+document.querySelector('#update').addEventListener('click', () => {
+  if (document.querySelector('#draft').value) { document.querySelector('#update-status').textContent = 'Save your draft before updating'; return; }
+  if (registration && registration.waiting) registration.waiting.postMessage('activate');
+});
 window.safeTarget = value => { try { const target = new URL(value, location.origin); return target.origin === location.origin && target.pathname.startsWith('/app/') ? target.href : null; } catch { return null; } };
 document.querySelector('#notifications').addEventListener('click', async () => {
   const result = !('Notification' in window) ? 'unsupported' : Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
   document.querySelector('#permission').textContent = result;
 });
+document.querySelector('#notification-status').addEventListener('click', async () => {
+  const output = document.querySelector('#subscription');
+  if (!('Notification' in window) || Notification.permission !== 'granted') { output.textContent = 'Not subscribed'; return; }
+  const reg = await navigator.serviceWorker.ready;
+  output.textContent = reg.pushManager && await reg.pushManager.getSubscription() ? 'Subscribed' : 'Not subscribed';
+});
 document.querySelector('#save').addEventListener('click', async () => {
-  try { const response = await fetch('/app/write', {method:'POST'}); document.querySelector('#status').textContent = response.ok ? 'Saved' : 'Not saved'; }
+  const draft = document.querySelector('#draft');
+  const submitted = draft.value;
+  try { const response = await fetch('/app/write', {method:'POST', headers: {'X-CSRF-Token': 'fixture-current'}, body: submitted}); document.querySelector('#status').textContent = response.ok ? 'Saved' : 'Not saved'; if (response.ok && draft.value === submitted) draft.value = ''; }
   catch { document.querySelector('#status').textContent = 'Not saved'; }
 });
 </script></body></html>
