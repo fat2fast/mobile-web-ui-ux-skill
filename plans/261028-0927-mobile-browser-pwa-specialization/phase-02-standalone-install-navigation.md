@@ -1,6 +1,6 @@
 # Phase 02 — Installed PWA, installation and navigation
 
-**Status:** in progress · **Effort:** 6h · **Tasks:** 05–08 · **Maps:** P05-04/05/07 · **Depends:** Phase 01.
+**Status:** completed (synthetic scope; device checks NOT RUN) · **Effort:** 6h · **Tasks:** 05–08 · **Maps:** P05-04/05/07 · **Depends:** Phase 01.
 
 
 **Historical PR snapshot a7b3176 (2026-10-28):** Partial: guidance and scenario exist; tab Back/reload and origin/server-denial checks run, but manifest icon and bad scope, Forward/edit/focus restoration, emulated standalone and install/permission negative cases are missing. See the [task status](plan.md#implementation-status--pr-15-2026-10-28).

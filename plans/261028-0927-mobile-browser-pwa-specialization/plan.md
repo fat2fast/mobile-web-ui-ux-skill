@@ -1,7 +1,7 @@
 ---
 title: "P05 — Mobile Browser & PWA Specialization"
 description: "Conditional mobile browser and PWA decision playbooks with safe synthetic regression evidence; informed by SERP."
-status: in-progress
+status: completed
 priority: P1
 effort: 28h
 branch: feat/261028-0927-mobile-browser-pwa-specialization
@@ -13,7 +13,7 @@ created: 2026-10-28
 
 # P05 — Mobile Browser & PWA Specialization
 
-**Implementation in progress** · originally `pp-plan` hard mode · **Source:** `mobile-web-ui-ux-skill/main@344d9d464a8eb4d769ea1f061d3e579d230f8ab7` · **Reference:** `serp/main@ad6d6e3736b74a277ffd411fb624eab3070b7a3a`. See [source research](research-serp-pwa.md). Current [P05 scope](../../docs/phases/p05-mobile-browser-pwa-specialization.md) was last status-annotated 2026-10-17.
+**Implementation complete; final status commit requires CI** · originally `pp-plan` hard mode · **Source:** `mobile-web-ui-ux-skill/main@344d9d464a8eb4d769ea1f061d3e579d230f8ab7` · **Reference:** `serp/main@ad6d6e3736b74a277ffd411fb624eab3070b7a3a`. See [source research](research-serp-pwa.md). Current [P05 scope](../../docs/phases/p05-mobile-browser-pwa-specialization.md) was last status-annotated 2026-10-17.
 
 ## Objective
 
@@ -47,7 +47,7 @@ Extend the existing **task-first agent skill**, not build a universal PWA framew
 | [03. Offline/updates/push](phase-03-offline-updates-push.md) | 8h; 4 tasks | Cache classification, update/recovery, push/privacy guide | No private-content caching or silent permission |
 | [04. Runnable verification and integration](phase-04-fixture-verification.md) | 8h; 5 tasks | Synthetic localhost PWA, Playwright tests, updated runtime docs | Same-commit PR `required-ci` PASS and honest limitations |
 
-**Dependencies:** 01 → 02 → 03 → 04. Implement as bounded PRs; don't duplicate existing push/PR full-CI jobs. Task status is recorded below; implementation and verification remain incomplete.
+**Dependencies:** 01 → 02 → 03 → 04. Implement as bounded PRs; don't duplicate existing push/PR full-CI jobs. Historical snapshots and the final verification record follow.
 
 ## Implementation status — PR #15 (2026-10-28)
 
@@ -77,6 +77,10 @@ The first delivery stopped after guidance and routing; the follow-up fix added o
 Commits `3ca58cd`, `ed72b8f` and `a30227c` extend the capability guidance, fixture and CI evidence requirements. Focused Chromium: 24 tests passed locally; full suite before the latest fixture changes: 131 passed. These local results are exploratory because the worktree has pre-existing changes. The recorded PR run above predates these commits; same-head PR CI for the new commits is NOT RUN.
 
 New coverage includes scoped cache reads, rejected private/redirected precache responses, logout 401, offline PUT, mocked standalone mode, Forward, icon retrieval, update gating with saved draft, controlled permissions, overlay widths, stale CSRF and a delayed-save race. Follow-up adds manifest audit failures, account-scoped drafts across reload, negative controls for unsafe navigation, unsolicited permission and actual worker non-GET interception. Tab and simulated standalone navigation now cover focus/scroll restoration; stale-form CSRF recovery and offline refresh have focused tests. The fixture now exercises rollback and preserves saved work and unrelated caches. The new evidence-verifier rejection path and same-head CI still need execution. The synthetic account-switch test reloads the page; live identity changes are not covered. Device and real OS push/install remain NOT RUN.
+
+### Verification of implemented scope
+
+[PR run 60](https://github.com/fat2fast/mobile-web-ui-ux-skill/actions/runs/40661375943) passed `task-ux-browser`, current-run evidence validation and rejection checks, and `required-ci` for head `ddc955e55a697eb62f2520483d08ff3f80304819`. The final status-only commit requires a fresh run. The synthetic scenario covers the scoped decision, privacy, navigation, install/permission simulation, offline/reconnect, update and rollback checks in [the browser suite](../../tests/task-ux/pwa-browser.spec.cjs); the committed [evidence verifier](../../tests/task-ux/verify-evidence.py) requires the PWA outcomes. Physical iOS/Android devices, OS installation and real push delivery remain NOT RUN by the accepted scope. The fixture account switch includes a reload; the HTTP cache bypass does not remove pre-existing cached entries.
 
 ## Scope boundaries
 
