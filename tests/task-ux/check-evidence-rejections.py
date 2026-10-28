@@ -85,10 +85,16 @@ def main():
                 if "desktop layout at 1280px displays full comparison matrix" not in spec.get("title", "")
             ]
 
+    def remove_pwa_cache_probe(build_report, test_report, invocation):
+        for suite in suites(test_report):
+            suite['specs'] = [spec for spec in suite.get('specs', [])
+                              if spec.get('title') != 'worker rejects private or redirected precache responses']
+
     rejected("skipped summary", lambda b, t, m: t["stats"].update(skipped=1))
     rejected("skipped comparison desktop result", skip_comparison_desktop)
     rejected("skipped test outside required title set", skip_nonmandatory_spec)
     rejected("missing comparison desktop test", remove_comparison_desktop)
+    rejected("missing PWA cache probe", remove_pwa_cache_probe)
     rejected("stale build run", lambda b, t, m: b.update(run_id="old-run"))
     rejected("mismatched browser SHA", lambda b, t, m: t["provenance"].update(sha="old-sha"))
     rejected("failed build", lambda b, t, m: next(iter(b["projects"].values())).update(success=False))

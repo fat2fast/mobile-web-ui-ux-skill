@@ -79,6 +79,25 @@ REQUIRED_TESTS.update({
     "navigation routes and roles": ("tests/task-ux/navigation.spec.cjs", "chromium", r"^navigation direct links refresh and local role guards$"),
     "navigation rendered states": ("tests/task-ux/navigation.spec.cjs", "chromium", r"^navigation rendered accessibility and keyboard states$"),
 })
+REQUIRED_TESTS.update({
+    f"pwa {name}": ("tests/task-ux/pwa-browser.spec.cjs", "chromium", f"^{re.escape(name)}$")
+    for name in (
+        'manifest, worker scope, history and deep link',
+        'offline fallback, mutations and same-context account isolation',
+        'offline fallback ignores unrelated cache entries',
+        'worker rejects private or redirected precache responses',
+        'simulated standalone keeps navigation and manifest scope rules',
+        'HTTP cache negative control detects stale account content',
+        'waiting update preserves draft and cleans only owned caches',
+        'permission requires a gesture and notification targets stay in scope',
+        'install offer is event gated and dismissible without blocking task',
+        'notification denied fallback', 'notification unsupported fallback',
+        'revoked permission and absent subscription do not claim delivery',
+        'saving does not discard edits made while the request is pending',
+        'stale CSRF is rejected and a current PUT reaches the server',
+        *(f'task and overlay remain usable at {width}px' for width in (320, 390, 1280)),
+    )
+})
 VISUAL_STATES = {"orders": ("selected-empty", "long-label"), "comparison": ("selected",),
                  "form": ("server-error-selected", "success"), "catalog": ("selected-empty",),
                  "navigation": ("edit-error", "long-detail", "restricted")}
