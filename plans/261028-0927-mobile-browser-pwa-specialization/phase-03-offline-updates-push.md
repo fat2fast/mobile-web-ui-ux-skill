@@ -14,13 +14,13 @@
 
 ## Work items and verification
 
-**09 (2h) Cache boundary:** Treat private HTML/JSON/API, session, CSRF, tenant data and non-GET writes as network-only by default; allowlist approved public hashed assets and a data-free offline fallback only if product needs it. Document logout/account-switch and cache purge/version rules. **DoD:** failed connection cannot surface user A's private data to B, and no silent offline mutation success.
+- [x] **09 (2h) Cache boundary:** Treat private HTML/JSON/API, session, CSRF, tenant data and non-GET writes as network-only by default; allowlist approved public hashed assets and a data-free offline fallback only if product needs it. Document logout/account-switch and cache purge/version rules. **DoD:** failed connection cannot surface user A's private data to B, and no silent offline mutation success.
 
-**10 (2h) Offline/update UX:** Online→offline→retry→online; stale data warning; SW waiting/activation, old asset cleanup and unsaved form. Do not auto-reload/`skipWaiting` on users with active work. **DoD:** deterministic state descriptions, recoverable error and no data-loss instruction.
+- [x] **10 (2h) Offline/update UX:** Online→offline→retry→online; stale data warning; SW waiting/activation, old asset cleanup and unsaved form. Do not auto-reload/`skipWaiting` on users with active work. **DoD:** deterministic state descriptions, recoverable error and no data-loss instruction.
 
-**11 (2h) Permission/push:** Evaluate need for push vs in-app/email; request permission only via direct user action; distinguish permission/subscription/delivery. iOS Home Screen prerequisites are separate. Require same-origin notification target and fresh server-side authorization; support denied/revoked/unsubscribed/logout. **DoD:** no silent re-enrollment or untrusted open redirect; no private payload by default.
+- [x] **11 (2h) Permission/push:** Evaluate need for push vs in-app/email; request permission only via direct user action; distinguish permission/subscription/delivery. iOS Home Screen prerequisites are separate. Require same-origin notification target and fresh server-side authorization; support denied/revoked/unsubscribed/logout. **DoD:** no silent re-enrollment or untrusted open redirect; no private payload by default.
 
-**12 (2h) Threat/counterexamples:** Create negative probes for private cache leak, origin/scope escape, cross-tenant click URL, stale HTML/CSRF, involuntary permission and worker that hijacks non-GET. Each probe must be intentionally detected then restored. **DoD:** runnable test plan with precise oracle and cleanup.
+- [x] **12 (2h) Threat/counterexamples:** Create negative probes for private cache leak, origin/scope escape, cross-tenant click URL, stale HTML/CSRF, involuntary permission and worker that hijacks non-GET. Each probe must be intentionally detected then restored. **DoD:** runnable test plan with precise oracle and cleanup.
 
 ## Risk and non-goals
 

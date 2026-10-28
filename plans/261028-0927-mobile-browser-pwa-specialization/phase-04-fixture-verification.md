@@ -15,15 +15,15 @@
 
 ## Work items and executable gates
 
-**13 (2h) Synthetic fixture:** Host manifest/registered SW on localhost, scoped routing, public offline fallback, hashed/static cache, synthetic auth user A/B and deterministic update version. No real push/credentials; fresh browser context, isolated cache prefix. **DoD:** fixture runs without external service.
+- [x] **13 (2h) Synthetic fixture:** Host manifest/registered SW on localhost, scoped routing, public offline fallback, hashed/static cache, synthetic auth user A/B and deterministic update version. No real push/credentials; fresh browser context, isolated cache prefix. **DoD:** fixture runs without external service.
 
-**14 (2h) Playwright behavior:** Verify tab vs emulated standalone, Back/deep link/scope, offline+retry, only-public cache entries, non-GET bypass, A→logout→B isolation, version update with unsaved draft and cleanup, denied/unsupported permission fallback and safe notification target via mocks. **DoD:** explicit DOM + CacheStorage/fetch assertions; no hardware claim.
+- [x] **14 (2h) Playwright behavior:** Verify tab vs emulated standalone, Back/deep link/scope, offline+retry, only-public cache entries, non-GET bypass, A→logout→B isolation, version update with unsaved draft and cleanup, denied/unsupported permission fallback and safe notification target via mocks. **DoD:** explicit DOM + CacheStorage/fetch assertions; no hardware claim.
 
-**15 (1.5h) Negative controls:** Intentionally inject private-cache and unsafe navigation conditions, assert test failure and restore state. Bind evidence to exact run/source/browser/artifact, not stale snapshot. **DoD:** negative probe rejects intended defect and normal test remains clean.
+- [x] **15 (1.5h) Negative controls:** Intentionally inject private-cache and unsafe navigation conditions, assert test failure and restore state. Bind evidence to exact run/source/browser/artifact, not stale snapshot. **DoD:** negative probe rejects intended defect and normal test remains clean.
 
-**16 (1.5h) Runtime handoff:** Add conditional `references/pwa/*` paths to `SKILL.md` only on relevant project evidence; check local link closure and installer payload. Update P05 statuses individually according to actual executions, maintain historic source claims; bump skill version only with runtime content. **DoD:** standard responsive flows unchanged, installer tests pass.
+- [x] **16 (1.5h) Runtime handoff:** Add conditional `references/pwa/*` paths to `SKILL.md` only on relevant project evidence; check local link closure and installer payload. Update P05 statuses individually according to actual executions, maintain historic source claims; bump skill version only with runtime content. **DoD:** standard responsive flows unchanged, installer tests pass.
 
-**17 (1h) CI and manual UAT contract:** Run `python3 scripts/validate_skill.py`, Python unit suite, `npm --prefix tests/task-ux test` (after fixtures installed), existing regression/visual and `required-ci` on clean PR head. Add browser-device manual matrix for iOS Safari tab/Home Screen and Android Chrome tab/installed, orientation, keyboard, update, offline/push. **All physical-device results remain NOT RUN** until separately executed. **DoD:** one-run evidence provenance and no duplicate full CI triggers.
+- [x] **17 (1h) CI and manual UAT contract:** Run `python3 scripts/validate_skill.py`, Python unit suite, `npm --prefix tests/task-ux test` (after fixtures installed), existing regression/visual and `required-ci` on clean PR head. Add browser-device manual matrix for iOS Safari tab/Home Screen and Android Chrome tab/installed, orientation, keyboard, update, offline/push. **All physical-device results remain NOT RUN** until separately executed. **DoD:** one-run evidence provenance and no duplicate full CI triggers.
 
 ## Test matrix
 

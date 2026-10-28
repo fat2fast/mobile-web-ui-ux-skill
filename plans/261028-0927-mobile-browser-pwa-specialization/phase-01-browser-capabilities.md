@@ -14,13 +14,13 @@
 
 ## Work items and verification
 
-**01 (1.5h) Support matrix:** For manifest/display-mode, `beforeinstallprompt`, service worker, Push/Notification, `visualViewport`, keyboard API and safe-area, state feature detection, platform context, source date, fallback and `NOT RUN` devices. **DoD:** no unqualified universal support claim.
+- [x] **01 (1.5h) Support matrix:** For manifest/display-mode, `beforeinstallprompt`, service worker, Push/Notification, `visualViewport`, keyboard API and safe-area, state feature detection, platform context, source date, fallback and `NOT RUN` devices. **DoD:** no unqualified universal support claim.
 
-**02 (1.5h) Browser chrome/safe area:** Document address bar expand/shrink, top/bottom safe areas, app navigation overlap, dynamic viewport resize. Prefer natural scroll; `100svh`/`100dvh` only conditionally. **DoD:** task actions and critical content remain reachable in narrow layout, no disabled zoom, desktop preserved.
+- [x] **02 (1.5h) Browser chrome/safe area:** Document address bar expand/shrink, top/bottom safe areas, app navigation overlap, dynamic viewport resize. Prefer natural scroll; `100svh`/`100dvh` only conditionally. **DoD:** task actions and critical content remain reachable in narrow layout, no disabled zoom, desktop preserved.
 
-**03 (1.5h) Keyboard:** Test focus/validation/submit path and scrolling. Do not depend on experimental VirtualKeyboard API; `window.visualViewport` is optional. **DoD:** no surprise autofocus, stale scroll lock or obscured submit under specified tested context.
+- [x] **03 (1.5h) Keyboard:** Test focus/validation/submit path and scrolling. Do not depend on experimental VirtualKeyboard API; `window.visualViewport` is optional. **DoD:** no surprise autofocus, stale scroll lock or obscured submit under specified tested context.
 
-**04 (1.5h) Positive and negative examples:** 320/375/390/430/1280 CSS px; small viewport, long labels, menu/overlay focus. Provide counterexamples for fixed CTA under keyboard and safe-area overlap. **DoD:** source/DOM checks separated from real OS keyboard `NOT RUN`.
+- [x] **04 (1.5h) Positive and negative examples:** 320/375/390/430/1280 CSS px; small viewport, long labels, menu/overlay focus. Provide counterexamples for fixed CTA under keyboard and safe-area overlap. **DoD:** source/DOM checks separated from real OS keyboard `NOT RUN`.
 
 ## Security / scope
 
