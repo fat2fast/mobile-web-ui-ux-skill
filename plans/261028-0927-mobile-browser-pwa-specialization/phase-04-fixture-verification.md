@@ -1,6 +1,9 @@
 # Phase 04 — Runnable fixture, CI evidence and skill integration
 
-**Status:** pending · **Effort:** 8h · **Tasks:** 13–17 · **Maps:** P05-08 and P04/06 evidence · **Depends:** Phases 01–03.
+**Status:** in progress · **Effort:** 8h · **Tasks:** 13–17 · **Maps:** P05-08 and P04/06 evidence · **Depends:** Phases 01–03.
+
+
+**Historical PR snapshot a7b3176 (2026-10-28):** Partial: fixture, five PWA tests, runtime routing and manual replay exist. PR head a7b3176 has passing required-ci; missing coverage is listed in the [task status](plan.md#implementation-status--pr-15-2026-10-28). Device tests are NOT RUN by scope. CI must rerun for a new head.
 
 ## Files to create/modify
 

@@ -1,6 +1,9 @@
 # Phase 03 — Offline, service worker updates and push permissions
 
-**Status:** pending · **Effort:** 8h · **Tasks:** 09–12 · **Maps:** P05-06/07 · **Depends:** Phases 01–02.
+**Status:** in progress · **Effort:** 8h · **Tasks:** 09–12 · **Maps:** P05-06/07 · **Depends:** Phases 01–02.
+
+
+**Historical PR snapshot a7b3176 (2026-10-28):** Partial: guidance and some A/B, cache, offline POST and update tests exist; PUT, full permission lifecycle and several planned negative probes remain. Physical push delivery is NOT RUN. See the [task status](plan.md#implementation-status--pr-15-2026-10-28).
 
 ## Files to create
 

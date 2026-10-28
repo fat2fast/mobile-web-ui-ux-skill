@@ -1,6 +1,9 @@
 # Phase 01 — Browser capabilities, viewport and keyboard
 
-**Status:** pending · **Effort:** 6h · **Tasks:** 01–04 · **Maps:** P05-01/02/03 · **Depends:** Existing P02 forms/accessibility and P04 verification.
+**Status:** in progress · **Effort:** 6h · **Tasks:** 01–04 · **Maps:** P05-01/02/03 · **Depends:** Existing P02 forms/accessibility and P04 verification.
+
+
+**Historical PR snapshot a7b3176 (2026-10-28):** Partial: all four guidance files exist; target-version detail and PWA-specific rendered viewport, overlay, keyboard and focus acceptance are not fully exercised. Device checks remain NOT RUN. See the [task status](plan.md#implementation-status--pr-15-2026-10-28).
 
 ## Files to create (implementation, not this plan branch)
 
